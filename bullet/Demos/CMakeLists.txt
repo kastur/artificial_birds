@@ -10,7 +10,7 @@ IF (USE_GLUT)
 	IF (GLUT_FOUND)
 		IF(BUILD_CPU_DEMOS)
 			SET(SharedDemoSubdirs
-			OpenGL AllBulletDemos  ConvexDecompositionDemo
+			OpenGL AllBulletDemos ArtificialBirds ConvexDecompositionDemo
 			CcdPhysicsDemo ConstraintDemo SliderConstraintDemo GenericJointDemo Raytracer
 			RagdollDemo ForkLiftDemo BasicDemo VoronoiFractureDemo FractureDemo Box2dDemo BspDemo MovingConcaveDemo VehicleDemo
 			UserCollisionAlgorithm CharacterDemo SoftDemo HeightFieldFluidDemo
@@ -42,6 +42,7 @@ ELSE (USE_GLUT)
 		OpenGL 
 		BasicDemo 
 		FractureDemo
+		ArtificialBirds
 		Benchmarks 
 		Box2dDemo 
 		CollisionInterfaceDemo 
