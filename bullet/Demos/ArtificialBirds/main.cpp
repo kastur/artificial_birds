@@ -23,15 +23,15 @@ GLDebugDrawer	gDebugDrawer;
 int main(int argc,char** argv)
 {
 
-	ArtificialBirds* ArtificialBirds = new ArtificialBirds();
+	ArtificialBirds* artificialBirds = new ArtificialBirds();
 
-	ArtificialBirds->initPhysics();
-	ArtificialBirds->getDynamicsWorld()->setDebugDrawer(&gDebugDrawer);
+	artificialBirds->initPhysics();
+	artificialBirds->getDynamicsWorld()->setDebugDrawer(&gDebugDrawer);
 
 
-	glutmain(argc, argv,1024,768,"Bullet Physics Demo. http://bulletphysics.com",ArtificialBirds);
+	glutmain(argc, argv,1024,768,"Bullet Physics Demo. http://bulletphysics.com",artificialBirds);
 
-	delete ArtificialBirds;
+	delete artificialBirds;
 	return 0;
 
 }

@@ -249,17 +249,17 @@ extern int gOverlappingPairs;
 ///for mouse picking
 void pickingPreTickCallback (btDynamicsWorld *world, btScalar timeStep)
 {
-	ArtificialBirds* ArtificialBirds = (ArtificialBirds*)world->getWorldUserInfo();
+	ArtificialBirds* artificialBirds = (ArtificialBirds*)world->getWorldUserInfo();
 
-	if(ArtificialBirds->m_drag)
+	if(artificialBirds->m_drag)
 	{
-		const int				x=ArtificialBirds->m_lastmousepos[0];
-		const int				y=ArtificialBirds->m_lastmousepos[1];
-		const btVector3			rayFrom=ArtificialBirds->getCameraPosition();
-		const btVector3			rayTo=ArtificialBirds->getRayTo(x,y);
+		const int				x=artificialBirds->m_lastmousepos[0];
+		const int				y=artificialBirds->m_lastmousepos[1];
+		const btVector3			rayFrom=artificialBirds->getCameraPosition();
+		const btVector3			rayTo=artificialBirds->getRayTo(x,y);
 		const btVector3			rayDir=(rayTo-rayFrom).normalized();
-		const btVector3			N=(ArtificialBirds->getCameraTargetPosition()-ArtificialBirds->getCameraPosition()).normalized();
-		const btScalar			O=btDot(ArtificialBirds->m_impact,N);
+		const btVector3			N=(artificialBirds->getCameraTargetPosition()-artificialBirds->getCameraPosition()).normalized();
+		const btScalar			O=btDot(artificialBirds->m_impact,N);
 		const btScalar			den=btDot(N,rayDir);
 		if((den*den)>0)
 		{
@@ -267,16 +267,16 @@ void pickingPreTickCallback (btDynamicsWorld *world, btScalar timeStep)
 			const btScalar			hit=num/den;
 			if((hit>0)&&(hit<1500))
 			{				
-				ArtificialBirds->m_goal=rayFrom+rayDir*hit;
+				artificialBirds->m_goal=rayFrom+rayDir*hit;
 			}				
 		}		
-		btVector3				delta=ArtificialBirds->m_goal-ArtificialBirds->m_node->m_x;
+		btVector3				delta=artificialBirds->m_goal-artificialBirds->m_node->m_x;
 		static const btScalar	maxdrag=10;
 		if(delta.length2()>(maxdrag*maxdrag))
 		{
 			delta=delta.normalized()*maxdrag;
 		}
-		ArtificialBirds->m_node->m_v+=delta/timeStep;
+		artificialBirds->m_node->m_v+=delta/timeStep;
 	}
 
 }
