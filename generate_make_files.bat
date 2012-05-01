@@ -1,3 +1,3 @@
-mkdir vs2010
-cd vs2010
+mkdir vs10
+cd vs10
 ..\cmake\bin\cmake.exe ..\bullet -G "Visual Studio 10"
