@@ -1,0 +1,481 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|Win32">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|Win32">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGUID>{0FE455B6-1BE7-4540-A9B8-B101DFAC2B6B}</ProjectGUID>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>Win32</Platform>
+    <ProjectName>AppAllBulletDemos</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+    <PropertyGroup>
+      <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\k\cs275\vs2010\Demos\AllBulletDemos\Debug\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AppAllBulletDemos.dir\Debug\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AppAllBulletDemos</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.exe</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\k\cs275\vs2010\Demos\AllBulletDemos\Release\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AppAllBulletDemos.dir\Release\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AppAllBulletDemos</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.exe</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Users\k\cs275\vs2010\Demos\AllBulletDemos\MinSizeRel\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">AppAllBulletDemos.dir\MinSizeRel\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">AppAllBulletDemos</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.exe</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">true</GenerateManifest>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Users\k\cs275\vs2010\Demos\AllBulletDemos\RelWithDebInfo\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">AppAllBulletDemos.dir\RelWithDebInfo\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">AppAllBulletDemos</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.exe</TargetExt>
+      <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkIncremental>
+      <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</GenerateManifest>
+    </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions> /Zm1000 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:/Users/k/cs275/bullet/Glut;C:/Users/k/cs275/bullet/Extras;C:/Users/k/cs275/bullet/Extras/GIMPACTUtils;C:/Users/k/cs275/bullet/Extras/HACD;C:/Users/k/cs275/bullet/Extras/ConvexDecomposition;C:/Users/k/cs275/bullet/Extras/LibXML;C:/Users/k/cs275/bullet/Extras/LibXML/include;C:/Users/k/cs275/bullet/src;C:/Users/k/cs275/bullet/Demos/OpenGL;C:/Users/k/cs275/bullet/Extras/Serialize/BulletFileLoader;C:/Users/k/cs275/bullet/Extras/Serialize/BulletWorldImporter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_DEBUG;USE_GRAPHICAL_BENCHMARK;_IRR_STATIC_LIB_;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>Debug</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/Debug/AppAllBulletDemos.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_DEBUG;USE_GRAPHICAL_BENCHMARK;_IRR_STATIC_LIB_;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:/Users/k/cs275/bullet/Glut;C:/Users/k/cs275/bullet/Extras;C:/Users/k/cs275/bullet/Extras/GIMPACTUtils;C:/Users/k/cs275/bullet/Extras/HACD;C:/Users/k/cs275/bullet/Extras/ConvexDecomposition;C:/Users/k/cs275/bullet/Extras/LibXML;C:/Users/k/cs275/bullet/Extras/LibXML/include;C:/Users/k/cs275/bullet/src;C:/Users/k/cs275/bullet/Demos/OpenGL;C:/Users/k/cs275/bullet/Extras/Serialize/BulletFileLoader;C:/Users/k/cs275/bullet/Extras/Serialize/BulletWorldImporter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:/Users/k/cs275/bullet/Glut;C:/Users/k/cs275/bullet/Extras;C:/Users/k/cs275/bullet/Extras/GIMPACTUtils;C:/Users/k/cs275/bullet/Extras/HACD;C:/Users/k/cs275/bullet/Extras/ConvexDecomposition;C:/Users/k/cs275/bullet/Extras/LibXML;C:/Users/k/cs275/bullet/Extras/LibXML/include;C:/Users/k/cs275/bullet/src;C:/Users/k/cs275/bullet/Demos/OpenGL;C:/Users/k/cs275/bullet/Extras/Serialize/BulletFileLoader;C:/Users/k/cs275/bullet/Extras/Serialize/BulletWorldImporter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PostBuildEvent>
+      <Message>	</Message>
+      <Command>setlocal
+C:\Users\k\cs275\cmake\bin\cmake.exe -E copy_if_different C:/Users/k/cs275/bullet/GLUT32.DLL C:/Users/k/cs275/vs2010/Demos/AllBulletDemos
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+C:\Users\k\cs275\cmake\bin\cmake.exe -E copy_if_different C:/Users/k/cs275/bullet/Demos/SerializeDemo/testFile.bullet C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/testFile.bullet
+if %errorlevel% neq 0 goto :cmEnd
+C:\Users\k\cs275\cmake\bin\cmake.exe -E copy_if_different C:/Users/k/cs275/bullet/file.obj C:/Users/k/cs275/vs2010/Demos/AllBulletDemos
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalOptions> /machine:X86 /debug %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\..\lib\Debug\GLUI_Debug.lib;..\..\lib\Debug\GIMPACTUtils_Debug.lib;..\..\lib\Debug\HACD_Debug.lib;..\..\lib\Debug\ConvexDecomposition_Debug.lib;..\..\lib\Debug\BulletMultiThreaded_Debug.lib;..\..\lib\Debug\OpenGLSupport_Debug.lib;..\..\lib\Debug\BulletWorldImporter_Debug.lib;..\..\lib\Debug\BulletSoftBody_Debug.lib;..\..\lib\Debug\BulletDynamics_Debug.lib;..\..\lib\Debug\BulletCollision_Debug.lib;..\..\lib\Debug\BulletFileLoader_Debug.lib;..\..\lib\Debug\LinearMath_Debug.lib;C:\Users\k\cs275\bullet\Glut\glut32.lib;opengl32.lib;glu32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/Debug/AppAllBulletDemos.lib</ImportLibrary>
+      <LinkIncremental>true</LinkIncremental>
+      <ProgramDataBaseFile>C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/Debug/AppAllBulletDemos.pdb</ProgramDataBaseFile>
+      <StackReserveSize>10000000</StackReserveSize>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions> /Zm1000 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:/Users/k/cs275/bullet/Glut;C:/Users/k/cs275/bullet/Extras;C:/Users/k/cs275/bullet/Extras/GIMPACTUtils;C:/Users/k/cs275/bullet/Extras/HACD;C:/Users/k/cs275/bullet/Extras/ConvexDecomposition;C:/Users/k/cs275/bullet/Extras/LibXML;C:/Users/k/cs275/bullet/Extras/LibXML/include;C:/Users/k/cs275/bullet/src;C:/Users/k/cs275/bullet/Demos/OpenGL;C:/Users/k/cs275/bullet/Extras/Serialize/BulletFileLoader;C:/Users/k/cs275/bullet/Extras/Serialize/BulletWorldImporter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat></DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;NDEBUG;USE_GRAPHICAL_BENCHMARK;_IRR_STATIC_LIB_;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>Release</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/Release/AppAllBulletDemos.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;USE_GRAPHICAL_BENCHMARK;_IRR_STATIC_LIB_;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:/Users/k/cs275/bullet/Glut;C:/Users/k/cs275/bullet/Extras;C:/Users/k/cs275/bullet/Extras/GIMPACTUtils;C:/Users/k/cs275/bullet/Extras/HACD;C:/Users/k/cs275/bullet/Extras/ConvexDecomposition;C:/Users/k/cs275/bullet/Extras/LibXML;C:/Users/k/cs275/bullet/Extras/LibXML/include;C:/Users/k/cs275/bullet/src;C:/Users/k/cs275/bullet/Demos/OpenGL;C:/Users/k/cs275/bullet/Extras/Serialize/BulletFileLoader;C:/Users/k/cs275/bullet/Extras/Serialize/BulletWorldImporter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:/Users/k/cs275/bullet/Glut;C:/Users/k/cs275/bullet/Extras;C:/Users/k/cs275/bullet/Extras/GIMPACTUtils;C:/Users/k/cs275/bullet/Extras/HACD;C:/Users/k/cs275/bullet/Extras/ConvexDecomposition;C:/Users/k/cs275/bullet/Extras/LibXML;C:/Users/k/cs275/bullet/Extras/LibXML/include;C:/Users/k/cs275/bullet/src;C:/Users/k/cs275/bullet/Demos/OpenGL;C:/Users/k/cs275/bullet/Extras/Serialize/BulletFileLoader;C:/Users/k/cs275/bullet/Extras/Serialize/BulletWorldImporter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PostBuildEvent>
+      <Message>	</Message>
+      <Command>setlocal
+C:\Users\k\cs275\cmake\bin\cmake.exe -E copy_if_different C:/Users/k/cs275/bullet/GLUT32.DLL C:/Users/k/cs275/vs2010/Demos/AllBulletDemos
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+C:\Users\k\cs275\cmake\bin\cmake.exe -E copy_if_different C:/Users/k/cs275/bullet/Demos/SerializeDemo/testFile.bullet C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/testFile.bullet
+if %errorlevel% neq 0 goto :cmEnd
+C:\Users\k\cs275\cmake\bin\cmake.exe -E copy_if_different C:/Users/k/cs275/bullet/file.obj C:/Users/k/cs275/vs2010/Demos/AllBulletDemos
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalOptions> /machine:X86 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\..\lib\Release\GLUI.lib;..\..\lib\Release\GIMPACTUtils.lib;..\..\lib\Release\HACD.lib;..\..\lib\Release\ConvexDecomposition.lib;..\..\lib\Release\BulletMultiThreaded.lib;..\..\lib\Release\OpenGLSupport.lib;..\..\lib\Release\BulletWorldImporter.lib;..\..\lib\Release\BulletSoftBody.lib;..\..\lib\Release\BulletDynamics.lib;..\..\lib\Release\BulletCollision.lib;..\..\lib\Release\BulletFileLoader.lib;..\..\lib\Release\LinearMath.lib;C:\Users\k\cs275\bullet\Glut\glut32.lib;opengl32.lib;glu32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <ImportLibrary>C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/Release/AppAllBulletDemos.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/Release/AppAllBulletDemos.pdb</ProgramDataBaseFile>
+      <StackReserveSize>10000000</StackReserveSize>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
+    <ClCompile>
+      <AdditionalOptions> /Zm1000 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:/Users/k/cs275/bullet/Glut;C:/Users/k/cs275/bullet/Extras;C:/Users/k/cs275/bullet/Extras/GIMPACTUtils;C:/Users/k/cs275/bullet/Extras/HACD;C:/Users/k/cs275/bullet/Extras/ConvexDecomposition;C:/Users/k/cs275/bullet/Extras/LibXML;C:/Users/k/cs275/bullet/Extras/LibXML/include;C:/Users/k/cs275/bullet/src;C:/Users/k/cs275/bullet/Demos/OpenGL;C:/Users/k/cs275/bullet/Extras/Serialize/BulletFileLoader;C:/Users/k/cs275/bullet/Extras/Serialize/BulletWorldImporter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat></DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;NDEBUG;USE_GRAPHICAL_BENCHMARK;_IRR_STATIC_LIB_;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>MinSizeRel</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/MinSizeRel/AppAllBulletDemos.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;USE_GRAPHICAL_BENCHMARK;_IRR_STATIC_LIB_;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:/Users/k/cs275/bullet/Glut;C:/Users/k/cs275/bullet/Extras;C:/Users/k/cs275/bullet/Extras/GIMPACTUtils;C:/Users/k/cs275/bullet/Extras/HACD;C:/Users/k/cs275/bullet/Extras/ConvexDecomposition;C:/Users/k/cs275/bullet/Extras/LibXML;C:/Users/k/cs275/bullet/Extras/LibXML/include;C:/Users/k/cs275/bullet/src;C:/Users/k/cs275/bullet/Demos/OpenGL;C:/Users/k/cs275/bullet/Extras/Serialize/BulletFileLoader;C:/Users/k/cs275/bullet/Extras/Serialize/BulletWorldImporter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:/Users/k/cs275/bullet/Glut;C:/Users/k/cs275/bullet/Extras;C:/Users/k/cs275/bullet/Extras/GIMPACTUtils;C:/Users/k/cs275/bullet/Extras/HACD;C:/Users/k/cs275/bullet/Extras/ConvexDecomposition;C:/Users/k/cs275/bullet/Extras/LibXML;C:/Users/k/cs275/bullet/Extras/LibXML/include;C:/Users/k/cs275/bullet/src;C:/Users/k/cs275/bullet/Demos/OpenGL;C:/Users/k/cs275/bullet/Extras/Serialize/BulletFileLoader;C:/Users/k/cs275/bullet/Extras/Serialize/BulletWorldImporter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PostBuildEvent>
+      <Message>	</Message>
+      <Command>setlocal
+C:\Users\k\cs275\cmake\bin\cmake.exe -E copy_if_different C:/Users/k/cs275/bullet/GLUT32.DLL C:/Users/k/cs275/vs2010/Demos/AllBulletDemos
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+C:\Users\k\cs275\cmake\bin\cmake.exe -E copy_if_different C:/Users/k/cs275/bullet/Demos/SerializeDemo/testFile.bullet C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/testFile.bullet
+if %errorlevel% neq 0 goto :cmEnd
+C:\Users\k\cs275\cmake\bin\cmake.exe -E copy_if_different C:/Users/k/cs275/bullet/file.obj C:/Users/k/cs275/vs2010/Demos/AllBulletDemos
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalOptions> /machine:X86 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\..\lib\MinSizeRel\GLUI_MinsizeRel.lib;..\..\lib\MinSizeRel\GIMPACTUtils_MinsizeRel.lib;..\..\lib\MinSizeRel\HACD_MinsizeRel.lib;..\..\lib\MinSizeRel\ConvexDecomposition_MinsizeRel.lib;..\..\lib\MinSizeRel\BulletMultiThreaded_MinsizeRel.lib;..\..\lib\MinSizeRel\OpenGLSupport_MinsizeRel.lib;..\..\lib\MinSizeRel\BulletWorldImporter_MinsizeRel.lib;..\..\lib\MinSizeRel\BulletSoftBody_MinsizeRel.lib;..\..\lib\MinSizeRel\BulletDynamics_MinsizeRel.lib;..\..\lib\MinSizeRel\BulletCollision_MinsizeRel.lib;..\..\lib\MinSizeRel\BulletFileLoader_MinsizeRel.lib;..\..\lib\MinSizeRel\LinearMath_MinsizeRel.lib;C:\Users\k\cs275\bullet\Glut\glut32.lib;opengl32.lib;glu32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <ImportLibrary>C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/MinSizeRel/AppAllBulletDemos.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/MinSizeRel/AppAllBulletDemos.pdb</ProgramDataBaseFile>
+      <StackReserveSize>10000000</StackReserveSize>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
+    <ClCompile>
+      <AdditionalOptions> /Zm1000 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:/Users/k/cs275/bullet/Glut;C:/Users/k/cs275/bullet/Extras;C:/Users/k/cs275/bullet/Extras/GIMPACTUtils;C:/Users/k/cs275/bullet/Extras/HACD;C:/Users/k/cs275/bullet/Extras/ConvexDecomposition;C:/Users/k/cs275/bullet/Extras/LibXML;C:/Users/k/cs275/bullet/Extras/LibXML/include;C:/Users/k/cs275/bullet/src;C:/Users/k/cs275/bullet/Demos/OpenGL;C:/Users/k/cs275/bullet/Extras/Serialize/BulletFileLoader;C:/Users/k/cs275/bullet/Extras/Serialize/BulletWorldImporter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;USE_GRAPHICAL_BENCHMARK;_IRR_STATIC_LIB_;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>RelWithDebInfo</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/RelWithDebInfo/AppAllBulletDemos.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;USE_GRAPHICAL_BENCHMARK;_IRR_STATIC_LIB_;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_SCL_SECURE_NO_WARNINGS;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:/Users/k/cs275/bullet/Glut;C:/Users/k/cs275/bullet/Extras;C:/Users/k/cs275/bullet/Extras/GIMPACTUtils;C:/Users/k/cs275/bullet/Extras/HACD;C:/Users/k/cs275/bullet/Extras/ConvexDecomposition;C:/Users/k/cs275/bullet/Extras/LibXML;C:/Users/k/cs275/bullet/Extras/LibXML/include;C:/Users/k/cs275/bullet/src;C:/Users/k/cs275/bullet/Demos/OpenGL;C:/Users/k/cs275/bullet/Extras/Serialize/BulletFileLoader;C:/Users/k/cs275/bullet/Extras/Serialize/BulletWorldImporter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:/Users/k/cs275/bullet/Glut;C:/Users/k/cs275/bullet/Extras;C:/Users/k/cs275/bullet/Extras/GIMPACTUtils;C:/Users/k/cs275/bullet/Extras/HACD;C:/Users/k/cs275/bullet/Extras/ConvexDecomposition;C:/Users/k/cs275/bullet/Extras/LibXML;C:/Users/k/cs275/bullet/Extras/LibXML/include;C:/Users/k/cs275/bullet/src;C:/Users/k/cs275/bullet/Demos/OpenGL;C:/Users/k/cs275/bullet/Extras/Serialize/BulletFileLoader;C:/Users/k/cs275/bullet/Extras/Serialize/BulletWorldImporter;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PostBuildEvent>
+      <Message>	</Message>
+      <Command>setlocal
+C:\Users\k\cs275\cmake\bin\cmake.exe -E copy_if_different C:/Users/k/cs275/bullet/GLUT32.DLL C:/Users/k/cs275/vs2010/Demos/AllBulletDemos
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+setlocal
+C:\Users\k\cs275\cmake\bin\cmake.exe -E copy_if_different C:/Users/k/cs275/bullet/Demos/SerializeDemo/testFile.bullet C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/testFile.bullet
+if %errorlevel% neq 0 goto :cmEnd
+C:\Users\k\cs275\cmake\bin\cmake.exe -E copy_if_different C:/Users/k/cs275/bullet/file.obj C:/Users/k/cs275/vs2010/Demos/AllBulletDemos
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalOptions> /machine:X86 /debug %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;..\..\lib\RelWithDebInfo\GLUI_RelWithDebugInfo.lib;..\..\lib\RelWithDebInfo\GIMPACTUtils_RelWithDebugInfo.lib;..\..\lib\RelWithDebInfo\HACD_RelWithDebugInfo.lib;..\..\lib\RelWithDebInfo\ConvexDecomposition_RelWithDebugInfo.lib;..\..\lib\RelWithDebInfo\BulletMultiThreaded_RelWithDebugInfo.lib;..\..\lib\RelWithDebInfo\OpenGLSupport_RelWithDebugInfo.lib;..\..\lib\RelWithDebInfo\BulletWorldImporter_RelWithDebugInfo.lib;..\..\lib\RelWithDebInfo\BulletSoftBody_RelWithDebugInfo.lib;..\..\lib\RelWithDebInfo\BulletDynamics_RelWithDebugInfo.lib;..\..\lib\RelWithDebInfo\BulletCollision_RelWithDebugInfo.lib;..\..\lib\RelWithDebInfo\BulletFileLoader_RelWithDebugInfo.lib;..\..\lib\RelWithDebInfo\LinearMath_RelWithDebugInfo.lib;C:\Users\k\cs275\bullet\Glut\glut32.lib;opengl32.lib;glu32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/RelWithDebInfo/AppAllBulletDemos.lib</ImportLibrary>
+      <LinkIncremental>true</LinkIncremental>
+      <ProgramDataBaseFile>C:/Users/k/cs275/vs2010/Demos/AllBulletDemos/RelWithDebInfo/AppAllBulletDemos.pdb</ProgramDataBaseFile>
+      <StackReserveSize>10000000</StackReserveSize>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\bullet\Demos\AllBulletDemos\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule C:/Users/k/cs275/bullet/Demos/AllBulletDemos/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
+C:\Users\k\cs275\cmake\bin\cmake.exe -HC:/Users/k/cs275/bullet -BC:/Users/k/cs275/vs2010 --check-stamp-file C:\Users\k\cs275\vs2010\Demos\AllBulletDemos\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:/Users/k/cs275/bullet/Demos/AllBulletDemos/CMakeLists.txt;C:\Users\k\cs275\bullet\Demos\AllBulletDemos\CMakeLists.txt;C:\Users\k\cs275\bullet\Demos\AllBulletDemos\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\k\cs275\vs2010\Demos\AllBulletDemos\CMakeFiles\generate.stamp</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule C:/Users/k/cs275/bullet/Demos/AllBulletDemos/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
+C:\Users\k\cs275\cmake\bin\cmake.exe -HC:/Users/k/cs275/bullet -BC:/Users/k/cs275/vs2010 --check-stamp-file C:\Users\k\cs275\vs2010\Demos\AllBulletDemos\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:/Users/k/cs275/bullet/Demos/AllBulletDemos/CMakeLists.txt;C:\Users\k\cs275\bullet\Demos\AllBulletDemos\CMakeLists.txt;C:\Users\k\cs275\bullet\Demos\AllBulletDemos\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\k\cs275\vs2010\Demos\AllBulletDemos\CMakeFiles\generate.stamp</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule C:/Users/k/cs275/bullet/Demos/AllBulletDemos/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
+C:\Users\k\cs275\cmake\bin\cmake.exe -HC:/Users/k/cs275/bullet -BC:/Users/k/cs275/vs2010 --check-stamp-file C:\Users\k\cs275\vs2010\Demos\AllBulletDemos\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:/Users/k/cs275/bullet/Demos/AllBulletDemos/CMakeLists.txt;C:\Users\k\cs275\bullet\Demos\AllBulletDemos\CMakeLists.txt;C:\Users\k\cs275\bullet\Demos\AllBulletDemos\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Users\k\cs275\vs2010\Demos\AllBulletDemos\CMakeFiles\generate.stamp</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule C:/Users/k/cs275/bullet/Demos/AllBulletDemos/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
+C:\Users\k\cs275\cmake\bin\cmake.exe -HC:/Users/k/cs275/bullet -BC:/Users/k/cs275/vs2010 --check-stamp-file C:\Users\k\cs275\vs2010\Demos\AllBulletDemos\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:/Users/k/cs275/bullet/Demos/AllBulletDemos/CMakeLists.txt;C:\Users\k\cs275\bullet\Demos\AllBulletDemos\CMakeLists.txt;C:\Users\k\cs275\bullet\Demos\AllBulletDemos\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Users\k\cs275\vs2010\Demos\AllBulletDemos\CMakeFiles\generate.stamp</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\AllBulletDemos\Main.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\AllBulletDemos\DemoEntries.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\CcdPhysicsDemo\CcdPhysicsDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\BasicDemo\BasicDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\BspDemo\BspDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\BspDemo\BspConverter.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\BspDemo\BspLoader.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\DynamicControlDemo\MotorDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\ConcaveDemo\ConcavePhysicsDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\ConcaveRaycastDemo\ConcaveRaycastDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\ConcaveConvexcastDemo\ConcaveConvexcastDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\ConvexDecompositionDemo\ConvexDecompositionDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\SliderConstraintDemo\SliderConstraintDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\RagdollDemo\RagdollDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\GimpactTestDemo\GimpactTestDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\Raytracer\Raytracer.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\GjkConvexCastDemo\LinearConvexCastDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\ForkLiftDemo\ForkLiftDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\SoftDemo\SoftDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\ConstraintDemo\ConstraintDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\Benchmarks\BenchmarkDemo.cpp"  />
+    <ClCompile Include="C:\Users\k\cs275\bullet\Demos\Box2dDemo\Box2dDemo.cpp"  />
+    <ResourceCompile Include="C:\Users\k\cs275\bullet\msvc\bullet.rc"  />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:/Users/k/cs275/vs2010/src/BulletCollision/BulletCollision.vcxproj">
+      <Project>F3501BCA-F414-4555-9F51-C9069AF6C0F4</Project>
+    </ProjectReference>
+    <ProjectReference Include="C:/Users/k/cs275/vs2010/src/BulletDynamics/BulletDynamics.vcxproj">
+      <Project>C89535A3-955D-4599-A7D9-B1B64C2A1B97</Project>
+    </ProjectReference>
+    <ProjectReference Include="C:/Users/k/cs275/vs2010/Extras/Serialize/BulletFileLoader/BulletFileLoader.vcxproj">
+      <Project>A65430BC-A1D5-4E01-8CF1-DE14769A742B</Project>
+    </ProjectReference>
+    <ProjectReference Include="C:/Users/k/cs275/vs2010/src/BulletMultiThreaded/BulletMultiThreaded.vcxproj">
+      <Project>1744A9A1-7AFA-4334-8CE1-47A5FA0B8069</Project>
+    </ProjectReference>
+    <ProjectReference Include="C:/Users/k/cs275/vs2010/src/BulletSoftBody/BulletSoftBody.vcxproj">
+      <Project>0A64BFB4-2D4E-44D9-9198-DA362C8317C8</Project>
+    </ProjectReference>
+    <ProjectReference Include="C:/Users/k/cs275/vs2010/Extras/Serialize/BulletWorldImporter/BulletWorldImporter.vcxproj">
+      <Project>A45093F8-617D-4B4A-A1FA-9073C42EC5E0</Project>
+    </ProjectReference>
+    <ProjectReference Include="C:/Users/k/cs275/vs2010/Extras/ConvexDecomposition/ConvexDecomposition.vcxproj">
+      <Project>28D7D1D0-6447-45DB-81A1-04828066D91E</Project>
+    </ProjectReference>
+    <ProjectReference Include="C:/Users/k/cs275/vs2010/Extras/GIMPACTUtils/GIMPACTUtils.vcxproj">
+      <Project>8078E7E4-B953-42D2-9D15-38200FFB834A</Project>
+    </ProjectReference>
+    <ProjectReference Include="C:/Users/k/cs275/vs2010/Extras/glui/GLUI.vcxproj">
+      <Project>4CB5221C-C08A-4BA2-952D-EB7DC70C9BB2</Project>
+    </ProjectReference>
+    <ProjectReference Include="C:/Users/k/cs275/vs2010/Extras/HACD/HACD.vcxproj">
+      <Project>7B642A10-290D-4FAC-AABE-8214B5362D4F</Project>
+    </ProjectReference>
+    <ProjectReference Include="C:/Users/k/cs275/vs2010/src/LinearMath/LinearMath.vcxproj">
+      <Project>BA1A1F20-5A71-4438-8424-890FE828B6B0</Project>
+    </ProjectReference>
+    <ProjectReference Include="C:/Users/k/cs275/vs2010/Demos/OpenGL/OpenGLSupport.vcxproj">
+      <Project>3E0D1664-46B3-4C9F-A73F-E4488E4E87FC</Project>
+    </ProjectReference>
+    <ProjectReference Include="C:/Users/k/cs275/vs2010/ZERO_CHECK.vcxproj">
+      <Project>967DC4B1-DF89-4B0A-B376-8CD41FB85B84</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
