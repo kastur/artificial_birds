@@ -177,6 +177,7 @@ class RagDoll
 		btSoftBody::Material* mat = psb->appendMaterial();
 		mat->m_kAST = 1;
 		mat->m_kLST = 1;
+		mat->m_flags -= btSoftBody::fMaterial::DebugDraw;
 
 		
 		//psb->appendLink(4,5, mat);
@@ -230,8 +231,8 @@ class RagDoll
 			btSoftBody* psb=new btSoftBody(&m_softWorldInfo, 6, x, m);
 
 			btSoftBody::Material* mat = psb->appendMaterial();
-			mat->m_kAST = 0.55;
-			mat->m_kLST = 0.57;
+			mat->m_kAST = 1;
+			mat->m_kLST = 1;
 
 			psb->appendLink(2,3, mat);
 
@@ -258,9 +259,11 @@ class RagDoll
 
 			psb->m_cfg.aeromodel = btSoftBody::eAeroModel::F_TwoSidedLiftDrag;
 			psb->m_cfg.kDG = 0.04;
-			psb->m_cfg.kLF = 0.05;
+			psb->m_cfg.kLF = 3;
+			psb->m_cfg.kMT = 0.3;
+			//psb->setPose(false,true);
 
-			psb->setWindVelocity(btVector3(55.0, 0, 0));
+			psb->setWindVelocity(btVector3(0, 20, 0));
 
 
 			feather = psb;
@@ -271,11 +274,79 @@ class RagDoll
 		btTransform trs;
 		trs.setIdentity();
 		trs.setOrigin(center);
+		trs.getBasis().setEulerZYX(M_PI_2, M_PI_2, 0);
 		feather->transform(trs);
 		feather->appendAnchor(0, rigidBody, btVector3(0, w, 0));
 		feather->appendAnchor(1, rigidBody, btVector3(0, -w, 0));
-
+		feather->setPose(false,true);
 		return feather;
+	}
+
+	void getRigidFeather(btRigidBody* rigidBody, btTransform& trs) {
+		btCapsuleShape* collisionShape = (btCapsuleShape*)rigidBody->getCollisionShape();
+		btVector3 center;
+		btScalar radius;
+		collisionShape->getBoundingSphere(center, radius);
+		btScalar w = collisionShape->getHalfHeight();
+
+		btTransform featherTransform;
+		featherTransform.setIdentity();
+		featherTransform.setOrigin(trs.getOrigin() + btVector3(0, w, 0));
+
+		btRigidBody* feather_arm = localCreateRigidBody(0.1, featherTransform, new btCapsuleShape(0.01, w*2));
+
+		btTransform localA; localA.getBasis().setEulerZYX(0,0,M_PI_2); localA.setOrigin(btVector3(0,-w,0));
+		btTransform localB; localB.getBasis().setEulerZYX(M_PI_2,0,0); localB.setOrigin(btVector3(0,0,0));
+		btHingeConstraint* hingeC =  new btHingeConstraint(*feather_arm, *rigidBody, localA, localB);
+
+		hingeC->setLimit(-SIMD_PI/8, SIMD_PI/8);
+
+		hingeC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
+		m_ownerWorld->addConstraint(hingeC);
+
+		btSoftBody* feather = 0; {
+			const btVector3	x[] = {
+				btVector3(0, 0, 0),
+				btVector3(-w, 0.7*w, 0),
+				btVector3(w, 0.7*w, 0),
+				btVector3(0, w, 0),
+
+			};
+
+			const btScalar m[] = {0.1,0.1,0.1,0.1};
+
+			btSoftBody* psb=new btSoftBody(&m_softWorldInfo, 4, x, m);
+
+			btSoftBody::Material* mat = psb->appendMaterial();
+			mat->m_kAST = 0.6;
+			mat->m_kLST = 0.6;
+
+			psb->appendLink(0,1, mat);
+			psb->appendLink(0,2, mat);
+			psb->appendLink(0,3, mat);
+			psb->appendLink(1,3, mat);
+			psb->appendLink(2,3, mat);
+			psb->generateClusters(0);
+
+			psb->appendFace(0, 1, 3);
+			psb->appendFace(0, 2, 3);
+
+			psb->m_cfg.aeromodel = btSoftBody::eAeroModel::F_TwoSidedLiftDrag;
+			psb->m_cfg.kDG = 0.04;
+			psb->m_cfg.kLF = 0.05;
+			psb->m_cfg.kMT = 0.9;
+			psb->m_cfg.kCHR = 0.9;
+			psb->setPose(false,true);
+
+			//psb->setWindVelocity(btVector3(55.0, 0, 0));
+			feather = psb;
+		}
+
+		((btSoftRigidDynamicsWorld*)m_ownerWorld)->addSoftBody(feather);
+
+		feather->transform(featherTransform);
+		feather->appendAnchor(0, feather_arm, btVector3(0, 0, 0));
+
 	}
 
 public:
@@ -290,8 +361,6 @@ public:
 		m_shapes[BODYPART_RIGHT_UPPER_ARM] = new btCapsuleShape(btScalar(0.05), btScalar(0.33));
 		m_shapes[BODYPART_RIGHT_LOWER_ARM] = new btCapsuleShape(btScalar(0.04), btScalar(0.25));
 
-
-		
 		// Setup all the rigid bodies
 		btTransform offset; offset.setIdentity();
 		offset.setOrigin(positionOffset);
@@ -299,36 +368,41 @@ public:
 		btTransform transform;
 		transform.setIdentity();
 		transform.setOrigin(btVector3(btScalar(0.), btScalar(1.), btScalar(0.)));
-		m_bodies[BODYPART_PELVIS] = localCreateRigidBody(btScalar(1.), offset*transform, m_shapes[BODYPART_PELVIS]);
+		m_bodies[BODYPART_PELVIS] = localCreateRigidBody(btScalar(0.1), offset*transform, m_shapes[BODYPART_PELVIS]);
 
-		btSoftBody* hoistBody = hoistInit(offset*transform, m_bodies[BODYPART_PELVIS]);
+		//btSoftBody* hoistBody = hoistInit(offset*transform, m_bodies[BODYPART_PELVIS]);
 
 		transform.setIdentity();
-		transform.setOrigin(btVector3(btScalar(0), btScalar(0.5), btScalar(0.)));
+		transform.setOrigin(btVector3(btScalar(0), btScalar(1.6), btScalar(0.)));
 		m_bodies[BODYPART_TAIL] = localCreateRigidBody(btScalar(0.1), offset*transform, m_shapes[BODYPART_TAIL]);
 
 		transform.setIdentity();
 		transform.setOrigin(btVector3(btScalar(-0.35), btScalar(1.45), btScalar(0.)));
 		transform.getBasis().setEulerZYX(0,0,M_PI_2);
-		m_bodies[BODYPART_LEFT_UPPER_ARM] = localCreateRigidBody(btScalar(0.4), offset*transform, m_shapes[BODYPART_LEFT_UPPER_ARM]);
+		m_bodies[BODYPART_LEFT_UPPER_ARM] = localCreateRigidBody(btScalar(0.1), offset*transform, m_shapes[BODYPART_LEFT_UPPER_ARM]);
 
 		transform.setIdentity();
 		transform.setOrigin(btVector3(btScalar(-0.7), btScalar(1.45), btScalar(0.)));
 		transform.getBasis().setEulerZYX(0,0,M_PI_2);
-		m_bodies[BODYPART_LEFT_LOWER_ARM] = localCreateRigidBody(btScalar(0.2), offset*transform, m_shapes[BODYPART_LEFT_LOWER_ARM]);
+		m_bodies[BODYPART_LEFT_LOWER_ARM] = localCreateRigidBody(btScalar(0.1), offset*transform, m_shapes[BODYPART_LEFT_LOWER_ARM]);
+		//getRigidFeather(m_bodies[BODYPART_LEFT_LOWER_ARM], offset*transform);
+		
+
 
 		transform.setIdentity();
 		transform.setOrigin(btVector3(btScalar(0.35), btScalar(1.45), btScalar(0.)));
 		transform.getBasis().setEulerZYX(0,0,-M_PI_2);
-		m_bodies[BODYPART_RIGHT_UPPER_ARM] = localCreateRigidBody(btScalar(0.4), offset*transform, m_shapes[BODYPART_RIGHT_UPPER_ARM]);
+		m_bodies[BODYPART_RIGHT_UPPER_ARM] = localCreateRigidBody(btScalar(0.1), offset*transform, m_shapes[BODYPART_RIGHT_UPPER_ARM]);
 
 		transform.setIdentity();
 		transform.setOrigin(btVector3(btScalar(0.7), btScalar(1.45), btScalar(0.)));
 		transform.getBasis().setEulerZYX(0,0,-M_PI_2);
-		m_bodies[BODYPART_RIGHT_LOWER_ARM] = localCreateRigidBody(btScalar(0.2), offset*transform, m_shapes[BODYPART_RIGHT_LOWER_ARM]);
+		m_bodies[BODYPART_RIGHT_LOWER_ARM] = localCreateRigidBody(btScalar(0.1), offset*transform, m_shapes[BODYPART_RIGHT_LOWER_ARM]);
+		//getRigidFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM], offset*transform);
+		//getRigidFeather(m_bodies[BODYPART_LEFT_LOWER_ARM]);
+		//getRigidFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM]);
 
 		getFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM]);
-
 	    getFeather(m_bodies[BODYPART_LEFT_UPPER_ARM]);
 		getFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM]);
 		getFeather(m_bodies[BODYPART_LEFT_LOWER_ARM]);
@@ -336,7 +410,7 @@ public:
 		// Setup some damping on the m_bodies
 		for (int i = 0; i < BODYPART_COUNT; ++i)
 		{
-			m_bodies[i]->setDamping(0.05, 0.85);
+			m_bodies[i]->setDamping(0.5, 0.90);
 			m_bodies[i]->setDeactivationTime(0.8);
 			m_bodies[i]->setSleepingThresholds(1.6, 2.5);
 		}
@@ -347,59 +421,57 @@ public:
 
 		btTransform localA, localB;
 
-		localA.setIdentity(); localB.setIdentity();
-		localA.setOrigin(btVector3(btScalar(0.), btScalar(-.10), btScalar(0.)));
-		localB.setOrigin(btVector3(btScalar(0.), btScalar(0.225), btScalar(0.)));
+		localA.setIdentity();
+		localA.setOrigin(btVector3(btScalar(0.), btScalar(0.225), btScalar(0.))); 
+		localB.setIdentity();
+		localB.setOrigin(btVector3(btScalar(0.), btScalar(-.10), btScalar(0.)));
 		coneC = new btConeTwistConstraint(*m_bodies[BODYPART_PELVIS], *m_bodies[BODYPART_TAIL], localA, localB);
 		coneC->setLimit(M_PI_4/4.0, M_PI_4/4.0, 0);
 		m_joints[JOINT_PELVIS_TAIL] = coneC;
-		coneC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
-
+		//coneC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
 		m_ownerWorld->addConstraint(m_joints[JOINT_PELVIS_TAIL], true);
 
-
-		localA.setIdentity(); localB.setIdentity();
+		// LEFT_SHOULDER
+		localA.setIdentity();localB.setIdentity();
 		localA.getBasis().setEulerZYX(0,0,M_PI); localA.setOrigin(btVector3(btScalar(-0.2), btScalar(0.15), btScalar(0.)));
 		localB.getBasis().setEulerZYX(0,0,M_PI_2); localB.setOrigin(btVector3(btScalar(0.), btScalar(-0.18), btScalar(0.)));
 		coneC = new btConeTwistConstraint(*m_bodies[BODYPART_PELVIS], *m_bodies[BODYPART_LEFT_UPPER_ARM], localA, localB);
-		coneC->setLimit(M_PI_4/2, M_PI_4/2, 0);
-		coneC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
-
+		coneC->setLimit(0, SIMD_PI/9, 0);
+		//coneC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
 		m_joints[JOINT_LEFT_SHOULDER] = coneC;
 		m_ownerWorld->addConstraint(m_joints[JOINT_LEFT_SHOULDER], true);
 
-		localA.setIdentity(); localB.setIdentity();
-		localA.getBasis().setEulerZYX(0,M_PI_2,0); localA.setOrigin(btVector3(btScalar(0.), btScalar(0.18), btScalar(0.)));
-		localB.getBasis().setEulerZYX(0,M_PI_2,0); localB.setOrigin(btVector3(btScalar(0.), btScalar(-0.14), btScalar(0.)));
-		hingeC =  new btHingeConstraint(*m_bodies[BODYPART_LEFT_UPPER_ARM], *m_bodies[BODYPART_LEFT_LOWER_ARM], localA, localB);
-//		hingeC->setLimit(btScalar(-M_PI_2), btScalar(0));
-		hingeC->setLimit(btScalar(0), btScalar(M_PI_2));
-		m_joints[JOINT_LEFT_ELBOW] = hingeC;
-		hingeC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
-
-		m_ownerWorld->addConstraint(m_joints[JOINT_LEFT_ELBOW], true);
-
-
-
+		// RIGHT_SHOULDER
 		localA.setIdentity(); localB.setIdentity();
 		localA.getBasis().setEulerZYX(0,0,0); localA.setOrigin(btVector3(btScalar(0.2), btScalar(0.15), btScalar(0.)));
 		localB.getBasis().setEulerZYX(0,0,M_PI_2); localB.setOrigin(btVector3(btScalar(0.), btScalar(-0.18), btScalar(0.)));
 		coneC = new btConeTwistConstraint(*m_bodies[BODYPART_PELVIS], *m_bodies[BODYPART_RIGHT_UPPER_ARM], localA, localB);
-		coneC->setLimit(M_PI_4/2, M_PI_4/2, 0);
+		coneC->setLimit(0, SIMD_PI/9, 0);
+		//coneC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
 		m_joints[JOINT_RIGHT_SHOULDER] = coneC;
-		coneC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
-
 		m_ownerWorld->addConstraint(m_joints[JOINT_RIGHT_SHOULDER], true);
 
+		// LEFT_ELBOW
+		localA.setIdentity(); localB.setIdentity();
+		localA.getBasis().setEulerZYX(0,M_PI_2,0); localA.setOrigin(btVector3(btScalar(0.), btScalar(0.18), btScalar(0.)));
+		localB.getBasis().setEulerZYX(0,M_PI_2,0); localB.setOrigin(btVector3(btScalar(0.), btScalar(-0.14), btScalar(0.)));
+		hingeC =  new btHingeConstraint(*m_bodies[BODYPART_LEFT_UPPER_ARM], *m_bodies[BODYPART_LEFT_LOWER_ARM], localA, localB);
+		hingeC->setLimit(0, 0);
+		m_joints[JOINT_LEFT_ELBOW] = hingeC;
+		hingeC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
+		m_ownerWorld->addConstraint(m_joints[JOINT_LEFT_ELBOW], true);
+
+		// RIGHT_ELBOW
 		localA.setIdentity(); localB.setIdentity();
 		localA.getBasis().setEulerZYX(0,M_PI_2,0); localA.setOrigin(btVector3(btScalar(0.), btScalar(0.18), btScalar(0.)));
 		localB.getBasis().setEulerZYX(0,M_PI_2,0); localB.setOrigin(btVector3(btScalar(0.), btScalar(-0.14), btScalar(0.)));
 		hingeC =  new btHingeConstraint(*m_bodies[BODYPART_RIGHT_UPPER_ARM], *m_bodies[BODYPART_RIGHT_LOWER_ARM], localA, localB);
-//		hingeC->setLimit(btScalar(-M_PI_2), btScalar(0));
-		hingeC->setLimit(btScalar(0), btScalar(M_PI_2));
+		hingeC->setLimit(0, 0);
 		m_joints[JOINT_RIGHT_ELBOW] = hingeC;
-		hingeC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
+		//hingeC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
 		m_ownerWorld->addConstraint(m_joints[JOINT_RIGHT_ELBOW], true);
+
+
 
 
 		// Try to add soft body.
@@ -468,8 +540,7 @@ void ArtificialBirds::initPhysics()
 
 	m_dispatcher = new btCollisionDispatcher(m_collisionConfiguration);
 
-		
-	m_softBodyWorldInfo.air_density	= 1.2;
+	m_softBodyWorldInfo.air_density	= 5;
 	m_softBodyWorldInfo.water_density = 0;
 	m_softBodyWorldInfo.water_offset = 0;
 	m_softBodyWorldInfo.water_normal = btVector3(0,0,0);

@@ -21,6 +21,8 @@ Written by: Marten Svanfeldt
 
 #include "GlutDemoApplication.h"
 #include "LinearMath/btAlignedObjectArray.h"
+#include "BulletSoftBody/btSoftBody.h"
+
 class btBroadphaseInterface;
 class btCollisionShape;
 class btOverlappingPairCache;
@@ -44,6 +46,8 @@ class RagdollDemo : public GlutDemoApplication
 	btConstraintSolver*	m_solver;
 
 	btDefaultCollisionConfiguration* m_collisionConfiguration;
+
+	btSoftBodyWorldInfo	m_softBodyWorldInfo;
 
 public:
 	void initPhysics();
