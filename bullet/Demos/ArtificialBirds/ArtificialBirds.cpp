@@ -57,12 +57,16 @@ class RagDoll
 		BODYPART_PELVIS = 0,
 
 		BODYPART_TAIL,
+		BODYPART_HEAD,
+		BODYPART_BEAK,
 
 		BODYPART_LEFT_UPPER_ARM,
 		BODYPART_LEFT_LOWER_ARM,
+		BODYPART_LEFT_WRIST,
 
 		BODYPART_RIGHT_UPPER_ARM,
 		BODYPART_RIGHT_LOWER_ARM,
+		BODYPART_RIGHT_WRIST,
 
 		BODYPART_COUNT
 	};
@@ -71,12 +75,16 @@ class RagDoll
 	{
 		JOINT_PELVIS_SPINE = 0,
 		JOINT_PELVIS_TAIL,
+		JOINT_PELVIS_HEAD,
+		JOINT_HEAD_BEAK,
 
 		JOINT_LEFT_SHOULDER,
 		JOINT_LEFT_ELBOW,
+		JOINT_LEFT_WRIST,
 
 		JOINT_RIGHT_SHOULDER,
 		JOINT_RIGHT_ELBOW,
+		JOINT_RIGHT_WRIST,
 
 		JOINT_COUNT
 	};
@@ -160,19 +168,23 @@ class RagDoll
 	btSoftBody* arm = 0; {
 		const btVector3	x[] = {
 			// fixed
+			btVector3(-3*z, z, 0),
 			btVector3(-2*z, z, 0),
 			btVector3(-1*z, z, 0),
 			btVector3(+1*z, z, 0),
 			btVector3(+2*z, z, 0),
+			btVector3(+3*z, z, 0),
 
 			// movable
+			btVector3(-2*s, 0, 0),
 			btVector3(-1*s, 0, 0),
 			btVector3(+1*s, 0, 0),
+			btVector3(+2*s, 0, 0),
 		};
 
-		const btScalar m[] = {0,0,0,0,1,1};
+		const btScalar m[] = {0,0,0,0,0,0,1,1,1,1};
 
-		btSoftBody* psb=new btSoftBody(&m_softWorldInfo, 6, x, m);
+		btSoftBody* psb=new btSoftBody(&m_softWorldInfo, 10, x, m);
 
 		btSoftBody::Material* mat = psb->appendMaterial();
 		mat->m_kAST = 1;
@@ -182,15 +194,19 @@ class RagDoll
 		
 		//psb->appendLink(4,5, mat);
 
-		psb->appendLink(4,1, mat);
-		psb->appendLink(4,2, mat);
-		psb->appendLink(5,1, mat);
-		psb->appendLink(5,2, mat);
+		//psb->appendLink(4,1, mat);
+		//psb->appendLink(4,2, mat);
+		//psb->appendLink(5,1, mat);
+		//psb->appendLink(5,2, mat);
+		//psb->appendLink(6,2, mat);
+		//psb->appendLink(7,2, mat);
 
 		psb->appendLink(4,0, mat);
 		psb->appendLink(4,3, mat);
 		psb->appendLink(5,0, mat);
 		psb->appendLink(5,3, mat);
+		//psb->appendLink(8,3, mat);
+		//psb->appendLink(9,3, mat);
 
 		psb->generateClusters(0);
 
@@ -206,12 +222,13 @@ class RagDoll
 	return arm;
 	}
 
-	btSoftBody* getFeather(btRigidBody* rigidBody) {
+	btSoftBody* getFeather(btRigidBody* rigidBody, int numFeather=0, int total=1, int axis=1) {
 		btCapsuleShape* collisionShape = (btCapsuleShape*)rigidBody->getCollisionShape();
 		btVector3 center;
 		btScalar radius;
 		collisionShape->getBoundingSphere(center, radius);
 		btScalar w = collisionShape->getHalfHeight();
+		btScalar percent = 2*w/total;
 		btScalar h = 0.5;
 
 		btSoftBody* feather = 0; {
@@ -226,13 +243,14 @@ class RagDoll
 				btVector3(w, 2*h, 0),
 			};
 
-			const btScalar m[] = {0.1,0.1,0.1,0.1,0.1,0.1};
+			const btScalar m[] = {.1,0.1,0.1,0.1,0.1,.1};
 
 			btSoftBody* psb=new btSoftBody(&m_softWorldInfo, 6, x, m);
 
 			btSoftBody::Material* mat = psb->appendMaterial();
 			mat->m_kAST = 1;
 			mat->m_kLST = 1;
+			//mat->m_flags -= btSoftBody::fMaterial::DebugDraw;
 
 			psb->appendLink(2,3, mat);
 
@@ -274,10 +292,27 @@ class RagDoll
 		btTransform trs;
 		trs.setIdentity();
 		trs.setOrigin(center);
-		trs.getBasis().setEulerZYX(M_PI_2, M_PI_2, 0);
-		feather->transform(trs);
-		feather->appendAnchor(0, rigidBody, btVector3(0, w, 0));
-		feather->appendAnchor(1, rigidBody, btVector3(0, -w, 0));
+		if (axis == 0)
+		{
+			trs.getBasis().setEulerZYX(M_PI_2, 0, 0);
+			feather->transform(trs);
+			feather->appendAnchor(0, rigidBody, btVector3(-w+(numFeather+1)*percent, 0, 0));
+			feather->appendAnchor(1, rigidBody, btVector3(-w+(numFeather)*percent, 0, 0));
+		}
+		else if (axis == 2)
+		{
+			trs.getBasis().setEulerZYX(0, 0, M_PI_2);
+			feather->transform(trs);
+			feather->appendAnchor(0, rigidBody, btVector3(0,0, -w+(numFeather+1)*percent));
+			feather->appendAnchor(1, rigidBody, btVector3(0,0, -w+(numFeather)*percent));
+		}
+		else
+		{
+			trs.getBasis().setEulerZYX(M_PI_2, M_PI_2, 0);
+			feather->transform(trs);
+			feather->appendAnchor(0, rigidBody, btVector3(0, -w+(numFeather+1)*percent, 0));
+			feather->appendAnchor(1, rigidBody, btVector3(0, -w+(numFeather)*percent, 0));
+		}
 		feather->setPose(false,true);
 		return feather;
 	}
@@ -354,12 +389,20 @@ public:
 		: m_ownerWorld (ownerWorld), m_softWorldInfo (softWorldInfo)
 	{
 		// Setup the geometry
+		btTriangleMesh* data = new btTriangleMesh();
+		data->addTriangle(btVector3(0.,0.,0.),btVector3(0.05,0.,0.),btVector3(0.,0.,0.05),false);
+
 		m_shapes[BODYPART_PELVIS] = new btCapsuleShape(btScalar(0.15), btScalar(0.20));
-		m_shapes[BODYPART_TAIL] = new btCapsuleShape(btScalar(0.10), btScalar(0.05));
+		m_shapes[BODYPART_TAIL] = new btCapsuleShape(btScalar(0.05), btScalar(0.05));
+		m_shapes[BODYPART_HEAD] = new btCapsuleShape(btScalar(0.10), btScalar(0.05));
+		m_shapes[BODYPART_BEAK] = new btCapsuleShape(btScalar(0.02), btScalar(0.02));
 		m_shapes[BODYPART_LEFT_UPPER_ARM] = new btCapsuleShape(btScalar(0.05), btScalar(0.33));
 		m_shapes[BODYPART_LEFT_LOWER_ARM] = new btCapsuleShape(btScalar(0.04), btScalar(0.25));
 		m_shapes[BODYPART_RIGHT_UPPER_ARM] = new btCapsuleShape(btScalar(0.05), btScalar(0.33));
 		m_shapes[BODYPART_RIGHT_LOWER_ARM] = new btCapsuleShape(btScalar(0.04), btScalar(0.25));
+		m_shapes[BODYPART_LEFT_WRIST] = new btCapsuleShape(btScalar(0.02), btScalar(0.2));
+		m_shapes[BODYPART_RIGHT_WRIST] = new btCapsuleShape(btScalar(0.02), btScalar(0.2));
+		//m_shapes[BODYPART_TRIANGLE] = new btBvhTriangleMeshShape(data, true, true);
 
 		// Setup all the rigid bodies
 		btTransform offset; offset.setIdentity();
@@ -377,6 +420,14 @@ public:
 		m_bodies[BODYPART_TAIL] = localCreateRigidBody(btScalar(0.1), offset*transform, m_shapes[BODYPART_TAIL]);
 
 		transform.setIdentity();
+		transform.setOrigin(btVector3(btScalar(0), btScalar(1.6), btScalar(0.)));
+		m_bodies[BODYPART_HEAD] = localCreateRigidBody(btScalar(0.1), offset*transform, m_shapes[BODYPART_HEAD]);
+
+		transform.setIdentity();
+		transform.setOrigin(btVector3(btScalar(0), btScalar(1.6), btScalar(0.)));
+		m_bodies[BODYPART_BEAK] = localCreateRigidBody(btScalar(0.1), offset*transform, m_shapes[BODYPART_BEAK]);
+
+		transform.setIdentity();
 		transform.setOrigin(btVector3(btScalar(-0.35), btScalar(1.45), btScalar(0.)));
 		transform.getBasis().setEulerZYX(0,0,M_PI_2);
 		m_bodies[BODYPART_LEFT_UPPER_ARM] = localCreateRigidBody(btScalar(0.1), offset*transform, m_shapes[BODYPART_LEFT_UPPER_ARM]);
@@ -387,7 +438,10 @@ public:
 		m_bodies[BODYPART_LEFT_LOWER_ARM] = localCreateRigidBody(btScalar(0.1), offset*transform, m_shapes[BODYPART_LEFT_LOWER_ARM]);
 		//getRigidFeather(m_bodies[BODYPART_LEFT_LOWER_ARM], offset*transform);
 		
-
+		transform.setIdentity();
+		transform.setOrigin(btVector3(btScalar(-1.05), btScalar(1.45), btScalar(0.)));
+		transform.getBasis().setEulerZYX(0,0,M_PI_2);
+		m_bodies[BODYPART_LEFT_WRIST] = localCreateRigidBody(btScalar(0.1), offset*transform, m_shapes[BODYPART_LEFT_WRIST]);
 
 		transform.setIdentity();
 		transform.setOrigin(btVector3(btScalar(0.35), btScalar(1.45), btScalar(0.)));
@@ -398,14 +452,35 @@ public:
 		transform.setOrigin(btVector3(btScalar(0.7), btScalar(1.45), btScalar(0.)));
 		transform.getBasis().setEulerZYX(0,0,-M_PI_2);
 		m_bodies[BODYPART_RIGHT_LOWER_ARM] = localCreateRigidBody(btScalar(0.1), offset*transform, m_shapes[BODYPART_RIGHT_LOWER_ARM]);
+
+		transform.setIdentity();
+		transform.setOrigin(btVector3(btScalar(1.05), btScalar(1.45), btScalar(0.)));
+		transform.getBasis().setEulerZYX(0,0,-M_PI_2);
+		m_bodies[BODYPART_RIGHT_WRIST] = localCreateRigidBody(btScalar(0.1), offset*transform, m_shapes[BODYPART_RIGHT_WRIST]);
+
+		//transform.setIdentity();
+		//transform.setOrigin(btVector3(btScalar(1.05), btScalar(1.45), btScalar(0.)));
+		//transform.getBasis().setEulerZYX(0,0,-M_PI_2);
+		//m_bodies[BODYPART_TRIANGLE] = localCreateRigidBody(btScalar(0.1), offset*transform, m_shapes[BODYPART_TRIANGLE]);
+
+
 		//getRigidFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM], offset*transform);
 		//getRigidFeather(m_bodies[BODYPART_LEFT_LOWER_ARM]);
 		//getRigidFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM]);
 
-		getFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM]);
-	    getFeather(m_bodies[BODYPART_LEFT_UPPER_ARM]);
-		getFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM]);
-		getFeather(m_bodies[BODYPART_LEFT_LOWER_ARM]);
+		getFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM],0,2);
+		getFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM],1,2);
+	    getFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],0,2);
+	    getFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],1,2);
+		getFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM],0,2);
+		getFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM],1,2);
+		getFeather(m_bodies[BODYPART_LEFT_LOWER_ARM],0,2);
+		getFeather(m_bodies[BODYPART_LEFT_LOWER_ARM],1,2);
+		getFeather(m_bodies[BODYPART_LEFT_WRIST]);
+		getFeather(m_bodies[BODYPART_RIGHT_WRIST]);
+		//getFeather(m_bodies[BODYPART_PELVIS],0,2,0);
+		//getFeather(m_bodies[BODYPART_PELVIS],1,2,1);
+		//getFeather(m_bodies[BODYPART_TAIL],0,1,2);
 
 		// Setup some damping on the m_bodies
 		for (int i = 0; i < BODYPART_COUNT; ++i)
@@ -416,21 +491,42 @@ public:
 		}
 
 		// Now setup the constraints
-		btHingeConstraint* hingeC;
+		//btHingeConstraint* hingeC;
 		btConeTwistConstraint* coneC;
+		//btConeTwistConstraint* ellipC;
+		btGeneric6DofConstraint* ellipCG;
 
 		btTransform localA, localB;
 
-		localA.setIdentity();
-		localA.setOrigin(btVector3(btScalar(0.), btScalar(0.225), btScalar(0.))); 
-		localB.setIdentity();
-		localB.setOrigin(btVector3(btScalar(0.), btScalar(-.10), btScalar(0.)));
+		//PELVIS_TAIL
+		localA.setIdentity();localB.setIdentity();
+		localA.setOrigin(btVector3(btScalar(0.), btScalar(0.), btScalar(0.))); 
+		localB.setOrigin(btVector3(btScalar(0.), btScalar(.325), btScalar(0.)));
 		coneC = new btConeTwistConstraint(*m_bodies[BODYPART_PELVIS], *m_bodies[BODYPART_TAIL], localA, localB);
 		coneC->setLimit(M_PI_4/4.0, M_PI_4/4.0, 0);
 		m_joints[JOINT_PELVIS_TAIL] = coneC;
-		//coneC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
 		m_ownerWorld->addConstraint(m_joints[JOINT_PELVIS_TAIL], true);
 
+		//HEAD
+		localA.setIdentity(); localB.setIdentity();
+		localA.setOrigin(btVector3(btScalar(0.), btScalar(0.), btScalar(0.))); 
+		localB.setOrigin(btVector3(btScalar(0.), btScalar(-.325), btScalar(0.)));
+		coneC = new btConeTwistConstraint(*m_bodies[BODYPART_PELVIS], *m_bodies[BODYPART_HEAD], localA, localB);
+		coneC->setLimit(M_PI_4/4.0, M_PI_4/4.0, 0);
+		m_joints[JOINT_PELVIS_HEAD] = coneC;
+		m_ownerWorld->addConstraint(m_joints[JOINT_PELVIS_HEAD], true);
+
+		//BEAK
+		localA.setIdentity();localB.setIdentity();
+		localA.setOrigin(btVector3(btScalar(0.), btScalar(0.), btScalar(0.))); 
+		localB.getBasis().setEulerZYX(M_PI_2,0,0); localB.setOrigin(btVector3(btScalar(0.), btScalar(0.1), btScalar(0.)));
+		coneC = new btConeTwistConstraint(*m_bodies[BODYPART_HEAD], *m_bodies[BODYPART_BEAK], localA, localB);
+		coneC->setLimit(0, 0, 0);
+		m_joints[JOINT_HEAD_BEAK] = coneC;
+		m_ownerWorld->addConstraint(m_joints[JOINT_HEAD_BEAK], true);
+
+
+		/*
 		// LEFT_SHOULDER
 		localA.setIdentity();localB.setIdentity();
 		localA.getBasis().setEulerZYX(0,0,M_PI); localA.setOrigin(btVector3(btScalar(-0.2), btScalar(0.15), btScalar(0.)));
@@ -471,7 +567,104 @@ public:
 		//hingeC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
 		m_ownerWorld->addConstraint(m_joints[JOINT_RIGHT_ELBOW], true);
 
+		
+		// LEFT_WRIST
+		localA.setIdentity(); localB.setIdentity();
+		localA.getBasis().setEulerZYX(0,M_PI_2,0); localA.setOrigin(btVector3(btScalar(0.), btScalar(0.18), btScalar(0.)));
+		localB.getBasis().setEulerZYX(0,M_PI_2,0); localB.setOrigin(btVector3(btScalar(0.), btScalar(-0.14), btScalar(0.)));
+		ellipC =  new btConeTwistConstraint(*m_bodies[BODYPART_LEFT_LOWER_ARM], *m_bodies[BODYPART_LEFT_WRIST], localA, localB);
+		ellipC->setLimit(0,SIMD_PI/9,0);
+		m_joints[JOINT_LEFT_WRIST] = ellipC;
+		//hingeC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
+		m_ownerWorld->addConstraint(m_joints[JOINT_LEFT_WRIST], true);
+		
+		// RIGHT_WRIST
+		localA.setIdentity(); localB.setIdentity();
+		localA.getBasis().setEulerZYX(0,M_PI_2,0); localA.setOrigin(btVector3(btScalar(0.), btScalar(0.18), btScalar(0.)));
+		localB.getBasis().setEulerZYX(0,M_PI_2,0); localB.setOrigin(btVector3(btScalar(0.), btScalar(-0.04), btScalar(0.)));
+		ellipC =  new btConeTwistConstraint(*m_bodies[BODYPART_RIGHT_LOWER_ARM], *m_bodies[BODYPART_RIGHT_WRIST], localA, localB);
+		ellipC->setLimit(0,SIMD_PI/9,0);
+		m_joints[JOINT_RIGHT_WRIST] = ellipC;
+		//hingeC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
+		m_ownerWorld->addConstraint(m_joints[JOINT_RIGHT_WRIST], true);
+		*/
+		
+		// LEFT_SHOULDER
+		localA.setIdentity();localB.setIdentity();
+		localA.setOrigin(btVector3(btScalar(0.), btScalar(0.), btScalar(0.)));
+		localB.getBasis().setEulerZYX(0,0,-M_PI_2);
+		localB.setOrigin(btVector3(btScalar(0.), btScalar(0.33), btScalar(0.)));
+		ellipCG = new btGeneric6DofConstraint(*m_bodies[BODYPART_PELVIS], *m_bodies[BODYPART_LEFT_UPPER_ARM], localA, localB,false);
+		ellipCG->setLinearLowerLimit(btVector3(0,0,0));
+		ellipCG->setLinearUpperLimit(btVector3(0,0,0));
+		ellipCG->setAngularLowerLimit(btVector3(0,0,0));
+		ellipCG->setAngularUpperLimit(btVector3(0,0,0));
+		m_joints[JOINT_LEFT_SHOULDER] = ellipCG;
+		m_ownerWorld->addConstraint(m_joints[JOINT_LEFT_SHOULDER], true);
 
+		// RIGHT_SHOULDER
+		localA.setIdentity(); localB.setIdentity();
+		localA.setOrigin(btVector3(btScalar(0.), btScalar(0.), btScalar(0.)));
+		localB.getBasis().setEulerZYX(0,0,M_PI_2);
+		localB.setOrigin(btVector3(btScalar(0.), btScalar(0.33), btScalar(0.)));
+		ellipCG = new btGeneric6DofConstraint(*m_bodies[BODYPART_PELVIS], *m_bodies[BODYPART_RIGHT_UPPER_ARM], localA, localB,false);
+		ellipCG->setLinearLowerLimit(btVector3(0,0,0));
+		ellipCG->setLinearUpperLimit(btVector3(0,0,0));
+		ellipCG->setAngularLowerLimit(btVector3(0,0,0));
+		ellipCG->setAngularUpperLimit(btVector3(0,0,0));
+		m_joints[JOINT_RIGHT_SHOULDER] = ellipCG;
+		m_ownerWorld->addConstraint(m_joints[JOINT_RIGHT_SHOULDER], true);
+
+		// LEFT_ELBOW
+		localA.setIdentity(); localB.setIdentity();
+		localA.setOrigin(btVector3(btScalar(0.), btScalar(0.), btScalar(0.)));
+		localB.setOrigin(btVector3(btScalar(0.), btScalar(0.25), btScalar(0.)));
+		ellipCG =  new btGeneric6DofConstraint(*m_bodies[BODYPART_LEFT_UPPER_ARM], *m_bodies[BODYPART_LEFT_LOWER_ARM], localA, localB,false);
+		ellipCG->setLinearLowerLimit(btVector3(0,0,0));
+		ellipCG->setLinearUpperLimit(btVector3(0,0,0));
+		ellipCG->setAngularLowerLimit(btVector3(0,0,0));
+		ellipCG->setAngularUpperLimit(btVector3(0,0,0));
+		m_joints[JOINT_LEFT_ELBOW] = ellipCG;
+		m_ownerWorld->addConstraint(m_joints[JOINT_LEFT_ELBOW], true);
+
+		// RIGHT_ELBOW
+		localA.setIdentity(); localB.setIdentity();
+		localA.setOrigin(btVector3(btScalar(0.), btScalar(0.), btScalar(0.)));
+		localB.setOrigin(btVector3(btScalar(0.), btScalar(0.25), btScalar(0.)));
+		ellipCG =  new btGeneric6DofConstraint(*m_bodies[BODYPART_RIGHT_UPPER_ARM], *m_bodies[BODYPART_RIGHT_LOWER_ARM], localA, localB,false);
+		ellipCG->setLinearLowerLimit(btVector3(0,0,0));
+		ellipCG->setLinearUpperLimit(btVector3(0,0,0));
+		ellipCG->setAngularLowerLimit(btVector3(0,0,0));
+		ellipCG->setAngularUpperLimit(btVector3(0,0,0));
+		m_joints[JOINT_RIGHT_ELBOW] = ellipCG;
+		m_ownerWorld->addConstraint(m_joints[JOINT_RIGHT_ELBOW], true);
+
+		// LEFT_WRIST
+		localA.setIdentity(); localB.setIdentity();
+		//localB.getBasis().setEulerZYX(0,0,M_PI_4);
+		localA.setOrigin(btVector3(btScalar(0.), btScalar(0.), btScalar(0.)));
+		localB.setOrigin(btVector3(btScalar(0.), btScalar(0.2), btScalar(0.)));
+		ellipCG = new btGeneric6DofConstraint(*m_bodies[BODYPART_LEFT_LOWER_ARM], *m_bodies[BODYPART_LEFT_WRIST], localA, localB, false);
+		ellipCG->setLinearLowerLimit(btVector3(0,0,0));
+		ellipCG->setLinearUpperLimit(btVector3(0,0,0));
+		ellipCG->setAngularLowerLimit(btVector3(0,0,0));
+		ellipCG->setAngularUpperLimit(btVector3(0,0,0));
+		m_joints[JOINT_LEFT_WRIST] = ellipCG;
+		m_ownerWorld->addConstraint(m_joints[JOINT_LEFT_WRIST], true);
+
+		
+		// RIGHT_WRIST
+		localA= btTransform::getIdentity(); localB = btTransform::getIdentity();
+		//localB.getBasis().setEulerZYX(0,0,-M_PI_4);
+		localA.setOrigin(btVector3(btScalar(0.), btScalar(0.), btScalar(0.)));
+		localB.setOrigin(btVector3(btScalar(0.), btScalar(0.2), btScalar(0.)));
+		ellipCG = new btGeneric6DofConstraint(*m_bodies[BODYPART_RIGHT_LOWER_ARM], *m_bodies[BODYPART_RIGHT_WRIST], localA, localB, false);
+		ellipCG->setLinearLowerLimit(btVector3(0,0,0));
+		ellipCG->setLinearUpperLimit(btVector3(0,0,0));
+		ellipCG->setAngularLowerLimit(btVector3(0,0,0));
+		ellipCG->setAngularUpperLimit(btVector3(0,0,0));
+		m_joints[JOINT_RIGHT_WRIST] = ellipCG;
+		m_ownerWorld->addConstraint(m_joints[JOINT_RIGHT_WRIST], true);
 
 
 		// Try to add soft body.
