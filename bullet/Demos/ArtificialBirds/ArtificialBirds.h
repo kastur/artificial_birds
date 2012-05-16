@@ -1,6 +1,6 @@
 /*
 Bullet Continuous Collision Detection and Physics Library
-ArtificialBirds
+ArtificialBirdsDemoApp
 Copyright (c) 2007 Starbreeze Studios
 
 This software is provided 'as-is', without any express or implied warranty.
@@ -16,13 +16,11 @@ subject to the following restrictions:
 Written by: Marten Svanfeldt
 */
 
-#ifndef RAGDOLLDEMO_H
-#define RAGDOLLDEMO_H
+#ifndef ARTIFICIAL_BIRDS_H__
+#define ARTIFICIAL_BIRDS_H__
 
 #include "GlutDemoApplication.h"
 #include "LinearMath/btAlignedObjectArray.h"
-#include "BulletSoftBody/btSoftBody.h"
-
 class btBroadphaseInterface;
 class btCollisionShape;
 class btOverlappingPairCache;
@@ -31,10 +29,9 @@ class btConstraintSolver;
 struct btCollisionAlgorithmCreateFunc;
 class btDefaultCollisionConfiguration;
 
-class ArtificialBirds : public GlutDemoApplication
-{
+class ArtificialBirdsDemoApp : public GlutDemoApplication {
 
-	btAlignedObjectArray<class RagDoll*> m_ragdolls;
+	btAlignedObjectArray<class BigBird*> m_bigbirds;
 
 	//keep the collision shapes, for deletion/cleanup
 	btAlignedObjectArray<btCollisionShape*>	m_collisionShapes;
@@ -47,21 +44,17 @@ class ArtificialBirds : public GlutDemoApplication
 
 	btDefaultCollisionConfiguration* m_collisionConfiguration;
 
-	btSoftBodyWorldInfo	m_softBodyWorldInfo;
-
 public:
 	void initPhysics();
 
 	void exitPhysics();
 
-	virtual ~ArtificialBirds()
+	virtual ~ArtificialBirdsDemoApp()
 	{
 		exitPhysics();
 	}
 
 	void spawnRagdoll(const btVector3& startOffset);
-
-	void	renderme();
 
 	virtual void clientMoveAndDisplay();
 
@@ -71,7 +64,7 @@ public:
 
 	static DemoApplication* Create()
 	{
-		ArtificialBirds* demo = new ArtificialBirds();
+		ArtificialBirdsDemoApp* demo = new ArtificialBirdsDemoApp();
 		demo->myinit();
 		demo->initPhysics();
 		return demo;

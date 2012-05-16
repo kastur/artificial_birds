@@ -6,14 +6,14 @@
 GLDebugDrawer gDebugDrawer;
 
 int main(int argc, char** argv) {
-	ArtificialBirds* artificialBirds = new ArtificialBirds();
-	artificialBirds->initPhysics();
-	artificialBirds->getDynamicsWorld()->setDebugDrawer(&gDebugDrawer);
-	artificialBirds->setDebugMode(btIDebugDraw::DBG_DrawConstraints+btIDebugDraw::DBG_DrawConstraintLimits);
+	ArtificialBirdsDemoApp* artificialBirdsApp = new ArtificialBirdsDemoApp();
+	artificialBirdsApp->initPhysics();
+	artificialBirdsApp->getDynamicsWorld()->setDebugDrawer(&gDebugDrawer);
+	artificialBirdsApp->setDebugMode(btIDebugDraw::DBG_DrawConstraints+btIDebugDraw::DBG_DrawConstraintLimits);
 	glutmain(argc, argv, 1024, 768,
 		"Artificial Birds (http://github.com/kastur/artificial_birds)",
-		artificialBirds);
+		artificialBirdsApp);
 	
-	delete artificialBirds;
+	delete artificialBirdsApp;
 	return 0;
 }
