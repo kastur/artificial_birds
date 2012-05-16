@@ -352,16 +352,11 @@ void DemoApplication::keyboardCallback(unsigned char key, int x, int y)
 		break;
 
 	case 'w':
-		if (m_debugMode & btIDebugDraw::DBG_DrawWireframe)
-			m_debugMode = 
-			//m_debugMode & (~btIDebugDraw::DBG_DrawWireframe) &
-			(~btIDebugDraw::DBG_DrawConstraints) &
-			(~btIDebugDraw::DBG_DrawConstraintLimits);
-		else
-			m_debugMode |= 
-			//btIDebugDraw::DBG_DrawWireframe |
-			btIDebugDraw::DBG_DrawConstraints |
-			btIDebugDraw::DBG_DrawConstraintLimits;
+		if (m_debugMode & btIDebugDraw::DBG_DrawWireframe) {
+			m_debugMode = m_debugMode & (~btIDebugDraw::DBG_DrawWireframe);
+		} else {
+			m_debugMode |= btIDebugDraw::DBG_DrawWireframe;
+		}
 		break;
 
 	case 'p':

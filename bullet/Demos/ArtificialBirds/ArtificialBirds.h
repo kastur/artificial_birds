@@ -32,6 +32,7 @@ class btDefaultCollisionConfiguration;
 class ArtificialBirdsDemoApp : public GlutDemoApplication {
 
 	btAlignedObjectArray<class BigBird*> m_bigbirds;
+	btAlignedObjectArray<class BigFeather*> m_bigfeathers;
 
 	//keep the collision shapes, for deletion/cleanup
 	btAlignedObjectArray<btCollisionShape*>	m_collisionShapes;
@@ -54,7 +55,8 @@ public:
 		exitPhysics();
 	}
 
-	void spawnRagdoll(const btVector3& startOffset);
+	void spawnBigBird(const btVector3& startOffset);
+	void spawnBigFeather(const btVector3& startOffset);
 
 	virtual void clientMoveAndDisplay();
 

@@ -1,6 +1,9 @@
 #pragma once
 #include "btBulletDynamicsCommon.h"
 
+#ifndef BIGBIRD_H__
+#define BIGBIRD_H__
+
 class BigBird {
 	enum {
 		BODYPART_PELVIS = 0,
@@ -56,3 +59,4 @@ private:
 	btTypedConstraint* m_joints[JOINT_COUNT];
 };
 
+#endif

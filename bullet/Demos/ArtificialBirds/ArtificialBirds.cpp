@@ -7,7 +7,7 @@
 #include "LinearMath/btIDebugDraw.h"
 #include "GLDebugDrawer.h"
 #include "BigBird.h"
-
+#include "BigFeather.h"
 
 void ArtificialBirdsDemoApp::initPhysics()
 {
@@ -56,18 +56,24 @@ void ArtificialBirdsDemoApp::initPhysics()
 
 	// Spawn one ragdoll
 	btVector3 startOffset(1,0.5,0);
-	spawnRagdoll(startOffset);
+	spawnBigFeather(startOffset);
 	startOffset.setValue(-1,0.5,0);
-	spawnRagdoll(startOffset);
+	spawnBigFeather(startOffset);
 
 	clientResetScene();		
 }
 
-void ArtificialBirdsDemoApp::spawnRagdoll(const btVector3& startOffset)
+void ArtificialBirdsDemoApp::spawnBigBird(const btVector3& startOffset)
 {
-	BigBird* ragDoll = new BigBird (m_dynamicsWorld, startOffset);
-	m_bigbirds.push_back(ragDoll);
-}	
+	BigBird* bigbird = new BigBird (m_dynamicsWorld, startOffset);
+	m_bigbirds.push_back(bigbird);
+}
+
+void ArtificialBirdsDemoApp::spawnBigFeather(const btVector3& startOffset)
+{
+	BigFeather* bigfeather = new BigFeather(m_dynamicsWorld, startOffset);
+	m_bigfeathers.push_back(bigfeather);
+}
 
 void ArtificialBirdsDemoApp::clientMoveAndDisplay()
 {
@@ -118,7 +124,13 @@ void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y)
 	case 'e':
 		{
 		btVector3 startOffset(0,2,0);
-		spawnRagdoll(startOffset);
+		spawnBigBird(startOffset);
+		break;
+		}
+	case 'f':
+		{
+		btVector3 startOffset(0,2,0);
+		spawnBigFeather(startOffset);
 		break;
 		}
 	default:
@@ -135,8 +147,14 @@ void ArtificialBirdsDemoApp::exitPhysics()
 
 	for (i=0;i<m_bigbirds.size();i++)
 	{
-		BigBird* doll = m_bigbirds[i];
-		delete doll;
+		BigBird* bird = m_bigbirds[i];
+		delete bird;
+	}
+
+	for (i=0;i<m_bigfeathers.size();i++)
+	{
+		BigFeather* feather = m_bigfeathers[i];
+		delete feather;
 	}
 
 	//cleanup in the reverse order of creation/initialization
