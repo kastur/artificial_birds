@@ -9,6 +9,14 @@
 #include "BigBird.h"
 #include "BigFeather.h"
 
+void pickingPreTickCallback(btDynamicsWorld *world, btScalar timeStep) {
+	ArtificialBirdsDemoApp* app = (ArtificialBirdsDemoApp*)world->getWorldUserInfo();
+
+	for (int ii = 0; ii < app->getFeathers().size(); ++ii) {
+		app->getFeathers()[0]->pretick(timeStep);
+	}
+}
+
 void ArtificialBirdsDemoApp::initPhysics()
 {
 	// Setup the basic world
@@ -31,7 +39,8 @@ void ArtificialBirdsDemoApp::initPhysics()
 	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher,m_broadphase,m_solver,m_collisionConfiguration);
 	//m_dynamicsWorld->getDispatchInfo().m_useConvexConservativeDistanceUtil = true;
 	//m_dynamicsWorld->getDispatchInfo().m_convexConservativeDistanceThreshold = 0.01f;
-
+	m_dynamicsWorld->setInternalTickCallback(pickingPreTickCallback, this, true);
+	m_dynamicsWorld->setGravity(btVector3(0,-9.8,0));
 
 
 	// Setup a big ground box
@@ -55,9 +64,10 @@ void ArtificialBirdsDemoApp::initPhysics()
 	}
 
 	// Spawn one ragdoll
-	btVector3 startOffset(1,0.5,0);
+
+	btVector3 startOffset(0,2,0);
 	spawnBigFeather(startOffset);
-	startOffset.setValue(-1,0.5,0);
+	startOffset.setValue(-1,2,1);
 	spawnBigFeather(startOffset);
 
 	clientResetScene();		
@@ -71,7 +81,7 @@ void ArtificialBirdsDemoApp::spawnBigBird(const btVector3& startOffset)
 
 void ArtificialBirdsDemoApp::spawnBigFeather(const btVector3& startOffset)
 {
-	BigFeather* bigfeather = new BigFeather(m_dynamicsWorld, startOffset);
+	BigFeather* bigfeather = new BigFeather(m_dynamicsWorld, startOffset, m_bigfeathers.size());
 	m_bigfeathers.push_back(bigfeather);
 }
 
@@ -121,6 +131,25 @@ void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
+	case 'p':
+		{
+			for (int ii = 0; ii < m_bigfeathers.size(); ++ii) {
+				m_bigfeathers[ii]->applyImpulse();
+			}
+		break;
+		}
+	case 'o':
+		{
+			static btScalar angle = 0;
+			angle+= 10;
+
+			for (int ii = 0; ii < m_bigfeathers.size(); ++ii) {
+				m_bigfeathers[ii]->orient(btRadians(angle));
+				m_bigfeathers[ii]->applyImpulse();
+			}
+		break;
+		}
+
 	case 'e':
 		{
 		btVector3 startOffset(0,2,0);

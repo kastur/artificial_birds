@@ -19,8 +19,11 @@ class BigFeather {
 	};
 
 public:
-	BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset);
+	BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, int index);
 	virtual ~BigFeather();
+	void pretick(btScalar dt);
+	void applyImpulse();
+	void orient(btScalar angle);
 
 protected:
 	btRigidBody* BigFeather::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);
@@ -31,6 +34,9 @@ private:
 	btCollisionShape* m_shapes[BODYPART_COUNT];
 	btRigidBody* m_bodies[BODYPART_COUNT];
 	btTypedConstraint* m_joints[JOINT_COUNT];
+
+	btScalar t;
+	int m_index;
 };
 
 

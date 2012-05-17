@@ -71,6 +71,9 @@ public:
 		demo->initPhysics();
 		return demo;
 	}
+
+	btAlignedObjectArray<class BigFeather*> getFeathers() { return m_bigfeathers; }
+	btAlignedObjectArray<class BigBird*> getBirds() { return m_bigbirds; }
 	
 };
 
