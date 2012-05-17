@@ -42,7 +42,6 @@ void ArtificialBirdsDemoApp::initPhysics()
 	m_dynamicsWorld->setInternalTickCallback(pickingPreTickCallback, this, true);
 	m_dynamicsWorld->setGravity(btVector3(0,-9.8,0));
 
-
 	// Setup a big ground box
 	{
 		btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(200.),btScalar(10.),btScalar(200.)));
@@ -62,8 +61,6 @@ void ArtificialBirdsDemoApp::initPhysics()
 #endif //CREATE_GROUND_COLLISION_OBJECT
 
 	}
-
-	// Spawn one ragdoll
 
 	btVector3 startOffset(0,2,0);
 	spawnBigFeather(startOffset);
