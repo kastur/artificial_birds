@@ -1,8 +1,9 @@
 #pragma once
-#include "btBulletDynamicsCommon.h"
-
 #ifndef BIGBIRD_H__
 #define BIGBIRD_H__
+
+#include "btBulletDynamicsCommon.h"
+#include "BigFeather.h"
 
 class BigBird {
 	enum
@@ -38,6 +39,7 @@ class BigBird {
 public:
 	BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset);
 	virtual ~BigBird();
+	void pretick(btScalar dt);
 
 protected:
 	btRigidBody* BigBird::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);
@@ -48,6 +50,10 @@ private:
 	btCollisionShape* m_shapes[BODYPART_COUNT];
 	btRigidBody* m_bodies[BODYPART_COUNT];
 	btTypedConstraint* m_joints[JOINT_COUNT];
+	btAlignedObjectArray<class BigFeather*> m_feathers;
+	btAlignedObjectArray<class btTypedConstraint*> m_featherjoints;
+
+	btScalar t;  // keep track of time.
 };
 
 #endif

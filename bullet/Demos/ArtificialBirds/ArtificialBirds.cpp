@@ -13,7 +13,11 @@ void pickingPreTickCallback(btDynamicsWorld *world, btScalar timeStep) {
 	ArtificialBirdsDemoApp* app = (ArtificialBirdsDemoApp*)world->getWorldUserInfo();
 
 	for (int ii = 0; ii < app->getFeathers().size(); ++ii) {
-		app->getFeathers()[0]->pretick(timeStep);
+		app->getFeathers()[ii]->pretick(timeStep);
+	}
+
+	for (int ii = 0; ii < app->getBirds().size(); ++ii) {
+		app->getBirds()[ii]->pretick(timeStep);
 	}
 }
 
@@ -63,9 +67,7 @@ void ArtificialBirdsDemoApp::initPhysics()
 	}
 
 	btVector3 startOffset(0,2,0);
-	spawnBigFeather(startOffset);
-	startOffset.setValue(-1,2,1);
-	spawnBigFeather(startOffset);
+	spawnBigBird(startOffset);
 
 	clientResetScene();		
 }

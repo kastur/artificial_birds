@@ -1,8 +1,8 @@
 #pragma once
-#include "btBulletDynamicsCommon.h"
-
 #ifndef BIGFEATHER_H__
 #define BIGFEATHER_H__
+
+#include "btBulletDynamicsCommon.h"
 
 class BigFeather {
 	enum {
@@ -19,17 +19,17 @@ class BigFeather {
 	};
 
 public:
-	BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, int index);
+	BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, int index=0);
 	virtual ~BigFeather();
 	void pretick(btScalar dt);
 	void applyImpulse();
 	void orient(btScalar angle);
+	btRigidBody* getFeatherBody();
 
 protected:
 	btRigidBody* BigFeather::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);
 
 private:
-
 	btDynamicsWorld* m_ownerWorld;
 	btCollisionShape* m_shapes[BODYPART_COUNT];
 	btRigidBody* m_bodies[BODYPART_COUNT];
