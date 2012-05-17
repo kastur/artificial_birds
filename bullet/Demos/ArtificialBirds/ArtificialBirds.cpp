@@ -31,6 +31,7 @@ void ArtificialBirdsDemoApp::initPhysics()
 	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher,m_broadphase,m_solver,m_collisionConfiguration);
 	//m_dynamicsWorld->getDispatchInfo().m_useConvexConservativeDistanceUtil = true;
 	//m_dynamicsWorld->getDispatchInfo().m_convexConservativeDistanceThreshold = 0.01f;
+	m_dynamicsWorld->setGravity(btVector3(0,0,0));
 
 
 
@@ -55,10 +56,10 @@ void ArtificialBirdsDemoApp::initPhysics()
 	}
 
 	// Spawn one ragdoll
-	btVector3 startOffset(1,0.5,0);
+	btVector3 startOffset(0,0,0);
 	spawnRagdoll(startOffset);
-	startOffset.setValue(-1,0.5,0);
-	spawnRagdoll(startOffset);
+//	startOffset.setValue(-1,0.5,0);
+//	spawnRagdoll(startOffset);
 
 	clientResetScene();		
 }
