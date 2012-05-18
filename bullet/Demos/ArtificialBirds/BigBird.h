@@ -40,10 +40,12 @@ public:
 	BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset);
 	virtual ~BigBird();
 	void pretick(btScalar dt);
+	void applyImpulse();
 
 protected:
 	btRigidBody* BigBird::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);
-
+	void addFeather(btRigidBody* rb, const btVector3& relPos, btScalar rbAngleX, btScalar rbAngleY, btScalar featherAngle);
+	
 private:
 
 	btDynamicsWorld* m_ownerWorld;

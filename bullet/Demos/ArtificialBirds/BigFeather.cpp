@@ -176,8 +176,20 @@ void BigFeather::pretick(btScalar dt) {
 	std::cout << "  force_mag: " << (lift_impulse + drag_impulse).length(); 
 	std::cout << std::endl;
 	*/
-	if ((lift_impulse + drag_impulse).length() < 10000) {
-		feather->applyForce((lift_impulse + drag_impulse)/5.0, btVector3(0,0,0));
+	/*
+	btVector3 impulse = (lift_impulse + drag_impulse);
+	std::cout << std::setprecision(2) << std::fixed;
+	std::cout << "  force_mag: " << impulse.length();
+	std::cout << "  x=" << impulse.x();
+	std::cout << "  y=" << impulse.y();
+	std::cout << "  z=" << impulse.z();
+	std::cout << std::endl;
+	*/
+
+	if ((lift_impulse + drag_impulse).length()/10.0 < 1000) {
+		feather->applyForce((lift_impulse + drag_impulse)/10.0, btVector3(0,0,0));
+	} else {
+		std:: cout << "sat!" << std::endl;
 	}
 }
 
@@ -185,7 +197,8 @@ void BigFeather::applyImpulse() {
 	
 	btRigidBody* feather = this->m_bodies[BODYPART_SPINE];
 	feather->activate();
-	feather->applyImpulse(btVector3(-10,3,0), btVector3(0,0,0));
+	feather->applyImpulse(btVector3(0,1,0), btVector3(0,0,0));
+	std::cout << "Applied impulse!" << std::endl;
 }
 
 void BigFeather::orient(btScalar angle) {

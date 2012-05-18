@@ -130,6 +130,13 @@ void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
+	case 'G':
+		{
+			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
+				m_bigbirds[ii]->applyImpulse();
+			}
+		break;
+		}
 	case 'p':
 		{
 			for (int ii = 0; ii < m_bigfeathers.size(); ++ii) {
