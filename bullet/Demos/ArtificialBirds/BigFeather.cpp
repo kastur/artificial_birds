@@ -186,7 +186,7 @@ void BigFeather::pretick(btScalar dt) {
 	std::cout << std::endl;
 	*/
 
-	if ((lift_impulse + drag_impulse).length()/10.0 < 1000) {
+	if ((lift_impulse + drag_impulse).length()/10.0< 1000) {
 		feather->applyForce((lift_impulse + drag_impulse)/10.0, btVector3(0,0,0));
 	} else {
 		std:: cout << "sat!" << std::endl;

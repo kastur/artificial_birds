@@ -105,6 +105,8 @@ void ArtificialBirdsDemoApp::clientMoveAndDisplay()
 
 	}
 
+	m_cameraTargetPosition = m_bigbirds[0]->getPosition();
+
 	renderme(); 
 
 	glFlush();
@@ -130,7 +132,7 @@ void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
-	case 'G':
+	case 'g':
 		{
 			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
 				m_bigbirds[ii]->applyImpulse();

@@ -37,7 +37,7 @@ btRigidBody* BigBird::localCreateRigidBody(btScalar mass, const btTransform& sta
 BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) : m_ownerWorld (ownerWorld)	{
 	t = 0;
 
-	const btScalar upper_arm_h = 0.35;
+	const btScalar upper_arm_h = 1.0;
 	const btScalar lower_arm_h = 0.57;
 	const btScalar wrist_h = 0.48;
 	// Setup the geometry
@@ -53,11 +53,11 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 	m_shapes[BODYPART_RIGHT_WRIST]		= new btCapsuleShape(btScalar(0.06), wrist_h);
 
 	btScalar mass[BODYPART_COUNT];
-	mass[BODYPART_PELVIS]			= 1.0;
-	mass[BODYPART_RIGHT_UPPER_ARM]	= 0.5;
-	mass[BODYPART_LEFT_UPPER_ARM]	= 0.5;
-	mass[BODYPART_RIGHT_LOWER_ARM]	= 0.5;
-	mass[BODYPART_LEFT_LOWER_ARM]	= 0.5;
+	mass[BODYPART_PELVIS]			= 2.0;
+	mass[BODYPART_RIGHT_UPPER_ARM]	= 1.0;
+	mass[BODYPART_LEFT_UPPER_ARM]	= 1.0;
+	mass[BODYPART_RIGHT_LOWER_ARM]	= 0.1;
+	mass[BODYPART_LEFT_LOWER_ARM]	= 0.1;
 	mass[BODYPART_RIGHT_WRIST]		= 0.0;
 	mass[BODYPART_LEFT_WRIST]		= 0.0;
 
@@ -184,7 +184,7 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 	m_joints[JOINT_RIGHT_SHOULDER] = hingeC;
 	m_ownerWorld->addConstraint(m_joints[JOINT_RIGHT_SHOULDER], true);
 	
-	
+	/*
 	// LEFT_ELBOW
 	hingeC =
 		new btHingeConstraint(
@@ -214,30 +214,30 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 	hingeC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
 	m_joints[JOINT_RIGHT_ELBOW] = hingeC;
 	m_ownerWorld->addConstraint(m_joints[JOINT_RIGHT_ELBOW], true);
-	
+	*/
 	
 	// Attach feathers
 	
-	addFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM], btVector3(0,-0.15,0), btRadians(90), btRadians(90), btRadians(-7));
-	addFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],  btVector3(0,-0.15,0), btRadians(90), btRadians(90), btRadians(-7));
+	addFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM], btVector3(0,-0.15,0), btRadians(90), btRadians(90), btRadians(0), btRadians(0));
+	addFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],  btVector3(0,-0.15,0), btRadians(90), btRadians(90), btRadians(0), btRadians(0));
 
-	addFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM], btVector3(0,+0.0,0), btRadians(90), btRadians(90), btRadians(-15));
-	addFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],  btVector3(0,+0.0,0), btRadians(90), btRadians(90), btRadians(-15));
+	addFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM], btVector3(0,+0.0,0), btRadians(90), btRadians(90), btRadians(0), btRadians(10));
+	addFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],  btVector3(0,+0.0,0), btRadians(90), btRadians(90), btRadians(0), btRadians(10));
 
-	addFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM], btVector3(0,+0.15,0), btRadians(90), btRadians(90), btRadians(-20));
-	addFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],  btVector3(0,+0.15,0), btRadians(90), btRadians(90), btRadians(-20));
+	addFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM], btVector3(0,+0.15,0), btRadians(90), btRadians(90), btRadians(0), btRadians(10));
+	addFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],  btVector3(0,+0.15,0), btRadians(90), btRadians(90), btRadians(0), btRadians(10));
 	
 
 	
 
-	addFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM], btVector3(0,-0.2,0), btRadians(90), btRadians(0), btRadians(0));
-	addFeather(m_bodies[BODYPART_LEFT_LOWER_ARM],  btVector3(0,-0.2,0), btRadians(90), btRadians(0), btRadians(0));
+	addFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM], btVector3(0,-0.2,0), btRadians(90), btRadians(0), btRadians(0), btRadians(10));
+	addFeather(m_bodies[BODYPART_LEFT_LOWER_ARM],  btVector3(0,-0.2,0), btRadians(90), btRadians(0), btRadians(0), btRadians(10));
 	
-	addFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM], btVector3(0,+0.0,0), btRadians(90), btRadians(0), btRadians(0));
-	addFeather(m_bodies[BODYPART_LEFT_LOWER_ARM],  btVector3(0,+0.0,0), btRadians(90), btRadians(0), btRadians(0));
+	addFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM], btVector3(0,+0.0,0), btRadians(90), btRadians(0), btRadians(0), btRadians(20));
+	addFeather(m_bodies[BODYPART_LEFT_LOWER_ARM],  btVector3(0,+0.0,0), btRadians(90), btRadians(0), btRadians(0), btRadians(20));
 
-	addFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM], btVector3(0,+0.2,0), btRadians(90), btRadians(0), btRadians(0));
-	addFeather(m_bodies[BODYPART_LEFT_LOWER_ARM],  btVector3(0,+0.2,0), btRadians(90), btRadians(0), btRadians(0));
+	addFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM], btVector3(0,+0.2,0), btRadians(90), btRadians(0), btRadians(0), btRadians(30));
+	addFeather(m_bodies[BODYPART_LEFT_LOWER_ARM],  btVector3(0,+0.2,0), btRadians(90), btRadians(0), btRadians(0), btRadians(30));
 
 	//addFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM], btVector3(0,-0.1,0), btRadians(90), btRadians(180), btRadians(55));
 	//addFeather(m_bodies[BODYPART_LEFT_LOWER_ARM],  btVector3(0,-0.1,0), btRadians(90), btRadians(180), btRadians(-25));
@@ -343,8 +343,8 @@ void BigBird::pretick (btScalar dt) {
 	*/
 }
 
-void BigBird::addFeather(btRigidBody* rb, const btVector3& relPos, btScalar rbAngleX, btScalar rbAngleY, btScalar featherAngle) {
-	btVector3 feather_pos(rb->getWorldTransform().getOrigin() + btVector3(-0.5, 0, 0));
+void BigBird::addFeather(btRigidBody* rb, const btVector3& relPos, btScalar rbAngleX, btScalar rbAngleY, btScalar featherAngle, btScalar featherGive) {
+	btVector3 feather_pos(rb->getWorldTransform().getOrigin() + relPos + btVector3(-0.5, 0, 0));
 	BigFeather* bigfeather = new BigFeather(m_ownerWorld, feather_pos);
 	m_feathers.push_back(bigfeather);
 	btRigidBody* feather = bigfeather->getFeatherBody();
@@ -359,15 +359,29 @@ void BigBird::addFeather(btRigidBody* rb, const btVector3& relPos, btScalar rbAn
 	localB.getBasis().setEulerZYX(btRadians(0), featherAngle, btRadians(0)); 
 
 	btConeTwistConstraint* coneC = new btConeTwistConstraint(*rb, *feather, localA, localB);
-	coneC->setLimit(btRadians(0), btRadians(0), btRadians(5));
+	coneC->setLimit(btRadians(0), btRadians(featherGive), btRadians(5));
 	coneC->setDbgDrawSize(0);
 	m_featherjoints.push_back(coneC);
 	m_ownerWorld->addConstraint(coneC, true);
 }
 
 void BigBird::applyImpulse() {
-	//m_bodies[BODYPART_PELVIS]->applyImpulse(btVector3(0, 30, 0), btVector3(0,0.34,0));
+	//btVector3 axis = m_bodies[BODYPART_PELVIS]->getCenterOfMassTransform().getRotation().getAxis();
+	btTransform transform;
+	transform.setIdentity();
+	transform.setOrigin(btVector3(0, 2, 0));
+	transform.getBasis().setEulerZYX(btRadians(90), 0, 0);
+
+	m_bodies[BODYPART_PELVIS]->setLinearVelocity(btVector3(0,0,0));
+	m_bodies[BODYPART_PELVIS]->setAngularVelocity(btVector3(0,0,0));
+
+	btVector3 impulse = m_bodies[BODYPART_PELVIS]->getWorldTransform().getBasis() * btVector3(0, 10.0*10, 0);
+
+	m_bodies[BODYPART_PELVIS]->applyImpulse(impulse, btVector3(0,0,0));
+	
+	/*
 	for (int ii = 0; ii < m_feathers.size(); ++ii) {
 		m_feathers[ii]->applyImpulse();
 	}
+	*/
 }
