@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
 	artificialBirdsApp->initPhysics();
 	artificialBirdsApp->getDynamicsWorld()->setDebugDrawer(&gDebugDrawer);
 	artificialBirdsApp->setDebugMode(btIDebugDraw::DBG_DrawConstraints+btIDebugDraw::DBG_DrawConstraintLimits);
-	glutmain(argc, argv, 1024, 768,
+	glutmain(argc, argv, 800, 600,
 		"Artificial Birds (http://github.com/kastur/artificial_birds)",
 		artificialBirdsApp);
 	

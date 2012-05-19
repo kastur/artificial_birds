@@ -9,6 +9,8 @@
 #include "BigBird.h"
 #include "BigFeather.h"
 
+const btScalar kGravity = -9.8;
+
 void pickingPreTickCallback(btDynamicsWorld *world, btScalar timeStep) {
 	ArtificialBirdsDemoApp* app = (ArtificialBirdsDemoApp*)world->getWorldUserInfo();
 
@@ -44,7 +46,7 @@ void ArtificialBirdsDemoApp::initPhysics()
 	//m_dynamicsWorld->getDispatchInfo().m_useConvexConservativeDistanceUtil = true;
 	//m_dynamicsWorld->getDispatchInfo().m_convexConservativeDistanceThreshold = 0.01f;
 	m_dynamicsWorld->setInternalTickCallback(pickingPreTickCallback, this, true);
-	m_dynamicsWorld->setGravity(btVector3(0,-9.8,0));
+	m_dynamicsWorld->setGravity(btVector3(0,kGravity,0));
 
 	// Setup a big ground box
 	{
@@ -80,7 +82,7 @@ void ArtificialBirdsDemoApp::spawnBigBird(const btVector3& startOffset)
 
 void ArtificialBirdsDemoApp::spawnBigFeather(const btVector3& startOffset)
 {
-	BigFeather* bigfeather = new BigFeather(m_dynamicsWorld, startOffset, m_bigfeathers.size());
+	BigFeather* bigfeather = new BigFeather(m_dynamicsWorld, startOffset, 0);
 	m_bigfeathers.push_back(bigfeather);
 }
 
@@ -97,7 +99,7 @@ void ArtificialBirdsDemoApp::clientMoveAndDisplay()
 
 	if (m_dynamicsWorld)
 	{
-		m_dynamicsWorld->stepSimulation(ms / 1000000.f);
+		m_dynamicsWorld->stepSimulation(ms / 1000000.f, 20);
 		
 		//optional but useful: debug drawing
 		m_dynamicsWorld->debugDrawWorld();
@@ -136,6 +138,13 @@ void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y)
 		{
 			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
 				m_bigbirds[ii]->applyImpulse();
+			}
+		break;
+		}		
+	case 'G':
+		{
+			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
+				m_bigbirds[ii]->applyFeatherImpulse();
 			}
 		break;
 		}

@@ -41,6 +41,7 @@ public:
 	virtual ~BigBird();
 	void pretick(btScalar dt);
 	void applyImpulse();
+	void applyFeatherImpulse();
 	const btVector3& getPosition() { return m_bodies[BODYPART_PELVIS]->getWorldTransform().getOrigin();  }
 
 protected:

@@ -22,9 +22,9 @@ btRigidBody* BigFeather::localCreateRigidBody(btScalar mass, const btTransform& 
 	return body;
 }
 
-BigFeather::BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, int index) : m_ownerWorld (ownerWorld) {
+BigFeather::BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, btRigidBody* limb)
+	:m_ownerWorld (ownerWorld), m_limb(limb) {
 		t = 0;
-		m_index = index;
 
 		// Calculate offset transform.
 		btTransform offset;
@@ -186,18 +186,36 @@ void BigFeather::pretick(btScalar dt) {
 	std::cout << std::endl;
 	*/
 
-	if ((lift_impulse + drag_impulse).length()/10.0< 1000) {
-		feather->applyForce((lift_impulse + drag_impulse)/10.0, btVector3(0,0,0));
+	if (!m_limb) return;
+
+	if (t < 4) return;
+
+	const btScalar scaler = 20.0f;
+	btVector3 liftForce = (lift_impulse + drag_impulse) / scaler;
+	btVector3 forcePos =  feather->getCenterOfMassPosition() - m_limb->getCenterOfMassPosition();
+	
+	const btScalar maxForce = 30.0;
+	btScalar forceMag = liftForce.length();
+	if (forceMag < maxForce) {
+		m_limb->applyForce(liftForce, btVector3(0,0,0));
+		std::cout << std::setprecision(2) << std::fixed;
+		std::cout << "  AoA: " << angle_of_attack * 180 / SIMD_PI << " l: " << liftForce.x() << " " << liftForce.y() << " " << liftForce.z() << std::endl;
 	} else {
-		std:: cout << "sat!" << std::endl;
+		std::cout << "sat!";
 	}
+
+	
 }
 
 void BigFeather::applyImpulse() {
-	
 	btRigidBody* feather = this->m_bodies[BODYPART_SPINE];
-	feather->activate();
-	feather->applyImpulse(btVector3(0,1,0), btVector3(0,0,0));
+	m_limb->activate();
+
+	btVector3 forcePos =  m_limb->getCenterOfMassPosition() - feather->getCenterOfMassPosition();
+
+	if (m_limb)
+		m_limb->applyForce(btVector3(0, 10, 0), forcePos);
+
 	std::cout << "Applied impulse!" << std::endl;
 }
 
@@ -206,7 +224,7 @@ void BigFeather::orient(btScalar angle) {
 	feather->activate();
 	btTransform trs;
 	trs.setIdentity();
-	trs.setOrigin(btVector3(0,2,m_index));
+	trs.setOrigin(btVector3(0,2,0));
 	trs.setRotation(btQuaternion(btVector3(0,0,1), angle));
 	
 	feather->setLinearVelocity(btVector3(0,0,0));

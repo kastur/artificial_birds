@@ -19,7 +19,7 @@ class BigFeather {
 	};
 
 public:
-	BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, int index=0);
+	BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, btRigidBody* m_limb);
 	virtual ~BigFeather();
 	void pretick(btScalar dt);
 	void applyImpulse();
@@ -37,6 +37,7 @@ private:
 
 	btScalar t;
 	int m_index;
+	btRigidBody* m_limb;
 };
 
 
