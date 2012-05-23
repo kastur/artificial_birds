@@ -5,7 +5,10 @@
 
 #define CONSTRAINT_DEBUG_SIZE 0.2f
 
-btRigidBody* BigFeather::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape) {
+btRigidBody* BigFeather::localCreateRigidBody(
+	btScalar mass,
+	const btTransform& startTransform,
+	btCollisionShape* shape) {
 	bool isDynamic = (mass != 0.f);
 
 	btVector3 localInertia(0,0,0);
@@ -190,7 +193,7 @@ void BigFeather::pretick(btScalar dt) {
 
 	if (t < 4) return;
 
-	const btScalar scaler = 20.0f;
+	const btScalar scaler = 10.0f;
 	btVector3 liftForce = (lift_impulse + drag_impulse) / scaler;
 	btVector3 forcePos =  feather->getCenterOfMassPosition() - m_limb->getCenterOfMassPosition();
 	
@@ -214,7 +217,7 @@ void BigFeather::applyImpulse() {
 	btVector3 forcePos =  m_limb->getCenterOfMassPosition() - feather->getCenterOfMassPosition();
 
 	if (m_limb)
-		m_limb->applyForce(btVector3(0, 10, 0), forcePos);
+		m_limb->applyForce(btVector3(0, 30, 0), forcePos);
 
 	std::cout << "Applied impulse!" << std::endl;
 }
