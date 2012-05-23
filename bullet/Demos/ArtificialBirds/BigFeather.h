@@ -6,16 +6,12 @@
 
 class BigFeather {
 	enum {
-		BODYPART_PELVIS = 0,
-		BODYPART_SPINE,
-		BODYPART_HEAD,
+		BODYPART_SPINE = 0,
 		BODYPART_COUNT
 	};
 
 	enum {
-		JOINT_PELVIS_SPINE = 0,
-		JOINT_SPINE_HEAD,
-		JOINT_COUNT
+		JOINT_COUNT = 0
 	};
 
 public:
@@ -33,7 +29,6 @@ private:
 	btDynamicsWorld* m_ownerWorld;
 	btCollisionShape* m_shapes[BODYPART_COUNT];
 	btRigidBody* m_bodies[BODYPART_COUNT];
-	btTypedConstraint* m_joints[JOINT_COUNT];
 
 	btScalar t;
 	int m_index;

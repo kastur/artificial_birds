@@ -53,9 +53,9 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 	m_shapes[BODYPART_RIGHT_WRIST]		= new btCapsuleShape(btScalar(0.06), wrist_h);
 
 	btScalar mass[BODYPART_COUNT];
-	mass[BODYPART_PELVIS]			= 2.0;
-	mass[BODYPART_RIGHT_UPPER_ARM]	= 1.0;
-	mass[BODYPART_LEFT_UPPER_ARM]	= 1.0;
+	mass[BODYPART_PELVIS]			= 3.0;
+	mass[BODYPART_RIGHT_UPPER_ARM]	= 2.0;
+	mass[BODYPART_LEFT_UPPER_ARM]	= 2.0;
 	mass[BODYPART_RIGHT_LOWER_ARM]	= 0.1;
 	mass[BODYPART_LEFT_LOWER_ARM]	= 0.1;
 	mass[BODYPART_RIGHT_WRIST]		= 0.0;
@@ -165,7 +165,7 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 			btVector3(0, 0, 1),
 			btVector3(0, 1, 0)
 			);
-	hingeC->setLimit(btRadians(90), btRadians(180-20));
+	//hingeC->setLimit(btRadians(90), btRadians(180-20));
 	m_joints[JOINT_LEFT_SHOULDER] = hingeC;
 	m_ownerWorld->addConstraint(m_joints[JOINT_LEFT_SHOULDER], true);
 	
@@ -180,7 +180,7 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 			btVector3(0, 1, 0),
 			btVector3(0, 0, 1)
 			);
-	hingeC->setLimit(btRadians(90), btRadians(180-20));
+	//hingeC->setLimit(btRadians(90), btRadians(180-20));
 	m_joints[JOINT_RIGHT_SHOULDER] = hingeC;
 	m_ownerWorld->addConstraint(m_joints[JOINT_RIGHT_SHOULDER], true);
 
@@ -224,8 +224,12 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 		//addFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],  btVector3(0,pp,0), btRadians(90), btRadians(100), btRadians(0), btRadians(0));
 	//}
 
-	addFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM], btVector3(0,0.00,0), btRadians(90), btRadians(180+80), btRadians(0), btRadians(5));
-	addFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],  btVector3(0,0.00,0), btRadians(90), btRadians(180+100), btRadians(0), btRadians(5));
+	//addFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM], btVector3(0,0.00,0), btRadians(90), btRadians(180+90+10), btRadians(0), btRadians(5));
+	//addFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],  btVector3(0,0.00,0), btRadians(90), btRadians(180+90-10), btRadians(0), btRadians(5));
+
+
+	addFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM], btVector3(0,0.50,0), btRadians(90), btRadians(180+90+10), btRadians(0), btRadians(5));
+	addFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],  btVector3(0,0.50,0), btRadians(90), btRadians(180+90-10), btRadians(0), btRadians(5));
 
 	
 	/*
@@ -255,9 +259,10 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 	// Enable motors
 	
 	((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER])->enableMotor(true);
-	((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER])->setMaxMotorImpulse(20);
+	((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER])->setMaxMotorImpulse(200);
 	((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER])->enableMotor(true);
-	((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER])->setMaxMotorImpulse(20);
+	((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER])->setMaxMotorImpulse(200);
+
 
 	/*
 	((btHingeConstraint*)m_joints[JOINT_LEFT_ELBOW])->enableMotor(true);
@@ -323,8 +328,10 @@ void BigBird::pretick (btScalar dt) {
 	//((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER])->setMotorTarget(btRadians(90  + req_angle), dt);
 	//((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER] )->setMotorTarget(btRadians(90  + req_angle), dt);
 
-	((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER])->setMotorTarget(btRadians(90), dt);
-	((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER])->setMotorTarget(btRadians(90), dt);
+	btScalar left_angle = 90;
+	btScalar right_angle = 90 ;
+	((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER])->setMotorTarget(btRadians(left_angle), dt);
+	((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER])->setMotorTarget(btRadians(right_angle), dt);
 
 	//((btHingeConstraint*)m_joints[JOINT_LEFT_ELBOW])->setMotorTarget(btRadians(0), dt);
 	//((btHingeConstraint*)m_joints[JOINT_RIGHT_ELBOW])->setMotorTarget(btRadians(0), dt);
@@ -375,7 +382,7 @@ void BigBird::addFeather(btRigidBody* rb, const btVector3& relPos, btScalar rbAn
 			btVector3(0, 1, 0),
 			btVector3(0, 0, 1)
 			);
-	hingeC->setLimit(rbAngleY, rbAngleY);
+	hingeC->setLimit(rbAngleY-btRadians(0), rbAngleY+btRadians(0));
 	m_ownerWorld->addConstraint(hingeC, true);
 	m_featherjoints.push_back(hingeC);
 	
@@ -383,17 +390,17 @@ void BigBird::addFeather(btRigidBody* rb, const btVector3& relPos, btScalar rbAn
 
 void BigBird::applyImpulse() {
 	//btVector3 axis = m_bodies[BODYPART_PELVIS]->getCenterOfMassTransform().getRotation().getAxis();
-	btTransform transform;
-	transform.setIdentity();
-	transform.setOrigin(btVector3(0, 2, 0));
-	transform.getBasis().setEulerZYX(btRadians(90), 0, 0);
+	//btTransform transform;
+	//transform.setIdentity();
+	//transform.setOrigin(btVector3(0, 2, 0));
+	//transform.getBasis().setEulerZYX(btRadians(90), 0, 0);
 
-	m_bodies[BODYPART_PELVIS]->setLinearVelocity(btVector3(0,0,0));
-	m_bodies[BODYPART_PELVIS]->setAngularVelocity(btVector3(0,0,0));
+	//m_bodies[BODYPART_PELVIS]->setLinearVelocity(btVector3(0,0,0));
+	//m_bodies[BODYPART_PELVIS]->setAngularVelocity(btVector3(0,0,0));
 
-	btVector3 impulse = m_bodies[BODYPART_PELVIS]->getWorldTransform().getBasis() * btVector3(0, 10.0*4, 0);
+	btVector3 impulse = m_bodies[BODYPART_PELVIS]->getWorldTransform().getBasis() * btVector3(0, 80.0, 0);
 
-	m_bodies[BODYPART_PELVIS]->applyImpulse(impulse, btVector3(0,0,0));
+	m_bodies[BODYPART_PELVIS]->applyForce(impulse, btVector3(0,0,0));
 	
 }
 

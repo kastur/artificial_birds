@@ -9,7 +9,7 @@
 #include "BigBird.h"
 #include "BigFeather.h"
 
-const btScalar kGravity = -9.8;
+const btScalar kGravity = -9.80;
 
 void pickingPreTickCallback(btDynamicsWorld *world, btScalar timeStep) {
 	ArtificialBirdsDemoApp* app = (ArtificialBirdsDemoApp*)world->getWorldUserInfo();

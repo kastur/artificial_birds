@@ -36,76 +36,23 @@ BigFeather::BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOf
 
 		btTransform transform;  // used for setting rigid body positions.
 
-		// Create head.
-		//transform.setIdentity();
-		//transform.setOrigin(btVector3(0,3,0));
-		//m_shapes[BODYPART_HEAD] = new btSphereShape(0.10);
-		//m_bodies[BODYPART_HEAD] = localCreateRigidBody(0, offset*transform, m_shapes[BODYPART_HEAD]);
-		m_shapes[BODYPART_HEAD] = 0;
-		m_bodies[BODYPART_HEAD] = 0;
-
-		// Create pelvis.
-		//transform.setIdentity();
-		//transform.setOrigin(btVector3(0,2,0));
-		//m_shapes[BODYPART_PELVIS] = new btBoxShape(btVector3(0.40, 0.01, 0.20));
-		//m_bodies[BODYPART_PELVIS] = localCreateRigidBody(1, offset*transform, m_shapes[BODYPART_PELVIS]);
-		m_shapes[BODYPART_PELVIS] = 0;
-		m_bodies[BODYPART_PELVIS] = 0;
-
 		// Create spine.
 		transform.setIdentity();
 		transform.setOrigin(btVector3(0,1,0));
-		m_shapes[BODYPART_SPINE] = new btBoxShape(btVector3(0.40, 0.01, 0.07));
+		m_shapes[BODYPART_SPINE] = new btBoxShape(btVector3(0.45, 0.01, 0.2));
 		m_bodies[BODYPART_SPINE] = localCreateRigidBody(0.1, offset*transform, m_shapes[BODYPART_SPINE]);
 
 		// Setup some damping on the m_bodies
 		for (int i = 0; i < BODYPART_COUNT; ++i)
 		{
-			if (!m_bodies[i]) continue;
 			m_bodies[i]->setDamping(0.09, 0.09);
 			m_bodies[i]->setDeactivationTime(900.0);
 			m_bodies[i]->setSleepingThresholds(0, 0);
 		}
 		
-
-		/*
-		// Now setup the constraints
-		btHingeConstraint* hingeC;
-		btConeTwistConstraint* coneC;
-
-		btTransform localA, localB;
-
-		localA.setIdentity(); localB.setIdentity();
-		localA.getBasis().setEulerZYX(0,0,0); localA.setOrigin(btVector3(+0.40, 0.00, 0.00));
-		localB.getBasis().setEulerZYX(0,0,0); localB.setOrigin(btVector3(-0.10, 0.00, 0.00));
-		coneC = new btConeTwistConstraint(*m_bodies[BODYPART_SPINE], *m_bodies[BODYPART_HEAD], localA, localB);
-		coneC->setLimit(btRadians(90), btRadians(45), btRadians(90));
-		m_joints[JOINT_SPINE_HEAD] = coneC;
-		coneC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
-
-		m_ownerWorld->addConstraint(m_joints[JOINT_SPINE_HEAD], true);
-		
-		localA.setIdentity(); localB.setIdentity();
-		localA.getBasis().setEulerZYX(0,0,0); localA.setOrigin(btVector3(+0.40, 0.00, 0.00));
-		localB.getBasis().setEulerZYX(0,0,0); localB.setOrigin(btVector3(-0.40, 0.00, 0.00));
-		hingeC =  new btHingeConstraint(*m_bodies[BODYPART_PELVIS], *m_bodies[BODYPART_SPINE], localA, localB);
-		hingeC->setLimit(btScalar(btRadians(-45)), btScalar(btRadians(90)));
-		m_joints[JOINT_PELVIS_SPINE] = hingeC;
-		hingeC->setDbgDrawSize(CONSTRAINT_DEBUG_SIZE);
-
-		m_ownerWorld->addConstraint(m_joints[JOINT_PELVIS_SPINE], true);
-		*/
 	}
 
 BigFeather::~BigFeather() {
-
-	// Remove constraints.
-	for ( int ii = 0; ii < JOINT_COUNT; ++ii) {
-		if (!m_joints[ii]) continue;
-		m_ownerWorld->removeConstraint(m_joints[ii]);
-		delete m_joints[ii];
-		m_joints[ii] = 0;
-	}
 
 	// Remove bodies.
 	for (int ii = 0; ii < BODYPART_COUNT; ++ii) {
@@ -134,12 +81,19 @@ void BigFeather::pretick(btScalar dt) {
 	t += dt; // keep track of time.
 
 	btRigidBody* feather = this->m_bodies[BODYPART_SPINE];
+	feather->activate();
 
 	const btVector3 air_velocity = -1 * getVelocityInLocalFrame(feather, btVector3(0,0,0));
-	const btVector3 surface_normal(0,1,0);
+	btVector3 surface_normal(0,1,0);
 
 	// Decompose air velocity into components tangential and normal to surface.
 	btScalar angle_vn = btAngle(air_velocity, surface_normal);
+
+	if (angle_vn > SIMD_PI/2.0f) {
+		surface_normal = -surface_normal;
+		angle_vn = btAngle(air_velocity, surface_normal);
+	}
+	 
 	btVector3 vn = (air_velocity.length()*btCos(angle_vn))*surface_normal;
 	btVector3 vt = air_velocity - vn;
 
@@ -189,20 +143,16 @@ void BigFeather::pretick(btScalar dt) {
 	std::cout << std::endl;
 	*/
 
-	if (!m_limb) return;
-
-	if (t < 4) return;
-
-	const btScalar scaler = 10.0f;
+	const btScalar scaler = 8.0f;
 	btVector3 liftForce = (lift_impulse + drag_impulse) / scaler;
 	btVector3 forcePos =  feather->getCenterOfMassPosition() - m_limb->getCenterOfMassPosition();
 	
-	const btScalar maxForce = 30.0;
+	const btScalar maxForce = 150.0;
 	btScalar forceMag = liftForce.length();
 	if (forceMag < maxForce) {
 		m_limb->applyForce(liftForce, btVector3(0,0,0));
 		std::cout << std::setprecision(2) << std::fixed;
-		std::cout << "  AoA: " << angle_of_attack * 180 / SIMD_PI << " l: " << liftForce.x() << " " << liftForce.y() << " " << liftForce.z() << std::endl;
+		std::cout << angle_vn << "  AoA: " << angle_of_attack * 180 / SIMD_PI << " l: " << liftForce.x() << " " << liftForce.y() << " " << liftForce.z() << std::endl;
 	} else {
 		std::cout << "sat!";
 	}
