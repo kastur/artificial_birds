@@ -53,9 +53,9 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 	m_shapes[BODYPART_RIGHT_WRIST]		= new btCapsuleShape(btScalar(0.06), wrist_h);
 
 	btScalar mass[BODYPART_COUNT];
-	mass[BODYPART_PELVIS]			= 3.0;
-	mass[BODYPART_RIGHT_UPPER_ARM]	= 2.0;
-	mass[BODYPART_LEFT_UPPER_ARM]	= 2.0;
+	mass[BODYPART_PELVIS]			= 2.0;
+	mass[BODYPART_RIGHT_UPPER_ARM]	= 0.5;
+	mass[BODYPART_LEFT_UPPER_ARM]	= 0.5;
 	mass[BODYPART_RIGHT_LOWER_ARM]	= 0.1;
 	mass[BODYPART_LEFT_LOWER_ARM]	= 0.1;
 	mass[BODYPART_RIGHT_WRIST]		= 0.0;
@@ -161,7 +161,7 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 			*m_bodies[BODYPART_LEFT_UPPER_ARM],
 			*m_bodies[BODYPART_PELVIS],
 			btVector3(+0.00, -upper_arm_h/2, +0.00),
-			btVector3(-0.18, -0.00, +0.00),
+			btVector3(-0.18, -0.14, +0.00),
 			btVector3(0, 0, 1),
 			btVector3(0, 1, 0)
 			);
@@ -175,7 +175,7 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 		new btHingeConstraint(
 		*m_bodies[BODYPART_PELVIS],	
 			*m_bodies[BODYPART_RIGHT_UPPER_ARM],
-			btVector3(+0.18, -0.00, +0.00),
+			btVector3(+0.18, -0.14, +0.00),
 			btVector3(+0.00, -upper_arm_h/2, +0.00),
 			btVector3(0, 1, 0),
 			btVector3(0, 0, 1)
@@ -219,18 +219,19 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 	
 	// Attach feathers
 
-	//for (btScalar pp = -0.4; pp <= +0.4; pp += 0.2) {
+	for (btScalar pp = -0.4; pp <= +0.6; pp += 0.3) {
+		addFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM], btVector3(0,pp,0), btRadians(90), btRadians(180+90+10), btRadians(0), btRadians(5));
+		addFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],  btVector3(0,pp,0), btRadians(90), btRadians(180+90-10), btRadians(0), btRadians(5));
+
 		//addFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM], btVector3(0,pp,0), btRadians(90), btRadians(80), btRadians(0), btRadians(0));
 		//addFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],  btVector3(0,pp,0), btRadians(90), btRadians(100), btRadians(0), btRadians(0));
-	//}
+	}
 
 	//addFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM], btVector3(0,0.00,0), btRadians(90), btRadians(180+90+10), btRadians(0), btRadians(5));
 	//addFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],  btVector3(0,0.00,0), btRadians(90), btRadians(180+90-10), btRadians(0), btRadians(5));
 
 
-	addFeather(m_bodies[BODYPART_RIGHT_UPPER_ARM], btVector3(0,0.50,0), btRadians(90), btRadians(180+90+10), btRadians(0), btRadians(5));
-	addFeather(m_bodies[BODYPART_LEFT_UPPER_ARM],  btVector3(0,0.50,0), btRadians(90), btRadians(180+90-10), btRadians(0), btRadians(5));
-
+	
 	
 	/*
 	addFeather(m_bodies[BODYPART_RIGHT_LOWER_ARM], btVector3(0,-0.2,0), btRadians(90), btRadians(0), btRadians(0), btRadians(10));
@@ -320,18 +321,18 @@ void BigBird::pretick (btScalar dt) {
 	}
 
 	// Set motors.
-	btScalar freq = 1;
+	btScalar freq = 2;
 
 	// Wingbeat
 	btScalar req_angle = 35*btSin(t*SIMD_2_PI*freq) + 35;
 	//std::cout << req_angle << std::endl;
-	//((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER])->setMotorTarget(btRadians(90  + req_angle), dt);
-	//((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER] )->setMotorTarget(btRadians(90  + req_angle), dt);
+	((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER])->setMotorTarget(btRadians(90  + req_angle), dt);
+	((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER] )->setMotorTarget(btRadians(90  + req_angle), dt);
 
 	btScalar left_angle = 90;
 	btScalar right_angle = 90 ;
-	((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER])->setMotorTarget(btRadians(left_angle), dt);
-	((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER])->setMotorTarget(btRadians(right_angle), dt);
+	//((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER])->setMotorTarget(btRadians(left_angle), dt);
+	//((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER])->setMotorTarget(btRadians(right_angle), dt);
 
 	//((btHingeConstraint*)m_joints[JOINT_LEFT_ELBOW])->setMotorTarget(btRadians(0), dt);
 	//((btHingeConstraint*)m_joints[JOINT_RIGHT_ELBOW])->setMotorTarget(btRadians(0), dt);

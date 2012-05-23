@@ -147,7 +147,7 @@ void BigFeather::pretick(btScalar dt) {
 	btVector3 liftForce = (lift_impulse + drag_impulse) / scaler;
 	btVector3 forcePos =  feather->getCenterOfMassPosition() - m_limb->getCenterOfMassPosition();
 	
-	const btScalar maxForce = 150.0;
+	const btScalar maxForce = 1000.0;
 	btScalar forceMag = liftForce.length();
 	if (forceMag < maxForce) {
 		m_limb->applyForce(liftForce, btVector3(0,0,0));
