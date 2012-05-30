@@ -15,12 +15,14 @@ class BigFeather {
 	};
 
 public:
-	BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, btRigidBody* m_limb);
+	BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, btRigidBody* m_limb,btScalar featherZHalf=0.2,btScalar featherYHalf=0.01,btScalar featherXHalf=0.45);
 	virtual ~BigFeather();
 	void pretick(btScalar dt);
 	void applyImpulse();
 	void orient(btScalar angle);
 	btRigidBody* getFeatherBody();
+
+	bool aero_on;
 
 protected:
 	btRigidBody* BigFeather::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);

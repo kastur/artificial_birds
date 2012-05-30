@@ -41,12 +41,17 @@ public:
 	virtual ~BigBird();
 	void pretick(btScalar dt);
 	void applyImpulse();
+	void applyUpImpulse();
+	void applyDownImpulse();
 	void applyFeatherImpulse();
+	void zeroImpulse();
+	void toggleMotors();
 	const btVector3& getPosition() { return m_bodies[BODYPART_PELVIS]->getWorldTransform().getOrigin();  }
 
 protected:
 	btRigidBody* BigBird::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);
-	void addFeather(btRigidBody* rb, const btVector3& relPos, btScalar rbAngleX, btScalar rbAngleY, btScalar featherAngle, btScalar featherGive);
+	void addFeather(btRigidBody* rb, const btVector3& relPos, btScalar rbAngleX, btScalar rbAngleY, btScalar featherAngle, btScalar featherGive, btScalar featherWidthHalf=0.2);
+	void addTailFeather(btRigidBody* rb, const btVector3& relPos, btScalar rbAngleX, btScalar rbAngleY, btScalar featherAngle, btScalar featherGive, btScalar featherWidthHalf=0.2);
 	
 
 private:
@@ -58,6 +63,9 @@ private:
 	btAlignedObjectArray<class BigFeather*> m_feathers;
 	btAlignedObjectArray<class btTypedConstraint*> m_featherjoints;
 
+	bool motor_state;
+	btVector3 impulse_pretick;
+	btVector3 impulse_relpos;
 	btScalar t;  // keep track of time.
 };
 
