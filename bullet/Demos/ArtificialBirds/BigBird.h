@@ -40,11 +40,6 @@ public:
 	BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset);
 	virtual ~BigBird();
 	void pretick(btScalar dt);
-<<<<<<< Updated upstream
-	void applyImpulse();
-	void applyUpImpulse();
-	void applyDownImpulse();
-=======
 	void applyForImpulse();
 	void applyUpImpulse();
 	void applyDownImpulse();
@@ -52,21 +47,13 @@ public:
 	void toggleMotors();
 	void upTailAngle();
 	void downTailAngle();
->>>>>>> Stashed changes
 	void applyFeatherImpulse();
-	void zeroImpulse();
-	void toggleMotors();
 	const btVector3& getPosition() { return m_bodies[BODYPART_PELVIS]->getWorldTransform().getOrigin();  }
 
 protected:
 	btRigidBody* BigBird::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);
-<<<<<<< Updated upstream
-	void addFeather(btRigidBody* rb, const btVector3& relPos, btScalar rbAngleX, btScalar rbAngleY, btScalar featherAngle, btScalar featherGive, btScalar featherWidthHalf=0.2);
-	void addTailFeather(btRigidBody* rb, const btVector3& relPos, btScalar rbAngleX, btScalar rbAngleY, btScalar featherAngle, btScalar featherGive, btScalar featherWidthHalf=0.2);
-=======
 	void addFeather(btRigidBody* rb, const btVector3& relPos, btScalar rbAngleX, btScalar rbAngleY, btScalar featherAngle, btScalar featherGive, int id);
 	void addTailFeather(btRigidBody* rb, const btVector3& relPos, btScalar rbAngleX, btScalar rbAngleY, btScalar featherAngle, btScalar featherGive, int id);
->>>>>>> Stashed changes
 	
 
 private:

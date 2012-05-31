@@ -25,13 +25,8 @@ btRigidBody* BigFeather::localCreateRigidBody(
 	return body;
 }
 
-<<<<<<< Updated upstream
-BigFeather::BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, btRigidBody* limb, btScalar featherZHalf,btScalar featherYHalf,btScalar featherXHalf)
-	:m_ownerWorld (ownerWorld), m_limb(limb) {
-=======
 BigFeather::BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, btRigidBody* limb, int id, btScalar x, btScalar y, btScalar z)
 	:m_ownerWorld (ownerWorld), m_limb(limb), m_id(id) {
->>>>>>> Stashed changes
 		t = 0;
 		m_scaler = 8.0f;
 		m_wind_velocity = btVector3(-3.0, 0, 0);
@@ -46,11 +41,7 @@ BigFeather::BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOf
 		// Create spine.
 		transform.setIdentity();
 		transform.setOrigin(btVector3(0,1,0));
-<<<<<<< Updated upstream
-		m_shapes[BODYPART_SPINE] = new btBoxShape(btVector3(featherXHalf, featherYHalf, featherZHalf));
-=======
 		m_shapes[BODYPART_SPINE] = new btBoxShape(btVector3(x, y, z));
->>>>>>> Stashed changes
 		m_bodies[BODYPART_SPINE] = localCreateRigidBody(0.1, offset*transform, m_shapes[BODYPART_SPINE]);
 
 		// Setup some damping on the m_bodies
@@ -60,7 +51,7 @@ BigFeather::BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOf
 			m_bodies[i]->setDeactivationTime(900.0);
 			m_bodies[i]->setSleepingThresholds(0, 0);
 		}
-		aero_on = true;	
+		
 	}
 
 BigFeather::~BigFeather() {
@@ -97,8 +88,6 @@ btVector3 BigFeather::getEffectiveAirVelocity() {
 void BigFeather::pretick(btScalar dt) {
 	t += dt; // keep track of time.
 
-	if (!aero_on) return;
-
 	btRigidBody* feather = this->m_bodies[BODYPART_SPINE];
 	feather->activate();
 
@@ -120,11 +109,9 @@ void BigFeather::pretick(btScalar dt) {
 	btScalar angle_of_attack = btAtan(btDot(vn,surface_normal)/vt.length());	
 
 	// Calculate lift and drag as a function of the angle of attack.
-	btVector3 sides = ((btBoxShape*)feather)->getHalfExtentsWithoutMargin();
-	btScalar area = 1; //2*sides.getY()*sides.getZ();
-	btScalar drag_coeff = (-btCos(2 * angle_of_attack) + 1.0f)* area ;
+	btScalar drag_coeff = -btCos(2 * angle_of_attack) + 1.0f;
 	btScalar pp = 3.32 * angle_of_attack + 0.112;
-	btScalar lift_coeff = (4*((1/(1+btExp(-0.5*pp)) - 0.5)*1.9 + btSin(1.4*pp) * btExp(-abs(2*pp)))*btExp(-abs(0.3*pp)) + 0.1)* area;
+	btScalar lift_coeff = 4*((1/(1+btExp(-0.5*pp)) - 0.5)*1.9 + btSin(1.4*pp) * btExp(-abs(2*pp)))*btExp(-abs(0.3*pp)) + 0.1;
 	
 	// Calculate the directions of drag and lift.
 	btVector3 drag_direction = btVector3(air_velocity).normalize();

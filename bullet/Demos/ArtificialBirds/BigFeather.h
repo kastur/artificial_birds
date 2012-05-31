@@ -15,11 +15,7 @@ class BigFeather {
 	};
 
 public:
-<<<<<<< Updated upstream
-	BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, btRigidBody* m_limb,btScalar featherZHalf=0.2,btScalar featherYHalf=0.01,btScalar featherXHalf=0.45);
-=======
 	BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, btRigidBody* m_limb, int id, btScalar x=.45, btScalar y=.01,btScalar z=.2);
->>>>>>> Stashed changes
 	virtual ~BigFeather();
 	void pretick(btScalar dt);
 	void applyImpulse();
@@ -27,8 +23,6 @@ public:
 	void setWindVelocity(const btVector3& value);
 	void orient(btScalar angle);
 	btRigidBody* getFeatherBody();
-
-	bool aero_on;
 
 protected:
 	btRigidBody* BigFeather::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);

@@ -135,9 +135,6 @@ void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
-<<<<<<< Updated upstream
-	case 'd':
-=======
 	case 'w':
 		{
 			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
@@ -167,43 +164,12 @@ void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y)
 		break;
 		}		
 	case 'a':
->>>>>>> Stashed changes
 		{
 			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
 				m_bigbirds[ii]->toggleMotors();
 			}
 		break;
 		}		
-<<<<<<< Updated upstream
-	case 'w':
-		{
-			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
-				m_bigbirds[ii]->applyUpImpulse();
-			}
-		break;
-		}		
-	case 's':
-		{
-			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
-				m_bigbirds[ii]->applyDownImpulse();
-			}
-		break;
-		}	
-	case 'z':
-		{
-			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
-				m_bigbirds[ii]->zeroImpulse();
-			}
-			break;
-		}
-	case 'a':
-		{
-			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
-				m_bigbirds[ii]->toggleMotors();
-			}
-		break;
-		}		
-=======
 	case 'g':
 		{
 			if (kGravity == 0.0) {
@@ -230,7 +196,6 @@ void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y)
 			}
 		break;
 		}
->>>>>>> Stashed changes
 	case 'G':
 		{
 			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
