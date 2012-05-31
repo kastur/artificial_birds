@@ -74,15 +74,15 @@ void ArtificialBirdsDemoApp::spawnBigBird(const btVector3& startOffset)
 	info.startTransform.setOrigin(startOffset);
 	info.pelvisHalfLength = 1.0f;
 	info.wingHalfLength = 0.6f;
-	info.pelvisMass = 5.0f;
-	info.wingMass = 1.0f;
+	info.pelvisMass = 0.0f;
+	info.wingMass = 0.6f;
 	info.pelvisRelPosToAttachWing = btVector3(0.f, 0.f, 0.f);
 	info.featherRelPosToAttachFeather = btVector3(0.f, 0.f, 0.f);
-	info.featherAoAHingeLimit = 45.f;
-	info.wingFlapHingeLimit = 60.f;
-	info.featherAoAMotorMaxImpulse = 10.0f;
-	info.wingFlapMotorMaxImpulse = 10.0f;
-	info.wingFlapFrequency = 1.5f;
+	info.featherAoAHingeLimit = 35.f;
+	info.wingFlapHingeLimit = 70.f;
+	info.featherAoAMotorMaxImpulse = 500.0f;
+	info.wingFlapMotorMaxImpulse = 500.0f;
+	info.wingFlapFrequency = 0.5f;
 	BigBird* bigbird = new BigBird(m_dynamicsWorld, info);
 	m_bigbirds.push_back(bigbird);
 }

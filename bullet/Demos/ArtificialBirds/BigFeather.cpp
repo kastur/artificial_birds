@@ -102,7 +102,7 @@ void BigFeather::pretick(btScalar dt) {
 	btScalar angle_of_attack = btAtan(btDot(vn,surface_normal)/vt.length());	
 
 	// Calculate lift and drag as a function of the angle of attack.
-	btScalar drag_coeff = -btCos(2 * angle_of_attack) + 1.0f;
+	btScalar drag_coeff = -btCos(2.f * angle_of_attack) + 1.3f;
 	btScalar pp = 3.32 * angle_of_attack + 0.112;
 	btScalar lift_coeff = 4*((1/(1+btExp(-0.5*pp)) - 0.5)*1.9 + btSin(1.4*pp) * btExp(-abs(2*pp)))*btExp(-abs(0.3*pp)) + 0.1;
 	
@@ -145,23 +145,26 @@ void BigFeather::pretick(btScalar dt) {
 	*/
 
 	
-
-	btScalar scaler = 5.0f;
-	if (t < 2) {
-		scaler = 100.0f;
-	}
-	btVector3 liftForce = (lift_impulse + drag_impulse) / scaler;
-	btVector3 forcePos =  m_limb->getCenterOfMassPosition() - feather->getCenterOfMassPosition();
 	
-	const btScalar maxForce = 200.0;
-	btScalar forceMag = liftForce.length();
-	if (forceMag < maxForce) {
-		m_limb->applyForce(liftForce, forcePos);
-		//std::cout << std::setprecision(2) << std::fixed;
-		//std::cout << angle_vn << "  AoA: " << angle_of_attack * 180 / SIMD_PI << " l: " << liftForce.x() << " " << liftForce.y() << " " << liftForce.z() << std::endl;
-	} else {
-		std::cout << "sat!";
-	}
+		btScalar scaler = 5.0f;
+		if (t < 2) {
+			scaler = 100.0f;
+		}
+		btVector3 liftForce = (drag_impulse + lift_impulse) / scaler;
+		btVector3 forcePos =  m_limb->getCenterOfMassPosition() - feather->getCenterOfMassPosition();
+	
+		const btScalar maxForce = 200.0;
+		btScalar forceMag = liftForce.length();
+		if (forceMag < maxForce) {
+			m_limb->applyForce(liftForce, forcePos);
+			//std::cout << std::setprecision(2) << std::fixed;
+			//std::cout << angle_vn << "  AoA: " << angle_of_attack * 180 / SIMD_PI << " l: " << liftForce.x() << " " << liftForce.y() << " " << liftForce.z() << std::endl;
+		} else {
+			std::cout << "sat!";
+		}
+
+
+
 
 	
 }
