@@ -1,5 +1,3 @@
-
-
 #include "ArtificialBirds.h"
 #include "btBulletDynamicsCommon.h"
 #include "GlutStuff.h"
@@ -10,13 +8,10 @@
 #include "BigFeather.h"
 
 const btScalar kGravity = -9.80;
+const int kSolverNumIterations = 100;
 
 void pickingPreTickCallback(btDynamicsWorld *world, btScalar timeStep) {
 	ArtificialBirdsDemoApp* app = (ArtificialBirdsDemoApp*)world->getWorldUserInfo();
-
-	for (int ii = 0; ii < app->getFeathers().size(); ++ii) {
-		app->getFeathers()[ii]->pretick(timeStep);
-	}
 
 	for (int ii = 0; ii < app->getBirds().size(); ++ii) {
 		app->getBirds()[ii]->pretick(timeStep);
@@ -26,7 +21,6 @@ void pickingPreTickCallback(btDynamicsWorld *world, btScalar timeStep) {
 void ArtificialBirdsDemoApp::initPhysics()
 {
 	// Setup the basic world
-
 	setTexturing(true);
 	setShadows(true);
 
@@ -45,6 +39,7 @@ void ArtificialBirdsDemoApp::initPhysics()
 	//m_dynamicsWorld->getDispatchInfo().m_useConvexConservativeDistanceUtil = true;
 	//m_dynamicsWorld->getDispatchInfo().m_convexConservativeDistanceThreshold = 0.01f;
 	m_dynamicsWorld->setInternalTickCallback(pickingPreTickCallback, this, true);
+	m_dynamicsWorld->getSolverInfo().m_numIterations = kSolverNumIterations;
 	m_dynamicsWorld->setGravity(btVector3(0,kGravity,0));
 
 	// Setup a big ground box
@@ -67,22 +62,29 @@ void ArtificialBirdsDemoApp::initPhysics()
 
 	}
 
-	btVector3 startOffset(0,2,0);
-	spawnBigBird(startOffset);
+	spawnBigBird(btVector3(0, 2, 0));
 
 	clientResetScene();		
 }
 
 void ArtificialBirdsDemoApp::spawnBigBird(const btVector3& startOffset)
 {
-	BigBird* bigbird = new BigBird (m_dynamicsWorld, startOffset);
+	BigBirdConstructionInfo info;
+	info.startTransform.setIdentity();
+	info.startTransform.setOrigin(startOffset);
+	info.pelvisHalfLength = 1.0f;
+	info.wingHalfLength = 0.6f;
+	info.pelvisMass = 5.0f;
+	info.wingMass = 1.0f;
+	info.pelvisRelPosToAttachWing = btVector3(0.f, 0.f, 0.f);
+	info.featherRelPosToAttachFeather = btVector3(0.f, 0.f, 0.f);
+	info.featherAoAHingeLimit = 45.f;
+	info.wingFlapHingeLimit = 60.f;
+	info.featherAoAMotorMaxImpulse = 10.0f;
+	info.wingFlapMotorMaxImpulse = 10.0f;
+	info.wingFlapFrequency = 1.5f;
+	BigBird* bigbird = new BigBird(m_dynamicsWorld, info);
 	m_bigbirds.push_back(bigbird);
-}
-
-void ArtificialBirdsDemoApp::spawnBigFeather(const btVector3& startOffset)
-{
-	BigFeather* bigfeather = new BigFeather(m_dynamicsWorld, startOffset, 0);
-	m_bigfeathers.push_back(bigfeather);
 }
 
 void ArtificialBirdsDemoApp::clientMoveAndDisplay()
@@ -96,14 +98,11 @@ void ArtificialBirdsDemoApp::clientMoveAndDisplay()
 	if (ms > minFPS)
 		ms = minFPS;
 
-	if (m_dynamicsWorld)
-	{
+	if (m_dynamicsWorld) {
 		m_dynamicsWorld->stepSimulation(ms / 1000000.f);
 		
 		//optional but useful: debug drawing
 		m_dynamicsWorld->debugDrawWorld();
-
-
 	}
 
 	m_cameraTargetPosition = m_bigbirds[0]->getPosition();
@@ -131,31 +130,8 @@ void ArtificialBirdsDemoApp::displayCallback()
 
 void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y) {
 	switch (key) {
-	case 'u': {
-		for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
-			m_bigbirds[ii]->TrimUp();
-		}
+	case '!':
 		break;
-	}
-	case 'j': {
-		for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
-			m_bigbirds[ii]->TrimDn();
-		}
-		break;
-	}
-	case ')': {
-		for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
-			m_bigbirds[ii]->WindUp();
-		}
-		break;
-	}
-	case '(': {
-		for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
-			m_bigbirds[ii]->WindDn();
-		}
-		break;
-	}
-	
 	default:
 		DemoApplication::keyboardCallback(key, x, y);
 	}
@@ -166,16 +142,9 @@ void ArtificialBirdsDemoApp::exitPhysics()
 
 	int i;
 
-	for (i=0;i<m_bigbirds.size();i++)
-	{
+	for (i=0;i<m_bigbirds.size();i++) {
 		BigBird* bird = m_bigbirds[i];
 		delete bird;
-	}
-
-	for (i=0;i<m_bigfeathers.size();i++)
-	{
-		BigFeather* feather = m_bigfeathers[i];
-		delete feather;
 	}
 
 	//cleanup in the reverse order of creation/initialization
@@ -213,7 +182,5 @@ void ArtificialBirdsDemoApp::exitPhysics()
 	//delete dispatcher
 	delete m_dispatcher;
 
-	delete m_collisionConfiguration;
-
-	
+	delete m_collisionConfiguration;	
 }
