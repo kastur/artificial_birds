@@ -6,8 +6,12 @@
 
 const btScalar kWingPelvisAttachPosition = 0.00f;
 const btScalar kWingFeatherAttachPosition = 0.00f;
-const btScalar kMaxFeatherImpulse = 10.0f;
-const btScalar kMaxLimbImpulse = 10.0f;
+const btScalar kMaxFeatherImpulse = 1000.0f;
+const btScalar kMaxLimbImpulse = 1000.0f;
+const btScalar kWingbeatFrequency = 3.5f;
+
+const btScalar kFeatherLimit = 40.0f;
+const btScalar kShoulderLimit = 70.0f;
 
 btRigidBody* BigBird::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape) {
 	btVector3 localInertia(0,0,0);
@@ -60,6 +64,7 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 	transform.setOrigin(btVector3(btScalar(0.00), btScalar(1.45), btScalar(0.00)));
 	transform.getBasis().setEulerZYX(btRadians(90), 0, 0);
 	m_bodies[BODYPART_PELVIS] = localCreateRigidBody(mass[BODYPART_PELVIS], offset*transform, m_shapes[BODYPART_PELVIS]);
+
 
 
 	// UPPER_ARMS
@@ -134,10 +139,12 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 	// Setup some damping on the m_bodies
 	for (int i = 0; i < BODYPART_COUNT; ++i)
 	{
-		m_bodies[i]->setDamping(0.00, 0.00);
+		m_bodies[i]->setDamping(0.00, 0.80);
 		m_bodies[i]->setDeactivationTime(900.0);
 		m_bodies[i]->setSleepingThresholds(0.0, 0.0);
 	}
+	// Make sure pelvis is damped!
+	m_bodies[BODYPART_PELVIS]->setDamping(0.00, 0.90);
 	
 	// Now setup the constraints
 	btHingeConstraint* hingeC;
@@ -146,14 +153,14 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 
 	{ // LEFT_SHOULDER
 		hingeC = new btHingeConstraint(
+				*m_bodies[BODYPART_LEFT_UPPER_ARM],	
 				*m_bodies[BODYPART_PELVIS],	
-				*m_bodies[BODYPART_LEFT_UPPER_ARM],
-				btVector3(-0.18, kWingPelvisAttachPosition, +0.00),
 				btVector3(+0.00, -upper_arm_h/2, +0.00),
-				btVector3(0, 1, 0),
-				btVector3(0, 0, -1)
+				btVector3(0.00, kWingPelvisAttachPosition, +0.00),
+				btVector3(0, 0, -1),
+				btVector3(0, 1, 0)
 				);
-		//hingeC->setLimit(btRadians(90), btRadians(180-20));
+		hingeC->setLimit(btRadians(90-kShoulderLimit), btRadians(90+kShoulderLimit));
 		hingeC->enableMotor(true);
 		hingeC->setMaxMotorImpulse(kMaxLimbImpulse);
 		m_ownerWorld->addConstraint(hingeC, true);
@@ -162,14 +169,14 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 	
 	{ // RIGHT_SHOULDER
 		hingeC = new btHingeConstraint(
+				*m_bodies[BODYPART_RIGHT_UPPER_ARM],	
 				*m_bodies[BODYPART_PELVIS],	
-				*m_bodies[BODYPART_RIGHT_UPPER_ARM],
-				btVector3(+0.18, kWingPelvisAttachPosition, +0.00),
 				btVector3(+0.00, -upper_arm_h/2, +0.00),
-				btVector3(0, 1, 0),
-				btVector3(0, 0, 1)
+				btVector3(0.00, kWingPelvisAttachPosition, +0.00),
+				btVector3(0, 0, 1),
+				btVector3(0, 1, 0)
 				);
-		//hingeC->setLimit(btRadians(90), btRadians(180-20));
+		hingeC->setLimit(btRadians(90-kShoulderLimit), btRadians(90+kShoulderLimit));
 		hingeC->enableMotor(true);
 		hingeC->setMaxMotorImpulse(kMaxLimbImpulse);
 		m_ownerWorld->addConstraint(hingeC, true);
@@ -193,7 +200,7 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 				);
 		hingeC->enableMotor(true);
 		hingeC->setMaxMotorImpulse(kMaxFeatherImpulse);
-		hingeC->setLimit(btRadians(90-20), btRadians(90+20));
+		hingeC->setLimit(btRadians(90-kFeatherLimit), btRadians(90+kFeatherLimit));
 		m_ownerWorld->addConstraint(hingeC, true);
 		m_joints[JOINT_LEFT_SHOULDER_FEATHER] = hingeC;
 	}
@@ -215,7 +222,7 @@ BigBird::BigBird (btDynamicsWorld* ownerWorld, const btVector3& positionOffset) 
 				);
 		hingeC->enableMotor(true);
 		hingeC->setMaxMotorImpulse(kMaxFeatherImpulse);
-		hingeC->setLimit(btRadians(90-20), btRadians(90+20));
+		hingeC->setLimit(btRadians(90-kFeatherLimit), btRadians(90+kFeatherLimit));
 		m_ownerWorld->addConstraint(hingeC, true);
 		m_joints[JOINT_RIGHT_SHOULDER_FEATHER] = hingeC;
 	}
@@ -290,18 +297,15 @@ void BigBird::pretick (btScalar dt) {
 		m_feathers[ii]->pretick(dt);
 	}
 
-	// Set motors.
-	btScalar freq = 3;
-
-	// Wingbeat
-	btScalar req_angle = 35*btSin(t*SIMD_2_PI*freq) + 35;
-	req_angle = 0;
-
-	((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER])->setMotorTarget(btRadians(90  + req_angle), dt);
+	// Wing flapping
+	btScalar req_angle = kShoulderLimit*btSin(t*SIMD_2_PI*kWingbeatFrequency);
+	((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER])->setMotorTarget(btRadians(90  - req_angle), dt);
 	((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER] )->setMotorTarget(btRadians(90  + req_angle), dt);
 
 	
-	((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER_FEATHER ])->setMotorTarget(btRadians(90 + m_feather_angle), dt);
-	((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER_FEATHER])->setMotorTarget(btRadians(90 - m_feather_angle), dt);
+	// Feather angle of attack
+	btScalar feather_angle = kFeatherLimit*btCos(t*SIMD_2_PI*kWingbeatFrequency);
+	((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER_FEATHER ])->setMotorTarget(btRadians(90 + feather_angle), dt);
+	((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER_FEATHER])->setMotorTarget(btRadians(90 - feather_angle), dt);
 
 }

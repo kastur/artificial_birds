@@ -146,7 +146,7 @@ void BigFeather::pretick(btScalar dt) {
 
 	
 
-	btScalar scaler = 8.0f;
+	btScalar scaler = 2.0f;
 	if (t < 2) {
 		scaler = 100.0f;
 	}
@@ -157,8 +157,8 @@ void BigFeather::pretick(btScalar dt) {
 	btScalar forceMag = liftForce.length();
 	if (forceMag < maxForce) {
 		m_limb->applyForce(liftForce, btVector3(0,0,0));
-		std::cout << std::setprecision(2) << std::fixed;
-		std::cout << angle_vn << "  AoA: " << angle_of_attack * 180 / SIMD_PI << " l: " << liftForce.x() << " " << liftForce.y() << " " << liftForce.z() << std::endl;
+		//std::cout << std::setprecision(2) << std::fixed;
+		//std::cout << angle_vn << "  AoA: " << angle_of_attack * 180 / SIMD_PI << " l: " << liftForce.x() << " " << liftForce.y() << " " << liftForce.z() << std::endl;
 	} else {
 		std::cout << "sat!";
 	}
