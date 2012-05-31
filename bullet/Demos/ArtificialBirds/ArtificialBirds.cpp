@@ -41,7 +41,6 @@ void ArtificialBirdsDemoApp::initPhysics()
 	m_broadphase = new btAxisSweep3 (worldAabbMin, worldAabbMax);
 
 	m_solver = new btSequentialImpulseConstraintSolver;
-
 	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher,m_broadphase,m_solver,m_collisionConfiguration);
 	//m_dynamicsWorld->getDispatchInfo().m_useConvexConservativeDistanceUtil = true;
 	//m_dynamicsWorld->getDispatchInfo().m_convexConservativeDistanceThreshold = 0.01f;
@@ -99,7 +98,7 @@ void ArtificialBirdsDemoApp::clientMoveAndDisplay()
 
 	if (m_dynamicsWorld)
 	{
-		m_dynamicsWorld->stepSimulation(ms / 1000000.f, 20);
+		m_dynamicsWorld->stepSimulation(ms / 1000000.f);
 		
 		//optional but useful: debug drawing
 		m_dynamicsWorld->debugDrawWorld();
@@ -130,60 +129,36 @@ void ArtificialBirdsDemoApp::displayCallback()
 	glutSwapBuffers();
 }
 
-void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y)
-{
-	switch (key)
-	{
-	case 'g':
-		{
-			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
-				m_bigbirds[ii]->applyImpulse();
-			}
-		break;
-		}		
-	case 'G':
-		{
-			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
-				m_bigbirds[ii]->applyFeatherImpulse();
-			}
-		break;
+void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y) {
+	switch (key) {
+	case 'u': {
+		for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
+			m_bigbirds[ii]->TrimUp();
 		}
-	case 'p':
-		{
-			for (int ii = 0; ii < m_bigfeathers.size(); ++ii) {
-				m_bigfeathers[ii]->applyImpulse();
-			}
 		break;
+	}
+	case 'j': {
+		for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
+			m_bigbirds[ii]->TrimDn();
 		}
-	case 'o':
-		{
-			static btScalar angle = 0;
-			angle+= 10;
-
-			for (int ii = 0; ii < m_bigfeathers.size(); ++ii) {
-				m_bigfeathers[ii]->orient(btRadians(angle));
-				m_bigfeathers[ii]->applyImpulse();
-			}
 		break;
+	}
+	case ')': {
+		for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
+			m_bigbirds[ii]->WindUp();
 		}
-
-	case 'e':
-		{
-		btVector3 startOffset(0,2,0);
-		spawnBigBird(startOffset);
 		break;
+	}
+	case '(': {
+		for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
+			m_bigbirds[ii]->WindDn();
 		}
-	case 'f':
-		{
-		btVector3 startOffset(0,2,0);
-		spawnBigFeather(startOffset);
 		break;
-		}
+	}
+	
 	default:
 		DemoApplication::keyboardCallback(key, x, y);
 	}
-
-	
 }
 
 void ArtificialBirdsDemoApp::exitPhysics()

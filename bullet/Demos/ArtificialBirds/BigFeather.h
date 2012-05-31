@@ -22,10 +22,26 @@ public:
 	void orient(btScalar angle);
 	btRigidBody* getFeatherBody();
 
+	void WindUp() {
+		btScalar wind = m_wind_vel.x();
+		wind += 1.0;
+		m_wind_vel.setX(wind);
+	}
+
+	void WindDn() {
+		btScalar wind = m_wind_vel.x();
+		wind -= 1.0;
+		m_wind_vel.setX(wind);
+	}
+
+
+
 protected:
 	btRigidBody* BigFeather::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);
 
 private:
+	btVector3 getEffectiveWindVelocity();
+
 	btDynamicsWorld* m_ownerWorld;
 	btCollisionShape* m_shapes[BODYPART_COUNT];
 	btRigidBody* m_bodies[BODYPART_COUNT];
@@ -33,6 +49,7 @@ private:
 	btScalar t;
 	int m_index;
 	btRigidBody* m_limb;
+	btVector3 m_wind_vel;
 };
 
 
