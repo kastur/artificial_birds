@@ -25,9 +25,16 @@ btRigidBody* BigFeather::localCreateRigidBody(
 	return body;
 }
 
+<<<<<<< Updated upstream
 BigFeather::BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, btRigidBody* limb, btScalar featherZHalf,btScalar featherYHalf,btScalar featherXHalf)
 	:m_ownerWorld (ownerWorld), m_limb(limb) {
+=======
+BigFeather::BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, btRigidBody* limb, int id, btScalar x, btScalar y, btScalar z)
+	:m_ownerWorld (ownerWorld), m_limb(limb), m_id(id) {
+>>>>>>> Stashed changes
 		t = 0;
+		m_scaler = 8.0f;
+		m_wind_velocity = btVector3(-3.0, 0, 0);
 
 		// Calculate offset transform.
 		btTransform offset;
@@ -39,7 +46,11 @@ BigFeather::BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOf
 		// Create spine.
 		transform.setIdentity();
 		transform.setOrigin(btVector3(0,1,0));
+<<<<<<< Updated upstream
 		m_shapes[BODYPART_SPINE] = new btBoxShape(btVector3(featherXHalf, featherYHalf, featherZHalf));
+=======
+		m_shapes[BODYPART_SPINE] = new btBoxShape(btVector3(x, y, z));
+>>>>>>> Stashed changes
 		m_bodies[BODYPART_SPINE] = localCreateRigidBody(0.1, offset*transform, m_shapes[BODYPART_SPINE]);
 
 		// Setup some damping on the m_bodies
@@ -77,6 +88,12 @@ btVector3 getVelocityInLocalFrame(btRigidBody* body,const btVector3& relpos) {
 	return body->getWorldTransform().getBasis().transpose() * wvel;
 }
 
+btVector3 BigFeather::getEffectiveAirVelocity() {
+	btRigidBody* body = this->m_bodies[BODYPART_SPINE];
+	btVector3 world_vel = body->getVelocityInLocalPoint(btVector3(0,0,0));
+	return body->getWorldTransform().getBasis().transpose() * (m_wind_velocity - world_vel);
+}
+
 void BigFeather::pretick(btScalar dt) {
 	t += dt; // keep track of time.
 
@@ -85,7 +102,7 @@ void BigFeather::pretick(btScalar dt) {
 	btRigidBody* feather = this->m_bodies[BODYPART_SPINE];
 	feather->activate();
 
-	const btVector3 air_velocity = -1 * getVelocityInLocalFrame(feather, btVector3(0,0,0));
+	const btVector3 air_velocity = getEffectiveAirVelocity();
 	btVector3 surface_normal(0,1,0);
 
 	// Decompose air velocity into components tangential and normal to surface.
@@ -147,16 +164,15 @@ void BigFeather::pretick(btScalar dt) {
 	std::cout << std::endl;
 	*/
 
-	const btScalar scaler = 8.0f;
-	btVector3 liftForce = (lift_impulse + drag_impulse) / scaler;
-	btVector3 forcePos =  feather->getCenterOfMassPosition() - m_limb->getCenterOfMassPosition();
+	btVector3 liftForce = (lift_impulse + drag_impulse) / m_scaler;
+	btVector3 forcePos =  m_limb->getCenterOfMassPosition() - feather->getCenterOfMassPosition();
 	
 	const btScalar maxForce = 1000.0;
 	btScalar forceMag = liftForce.length();
 	if (forceMag < maxForce) {
 		m_limb->applyForce(liftForce, btVector3(0,0,0));
 		std::cout << std::setprecision(2) << std::fixed;
-		std::cout << angle_vn << "  AoA: " << angle_of_attack * 180 / SIMD_PI << " l: " << liftForce.x() << " " << liftForce.y() << " " << liftForce.z() << std::endl;
+		std::cout << m_id << "  AoA: " << angle_of_attack * 180 / SIMD_PI << " l: " << liftForce.x() << " " << liftForce.y() << " " << liftForce.z() << std::endl;
 	} else {
 		std::cout << "sat!";
 	}
@@ -171,7 +187,7 @@ void BigFeather::applyImpulse() {
 	btVector3 forcePos =  m_limb->getCenterOfMassPosition() - feather->getCenterOfMassPosition();
 
 	if (m_limb)
-		m_limb->applyForce(btVector3(0, 30, 0), forcePos);
+		m_limb->applyForce(btVector3(0, 50, 0), forcePos);
 
 	std::cout << "Applied impulse!" << std::endl;
 }
@@ -192,4 +208,14 @@ void BigFeather::orient(btScalar angle) {
 
 btRigidBody* BigFeather::getFeatherBody() {
 	return this->m_bodies[BODYPART_SPINE];
+}
+
+void BigFeather::setScaler(btScalar value)
+{
+	m_scaler = value;
+}
+
+void BigFeather::setWindVelocity(const btVector3& value)
+{
+	m_wind_velocity = value;
 }

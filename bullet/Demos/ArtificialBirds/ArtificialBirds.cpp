@@ -9,7 +9,7 @@
 #include "BigBird.h"
 #include "BigFeather.h"
 
-const btScalar kGravity = -9.80;
+btScalar kGravity = -9.80;
 
 void pickingPreTickCallback(btDynamicsWorld *world, btScalar timeStep) {
 	ArtificialBirdsDemoApp* app = (ArtificialBirdsDemoApp*)world->getWorldUserInfo();
@@ -41,6 +41,7 @@ void ArtificialBirdsDemoApp::initPhysics()
 	m_broadphase = new btAxisSweep3 (worldAabbMin, worldAabbMax);
 
 	m_solver = new btSequentialImpulseConstraintSolver;
+	
 
 	m_dynamicsWorld = new btDiscreteDynamicsWorld(m_dispatcher,m_broadphase,m_solver,m_collisionConfiguration);
 	//m_dynamicsWorld->getDispatchInfo().m_useConvexConservativeDistanceUtil = true;
@@ -82,7 +83,7 @@ void ArtificialBirdsDemoApp::spawnBigBird(const btVector3& startOffset)
 
 void ArtificialBirdsDemoApp::spawnBigFeather(const btVector3& startOffset)
 {
-	BigFeather* bigfeather = new BigFeather(m_dynamicsWorld, startOffset, 0);
+	BigFeather* bigfeather = new BigFeather(m_dynamicsWorld, startOffset, 0, 0);
 	m_bigfeathers.push_back(bigfeather);
 }
 
@@ -134,13 +135,46 @@ void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
+<<<<<<< Updated upstream
 	case 'd':
+=======
+	case 'w':
 		{
 			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
-				m_bigbirds[ii]->applyImpulse();
+				m_bigbirds[ii]->applyUpImpulse();
 			}
 		break;
 		}		
+	case 's':
+		{
+			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
+				m_bigbirds[ii]->applyDownImpulse();
+			}
+		break;
+		}		
+	case 'd':
+		{
+			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
+				m_bigbirds[ii]->applyForImpulse();
+			}
+		break;
+		}		
+	case 'z':
+		{
+			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
+				m_bigbirds[ii]->zeroImpulse();
+			}
+		break;
+		}		
+	case 'a':
+>>>>>>> Stashed changes
+		{
+			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
+				m_bigbirds[ii]->toggleMotors();
+			}
+		break;
+		}		
+<<<<<<< Updated upstream
 	case 'w':
 		{
 			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
@@ -169,6 +203,34 @@ void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y)
 			}
 		break;
 		}		
+=======
+	case 'g':
+		{
+			if (kGravity == 0.0) {
+				kGravity = -9.80;
+				m_dynamicsWorld->setGravity(btVector3(0,kGravity,0));
+			}
+			else {
+				kGravity = 0.0;
+				m_dynamicsWorld->setGravity(btVector3(0,kGravity,0));
+			}
+		break;
+		}
+	case 'u':
+		{
+			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
+				m_bigbirds[ii]->upTailAngle();
+			}
+		break;
+		}
+	case 'j':
+		{
+			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
+				m_bigbirds[ii]->downTailAngle();
+			}
+		break;
+		}
+>>>>>>> Stashed changes
 	case 'G':
 		{
 			for (int ii = 0; ii < m_bigbirds.size(); ++ii) {
