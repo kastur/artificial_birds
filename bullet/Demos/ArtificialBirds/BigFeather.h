@@ -15,29 +15,41 @@ class BigFeather {
 	};
 
 public:
-	BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, btRigidBody* m_limb, int id, btScalar x=.45, btScalar y=.01,btScalar z=.2);
+	BigFeather (btDynamicsWorld* ownerWorld, const btVector3& positionOffset, btRigidBody* m_limb);
 	virtual ~BigFeather();
 	void pretick(btScalar dt);
 	void applyImpulse();
-	void setScaler(btScalar value);
-	void setWindVelocity(const btVector3& value);
 	void orient(btScalar angle);
 	btRigidBody* getFeatherBody();
 
+	void WindUp() {
+		btScalar wind = m_wind_vel.x();
+		wind += 1.0;
+		m_wind_vel.setX(wind);
+	}
+
+	void WindDn() {
+		btScalar wind = m_wind_vel.x();
+		wind -= 1.0;
+		m_wind_vel.setX(wind);
+	}
+
+
+
 protected:
 	btRigidBody* BigFeather::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);
-	btVector3 getEffectiveAirVelocity();
+
 private:
+	btVector3 getEffectiveWindVelocity();
+
 	btDynamicsWorld* m_ownerWorld;
 	btCollisionShape* m_shapes[BODYPART_COUNT];
 	btRigidBody* m_bodies[BODYPART_COUNT];
 
 	btScalar t;
-	btScalar m_scaler;
-	btVector3 m_wind_velocity;
 	int m_index;
 	btRigidBody* m_limb;
-	int m_id;
+	btVector3 m_wind_vel;
 };
 
 
