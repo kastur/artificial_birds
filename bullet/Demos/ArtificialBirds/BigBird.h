@@ -5,6 +5,9 @@
 #include "btBulletDynamicsCommon.h"
 #include "BigBirdConstructionInfo.h"
 #include "BigFeather.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 class BigBird {
 
@@ -64,6 +67,8 @@ public:
 
 protected:
 	btRigidBody* BigBird::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);
+	void initialOutputToFile();
+	void pretickOutputToFile();
 
 private:
 	btDynamicsWorld* m_ownerWorld;
@@ -76,6 +81,11 @@ private:
 	btRigidBody* m_hoist_bodies[HOIST_POINT_COUNT];
 	btTypedConstraint* m_hoist_joints[JOINT_HOIST_COUNT];
 	btScalar m_time;  // keep track of time.
+	int m_time_steps;
+	std::ofstream file;
+	std::ostringstream convert;
+
+
 };
 
 #endif

@@ -21,6 +21,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 	m_info(bbInfo) {
 
 	m_time = 0;
+	m_time_steps = -1;
 
 	m_hoist_shapes[HOIST_POINT_0] = new btCapsuleShape(.01f,.01f);
 	m_hoist_shapes[HOIST_POINT_1] = new btCapsuleShape(.01f,.01f);
@@ -33,7 +34,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 	{ // HOIST point 0
 		btTransform trA;
 		trA.setIdentity();
-		trA.setOrigin(btVector3(0.0f,5.5f,0.0f));
+		trA.setOrigin(btVector3(0.0f,10.f,0.0f));
 		trA *= m_info.hoistTransform; 
 		m_hoist_bodies[HOIST_POINT_0] = localCreateRigidBody(
 			0.f,
@@ -41,7 +42,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 			m_hoist_shapes[HOIST_POINT_0]);
 
 		trA.setIdentity();
-		trA.setOrigin(btVector3(0.2f,5.5f + btSin(btRadians(m_info.hoistAngle))*m_info.pelvisHalfLength, btCos(btRadians(m_info.hoistAngle))* m_info.pelvisHalfLength));
+		trA.setOrigin(btVector3(0.2f,10.f + btCos(btRadians(m_info.hoistAngle))*m_info.pelvisHalfLength, btSin(btRadians(m_info.hoistAngle))* m_info.pelvisHalfLength));
 		trA *= m_info.hoistTransform; 
 		m_hoist_bodies[HOIST_POINT_1] = localCreateRigidBody(
 			0,
@@ -49,7 +50,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 			m_hoist_shapes[HOIST_POINT_1]);
 
 		trA.setIdentity();
-		trA.setOrigin(btVector3(-0.2f,5.5f + btSin(btRadians(m_info.hoistAngle))*m_info.pelvisHalfLength, btCos(btRadians(m_info.hoistAngle))* m_info.pelvisHalfLength));
+		trA.setOrigin(btVector3(-0.2f,10.f + btCos(btRadians(m_info.hoistAngle))*m_info.pelvisHalfLength, btSin(btRadians(m_info.hoistAngle))* m_info.pelvisHalfLength));
 		trA *= m_info.hoistTransform; 
 		m_hoist_bodies[HOIST_POINT_2] = localCreateRigidBody(
 			0,
@@ -106,7 +107,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 			*m_bodies[BODYPART_PELVIS],
 			*m_hoist_bodies[HOIST_POINT_0],
 			btVector3(0.0f,0.0f,0.1f),
-			btVector3(0.0f,0.0f,0.0f)
+			btVector3(0.0f,-5.0f,0.0f)
 			);
 		m_ownerWorld->addConstraint(pointC,true);
 		m_hoist_joints[JOINT_HOIST_POINT_0] = pointC;
@@ -115,7 +116,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 			*m_bodies[BODYPART_PELVIS],
 			*m_hoist_bodies[HOIST_POINT_1],
 			btVector3(0.2f,1.0f,0.1f),
-			btVector3(0.0f,0.0f,0.0f)
+			btVector3(0.0f,-5.0f,0.0f)
 			);
 		m_ownerWorld->addConstraint(pointC,true);
 		m_hoist_joints[JOINT_HOIST_POINT_1] = pointC;
@@ -124,7 +125,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 			*m_bodies[BODYPART_PELVIS],
 			*m_hoist_bodies[HOIST_POINT_2],
 			btVector3(-0.2f,1.0f,0.1f),
-			btVector3(0.0f,0.0f,0.0f)
+			btVector3(0.0f,-5.0f,0.0f)
 			);
 		m_ownerWorld->addConstraint(pointC,true);
 		m_hoist_joints[JOINT_HOIST_POINT_2] = pointC;
@@ -291,6 +292,12 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 		m_joints[JOINT_RIGHT_SHOULDER_FEATHER_3] = hingeC;
 	}
 
+	convert << "bigBird" <<  m_info.birdId << ".txt";
+	file.open(convert.str());
+
+	initialOutputToFile();
+
+
 }
 
 BigBird::~BigBird() {
@@ -317,18 +324,23 @@ BigBird::~BigBird() {
 		delete m_feathers[ii];
 		m_feathers[ii] = 0;
 	}
+	file.close();
 }
 
 void BigBird::pretick (btScalar dt) {
 	// Keep track of time.
 	m_time += dt;
-
-	/*if (m_time > 10)
-	{
+	m_time_steps = (m_time_steps  + 1) % m_info.numPoints;
+	
+	if ((5 < m_time) && (m_time < (5 + 2*dt))) {
 		for (int ii = 0; ii < JOINT_HOIST_COUNT; ++ii) {
 			m_ownerWorld->removeConstraint(m_hoist_joints[ii]);
 		}
 	}/**/
+
+	if (m_time_steps > 10) {
+		pretickOutputToFile();
+	}
 
 	// Compute aerodynamic forces for each feather.
 	for (int ii = 0; ii < FEATHER_COUNT; ++ii) {
@@ -336,26 +348,77 @@ void BigBird::pretick (btScalar dt) {
 	}
 
 	{ // Wing flapping
-		btScalar req_angle = m_info.wingFlapHingeLimit * btSin(m_time * SIMD_2_PI * m_info.wingFlapFrequency);
+		//btScalar req_angle = m_info.wingFlapHingeLimit * btSin(m_time * SIMD_2_PI * m_info.wingFlapFrequency);
+		btScalar req_angle = m_info.reqWingFlappingAngle[m_time_steps % m_info.numPoints];
 		((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER])->setMotorTarget(btRadians(90  - req_angle), dt);
 		((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER] )->setMotorTarget(btRadians(90  + req_angle), dt);
 	}
 
 	{ // Feather angle of attack
-		btScalar feather_angle = 0.f;
+		//btScalar feather_angle = 0.f;
+		btScalar feather_angle = m_info.reqFeatherAngleOfAttack1[m_time_steps % m_info.numPoints];
 		((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER_FEATHER_1 ])->setMotorTarget(btRadians(90 + feather_angle), dt);
 		((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER_FEATHER_1])->setMotorTarget(btRadians(90 - feather_angle), dt);
 	}
 	
 	{ // Feather angle of attack
-		btScalar feather_angle = m_info.featherAoAHingeLimit/5.0f * btCos(m_time * SIMD_2_PI * m_info.wingFlapFrequency);
+		//btScalar feather_angle = m_info.featherAoAHingeLimit/5.0f * btCos(m_time * SIMD_2_PI * m_info.wingFlapFrequency);
+		btScalar feather_angle = m_info.reqFeatherAngleOfAttack2[m_time_steps % m_info.numPoints];
 		((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER_FEATHER_2 ])->setMotorTarget(btRadians(90 + feather_angle), dt);
 		((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER_FEATHER_2])->setMotorTarget(btRadians(90 - feather_angle), dt);
 	}
 
 	{ // Feather angle of attack
-		btScalar feather_angle = m_info.featherAoAHingeLimit * btCos(m_time * SIMD_2_PI * m_info.wingFlapFrequency);
+		//btScalar feather_angle = m_info.featherAoAHingeLimit * btCos(m_time * SIMD_2_PI * m_info.wingFlapFrequency);
+		btScalar feather_angle = m_info.reqFeatherAngleOfAttack3[m_time_steps % m_info.numPoints];
 		((btHingeConstraint*)m_joints[JOINT_LEFT_SHOULDER_FEATHER_3 ])->setMotorTarget(btRadians(90 + feather_angle), dt);
 		((btHingeConstraint*)m_joints[JOINT_RIGHT_SHOULDER_FEATHER_3])->setMotorTarget(btRadians(90 - feather_angle), dt);
 	}
+}
+
+void BigBird::initialOutputToFile() {
+
+	file << "========== Initial Config ==========" << std::endl;
+
+	file << "id: " << m_info.birdId << std::endl;
+	file << "pl,wl: " << m_info.pelvisHalfLength << "," << m_info.wingHalfLength << std::endl;
+	file << "pm,wm: " << m_info.pelvisMass << "," << m_info.wingMass << std::endl;
+	file << "wfl,fal: " << m_info.wingFlapHingeLimit << "," << m_info.featherAoAHingeLimit << std::endl;
+
+	file << "ha: " << m_info.hoistAngle << std::endl;
+	file << "np,rs: " << m_info.numPoints << "," << m_info.randSeed << std::endl;
+
+	file << "wa: ";
+	for (int ii = 0; ii < m_info.numPoints-1; ++ii) {
+		file << m_info.reqWingFlappingAngle[ii] << ",";
+	}
+	file << m_info.reqWingFlappingAngle[m_info.numPoints-1] << std::endl;
+
+	file << "faoa1: ";
+	for (int ii = 0; ii < m_info.numPoints-1; ++ii) {
+		file << m_info.reqFeatherAngleOfAttack1[ii] << ",";
+	}
+	file << m_info.reqFeatherAngleOfAttack1[m_info.numPoints-1] << std::endl;
+	
+	file << "faoa2: ";
+	for (int ii = 0; ii < m_info.numPoints-1; ++ii) {
+		file << m_info.reqFeatherAngleOfAttack2[ii] << ",";
+	}
+	file << m_info.reqFeatherAngleOfAttack2[m_info.numPoints-1] << std::endl;
+
+	file << "faoa3: ";
+	for (int ii = 0; ii < m_info.numPoints-1; ++ii) {
+		file << m_info.reqFeatherAngleOfAttack3[ii] << ",";
+	}
+	file << m_info.reqFeatherAngleOfAttack3[m_info.numPoints-1] << std::endl;
+
+	file << "========== Initial Config End ==========" << std::endl;
+
+}
+
+void BigBird::pretickOutputToFile() {
+	btVector3 posInWorld = m_bodies[BODYPART_PELVIS]->getWorldTransform().getOrigin();
+	btQuaternion ortInWorld = m_bodies[BODYPART_PELVIS]->getWorldTransform().getRotation();
+	file << posInWorld.getX() << "," << posInWorld.getY() << "," << posInWorld.getZ() << std::endl;
+	file << btDegrees(ortInWorld.getAngle())<< std::endl;
 }

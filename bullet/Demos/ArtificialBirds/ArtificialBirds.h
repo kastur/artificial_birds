@@ -45,6 +45,8 @@ class ArtificialBirdsDemoApp : public GlutDemoApplication {
 
 	btDefaultCollisionConfiguration* m_collisionConfiguration;
 
+	void fillWithRandomNumbers(btScalar* arrScalar, btScalar minValue, btScalar maxValue, int numPoints);
+	void removeBird(int id);
 public:
 	void initPhysics();
 

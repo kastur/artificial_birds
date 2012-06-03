@@ -3,6 +3,8 @@
 
 struct BigBirdConstructionInfo {
 
+	int birdId;
+	
 	//Hoist offset
 	btTransform hoistTransform;
 
@@ -28,6 +30,13 @@ struct BigBirdConstructionInfo {
 	btScalar wingFlapHingeLimit;
 	btScalar featherAoAMotorMaxImpulse;
 	btScalar featherAoAHingeLimit;
+
+	unsigned int randSeed;
+	int numPoints;
+	btScalar* reqWingFlappingAngle;
+	btScalar* reqFeatherAngleOfAttack1;
+	btScalar* reqFeatherAngleOfAttack2;
+	btScalar* reqFeatherAngleOfAttack3;
 
 };
 
