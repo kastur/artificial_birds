@@ -71,6 +71,7 @@ void BirdOptimizer::spawnBigBird(const btVector3& startOffset)
 		fillWithRandomNumbers(&(info.birdCPG->reqFeatherAngleOfAttack1),-info.featherAoAHingeLimit,info.featherAoAHingeLimit,info.numPoints);
 	} else if (m_numGeneration > 0) {
 		perturbBestResult(&(m_currentBestCPG->reqWingFlappingAngle),&(info.birdCPG->reqWingFlappingAngle), -info.wingFlapHingeLimit,info.wingFlapHingeLimit,info.numPoints);
+		perturbBestResult(&(m_currentBestCPG->reqFeatherAngleOfAttack1),&(info.birdCPG->reqFeatherAngleOfAttack1), -info.wingFlapHingeLimit,info.wingFlapHingeLimit,info.numPoints);
 	}
 	
 	info.birdCPG->birdId = info.birdId;
