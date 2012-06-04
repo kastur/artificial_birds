@@ -11,6 +11,7 @@ links {
 	"BulletDynamics", 
 	"OpenGLSupport",
 	"opengl32",
+	"libprotobuf"
 }
 
 configuration "x64"
@@ -25,12 +26,25 @@ links {
 	"glew32s"
 }
 
+configuration "Debug"
+libdirs {
+	"../protobuf_win/Debug"
+}
+
+configuration "Release"
+libdirs {
+	"../protobuf_win/Release"
+}
+
 configuration {}
 
 includedirs {
 	"../bullet/src",
 	"../bullet/Glut",
-	"../bullet/Demos/OpenGL"
+	"../bullet/Demos/OpenGL",
+	"../proto/",
+	"../protobuf_win/src"
 }
 
-files { "**.cpp", "**.h" }
+files { "**.cpp", "**.h", "../proto/**.cc", "../proto/**.h" }
+
