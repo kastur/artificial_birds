@@ -34,6 +34,7 @@ buildoptions { "/MP"  }
 language "C++"
 	
 location("./vs2010")
+include "artificial_birds"
 include "bullet/src/LinearMath"	
 include "bullet/src/BulletCollision"	
 include "bullet/src/BulletDynamics"	
