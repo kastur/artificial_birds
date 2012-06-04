@@ -6,6 +6,7 @@
 #include "GLDebugDrawer.h"
 #include "BigBird.h"
 #include "BigFeather.h"
+#include "BirdOptimizer.h"
 
 const btScalar kGravity = -9.80;
 const int kSolverNumIterations = 100;
@@ -16,6 +17,11 @@ void pickingPreTickCallback(btDynamicsWorld *world, btScalar timeStep) {
 	for (int ii = 0; ii < app->getBirds().size(); ++ii) {
 		app->getBirds()[ii]->pretick(timeStep);
 	}
+
+	BirdOptimizer* birdOpt = app->getBirdOptimizer();
+	if (birdOpt)
+		birdOpt->pretick(timeStep);
+
 }
 
 void ArtificialBirdsDemoApp::initPhysics()
@@ -61,7 +67,7 @@ void ArtificialBirdsDemoApp::initPhysics()
 #endif //CREATE_GROUND_COLLISION_OBJECT
 
 	}
-	spawnBigBird(btVector3(0, 0, 0));
+	m_birdOpt = new BirdOptimizer(m_dynamicsWorld, 1);
 
 	clientResetScene();		
 }
@@ -77,8 +83,8 @@ void ArtificialBirdsDemoApp::spawnBigBird(const btVector3& startOffset)
 
 	info.hoistTransform.setIdentity();
 	info.hoistTransform.setOrigin(startOffset);
-	info.hoistAngleXY = 0.f;
-	info.hoistAngleZXY = 45.f;
+	info.hoistAngleXY = 30.f;
+	info.hoistAngleZXY = 90.f;
 
 	info.pelvisHalfLength = 1.0f;
 	info.wingHalfLength = 0.6f;
@@ -118,7 +124,10 @@ void ArtificialBirdsDemoApp::clientMoveAndDisplay()
 		m_dynamicsWorld->debugDrawWorld();
 	}
 
-	m_cameraTargetPosition = m_bigbirds[0]->getPosition();
+	if (m_bigbirds.size() > 0)
+		m_cameraTargetPosition = m_bigbirds[0]->getPosition();
+	else if (m_birdOpt)
+		m_cameraTargetPosition = m_birdOpt->getBirdPosition();
 
 	renderme(); 
 
@@ -146,11 +155,14 @@ void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y) {
 	case '!':
 		break;
 	case 'e':
-		if (m_bigbirds.size() > 0)
-			m_bigbirds.at(0)->restart();
+		if (m_birdOpt) {
+			m_birdOpt->removeBigBird();
+			m_birdOpt->spawnBigBird(btVector3(0,0,0));
+		}
 		break;
 	case 'r':
-		removeBird(0);
+		if (m_birdOpt)
+			m_birdOpt->removeBigBird();
 		break;
 	default:
 		DemoApplication::keyboardCallback(key, x, y);
@@ -205,11 +217,8 @@ void ArtificialBirdsDemoApp::exitPhysics()
 	delete m_collisionConfiguration;	
 }
 
-void ArtificialBirdsDemoApp::removeBird(int birdId) {
+void ArtificialBirdsDemoApp::removeBigBird(int birdId) {
 	BigBird* bird = m_bigbirds[birdId];
 	m_bigbirds.remove(m_bigbirds[birdId]);
 	delete bird;
-	for (int ii = birdId + 1; ii < m_bigbirds.size(); ++ii) {
-		m_bigbirds[ii - 1] = m_bigbirds[ii];
-	}
 }

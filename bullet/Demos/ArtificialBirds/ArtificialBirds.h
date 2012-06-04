@@ -45,7 +45,9 @@ class ArtificialBirdsDemoApp : public GlutDemoApplication {
 
 	btDefaultCollisionConfiguration* m_collisionConfiguration;
 
-	void removeBird(int id);
+	class BirdOptimizer* m_birdOpt;
+
+	void removeBigBird(int id);
 public:
 	void initPhysics();
 
@@ -75,6 +77,7 @@ public:
 
 	btAlignedObjectArray<class BigFeather*> getFeathers() { return m_bigfeathers; }
 	btAlignedObjectArray<class BigBird*> getBirds() { return m_bigbirds; }
+	BirdOptimizer* getBirdOptimizer() {return m_birdOpt;}
 	
 };
 
