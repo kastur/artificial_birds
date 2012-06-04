@@ -1,0 +1,1 @@
+..\protoc.exe --proto_path=. --cpp_out=. wingbeat_pattern.proto

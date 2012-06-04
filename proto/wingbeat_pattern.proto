@@ -1,0 +1,10 @@
+package proto;
+
+message JointAngleInfo {
+	required float wing = 1;
+	required float feather = 2;
+}
+
+message WingbeatPattern {
+	repeated JointAngleInfo angles = 1;
+}
