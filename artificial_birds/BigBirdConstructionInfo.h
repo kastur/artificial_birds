@@ -1,6 +1,8 @@
 #ifndef BIG_BIRD_CONSTRUCTION_INFO__
 #define BIG_BIRD_CONSTRUCTION_INFO__
 
+#include "CPG.h"
+
 struct BigBirdConstructionInfo {
 
 	int birdId;
@@ -34,11 +36,8 @@ struct BigBirdConstructionInfo {
 
 	unsigned int randSeed;
 	int numPoints;
-	btScalar* reqWingFlappingAngle;
-	btScalar* reqFeatherAngleOfAttack1;
-	btScalar* reqFeatherAngleOfAttack2;
-	btScalar* reqFeatherAngleOfAttack3;
-
+	
+	CPG birdCPG;
 };
 
 #endif
