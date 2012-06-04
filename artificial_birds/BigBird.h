@@ -65,6 +65,8 @@ public:
 	}
 
 	void fillMetricDetails(MetricDetails* md);
+	
+	btScalar getTime() {return m_time;}
 
 protected:
 	btRigidBody* BigBird::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);

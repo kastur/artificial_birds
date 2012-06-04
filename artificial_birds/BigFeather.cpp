@@ -146,7 +146,7 @@ void BigFeather::pretick(btScalar dt) {
 
 	
 
-	btScalar scaler = 5.0f;
+	btScalar scaler = 2.0f;
 	if (t < 2) {
 		scaler = 100.0f;
 	}

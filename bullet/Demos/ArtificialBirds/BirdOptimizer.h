@@ -24,6 +24,8 @@ protected:
 	void fillWithRandomNumbers(btAlignedObjectArray<btScalar>* arrScalar, btScalar minValue, btScalar maxValue, int numPoints);
 	//void spawnBigBird(const btVector3& startOffset);
 	//void removeBird();
+	void perturbBestResult(btAlignedObjectArray<btScalar>* arrBase, btAlignedObjectArray<btScalar>* arrChanged, btScalar minValue, btScalar maxValue, int numPoints);
+	void evaluateCurrentGenerationBirds();
 
 private:
 	btDynamicsWorld* m_ownerWorld;
@@ -31,7 +33,11 @@ private:
 	btScalar m_time;  // keep track of time.
 	btAlignedObjectArray<struct MetricDetails*> m_birdMetricDetails;
 	MetricDetails* m_currentBirdMetricDetails;
-	int m_numBirds;
+	btAlignedObjectArray<struct CPG*> m_birdCPGs;
+	CPG* m_currentBestCPG;
+	int m_numBirdsPerGeneration;
+	int m_numGeneration;
+	int m_giveBirdThisId;
 };
 
 #endif

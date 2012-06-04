@@ -37,7 +37,7 @@ struct BigBirdConstructionInfo {
 	unsigned int randSeed;
 	int numPoints;
 	
-	CPG birdCPG;
+	CPG* birdCPG;
 };
 
 #endif
