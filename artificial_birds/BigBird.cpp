@@ -136,7 +136,7 @@ void BigBird::start() {
 		pointC = new btPoint2PointConstraint(
 			*m_bodies[BODYPART_PELVIS],
 			*m_hoist_bodies[HOIST_POINT_1],
-			btVector3(+0.2,1.0f,0.0f),
+			btVector3(+0.2,m_info.pelvisHalfLength,0.0f),
 			btVector3(
 			0,
 			5.0f,
@@ -148,7 +148,7 @@ void BigBird::start() {
 		pointC = new btPoint2PointConstraint(
 			*m_bodies[BODYPART_PELVIS],
 			*m_hoist_bodies[HOIST_POINT_2],
-			btVector3(-0.2f,1.0f,0.0f),
+			btVector3(-0.2f,m_info.pelvisHalfLength,0.0f),
 			btVector3(
 			0,
 			5.0f,
@@ -165,7 +165,7 @@ void BigBird::start() {
 		hingeC = new btHingeConstraint(
 				*m_bodies[BODYPART_LEFT_UPPER_ARM],	
 				*m_bodies[BODYPART_PELVIS],	
-				btVector3(0.f, 0.f - m_info.wingHalfLength - 0.1f, 0.f),
+				btVector3(0.f, 0.f - m_info.wingHalfLength, 0.f),
 				m_info.pelvisRelPosToAttachWing,
 				btVector3( 0.f,  0.f, -1.f),
 				btVector3( 0.f, +1.f,  0.f)
@@ -182,7 +182,7 @@ void BigBird::start() {
 		hingeC = new btHingeConstraint(
 				*m_bodies[BODYPART_RIGHT_UPPER_ARM],	
 				*m_bodies[BODYPART_PELVIS],	
-				btVector3(0.f, 0.f - m_info.wingHalfLength - 0.1f, 0.f),
+				btVector3(0.f, 0.f - m_info.wingHalfLength, 0.f),
 				m_info.pelvisRelPosToAttachWing,
 				btVector3( 0.f,  0.f, +1.f),
 				btVector3( 0.f, +1.f,  0.f)
@@ -204,7 +204,7 @@ void BigBird::start() {
 		hingeC = new btHingeConstraint(
 				*rb,
 				*bigfeather->getFeatherBody(),
-				btVector3(0, -0.3f, 0),
+				btVector3(0, 0.0f, 0),
 				m_info.featherRelPosToAttachFeather,
 				btVector3(0, 1, 0),
 				btVector3(0, 0, 1)
@@ -270,7 +270,7 @@ void BigBird::start() {
 		hingeC = new btHingeConstraint(
 				*rb,
 				*bigfeather->getFeatherBody(),
-				btVector3(0, -0.3f, 0),
+				btVector3(0, 0.0f, 0),
 				m_info.featherRelPosToAttachFeather,
 				btVector3(0, 1, 0),
 				btVector3(0, 0, 1)

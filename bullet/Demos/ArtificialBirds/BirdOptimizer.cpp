@@ -27,7 +27,7 @@ void BirdOptimizer::spawnBigBird(const btVector3& startOffset)
 
 	info.hoistTransform.setIdentity();
 	info.hoistTransform.setOrigin(startOffset);
-	info.hoistAngleXY = 00.f;
+	info.hoistAngleXY = 45.f;
 	info.hoistAngleZXY = 90.f;
 
 	info.pelvisHalfLength = 0.5f;
