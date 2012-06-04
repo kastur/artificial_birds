@@ -40,3 +40,7 @@ include "bullet/src/BulletCollision"
 include "bullet/src/BulletDynamics"	
 include "bullet/src/BulletSoftBody"
 include "bullet/Demos/OpenGL"	
+
+
+-- Test cases
+dofile "proto/wingbeat_pattern-test.lua"
