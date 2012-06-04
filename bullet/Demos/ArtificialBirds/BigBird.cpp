@@ -19,13 +19,23 @@ btRigidBody* BigBird::localCreateRigidBody(btScalar mass, const btTransform& sta
 BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbInfo) :
 	m_ownerWorld(ownerWorld),
 	m_info(bbInfo) {
+		start();
+	}
 
+void BigBird::restart() {
+	end();
+	m_info.birdId++;
+	start();
+}
+
+void BigBird::start() {
+	bool enable_motor = true;
 	m_time = 0;
 	m_time_steps = -1;
 
-	m_hoist_shapes[HOIST_POINT_0] = new btCapsuleShape(.01f,.01f);
-	m_hoist_shapes[HOIST_POINT_1] = new btCapsuleShape(.01f,.01f);
-	m_hoist_shapes[HOIST_POINT_2] = new btCapsuleShape(.01f,.01f);
+	m_hoist_shapes[HOIST_POINT_0] = new btCapsuleShape(0.101f,0.101f);
+	m_hoist_shapes[HOIST_POINT_1] = new btCapsuleShape(0.101f,0.101f);
+	m_hoist_shapes[HOIST_POINT_2] = new btCapsuleShape(0.101f,0.101f);
 
 	m_shapes[BODYPART_PELVIS] = new btCapsuleShape(0.1f, m_info.pelvisHalfLength*2.f);
 	m_shapes[BODYPART_LEFT_UPPER_ARM] = new btCapsuleShape(0.1f, m_info.wingHalfLength*2.f);
@@ -33,8 +43,10 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 	
 	{ // HOIST point 0
 		btTransform trA;
+		btTransform trB;
+		btTransform trC;
 		trA.setIdentity();
-		trA.setOrigin(btVector3(0.0f,10.f,0.0f));
+		trA.setOrigin(btVector3(0.0f,00.f,0.0f));
 		trA *= m_info.hoistTransform; 
 		m_hoist_bodies[HOIST_POINT_0] = localCreateRigidBody(
 			0.f,
@@ -42,16 +54,27 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 			m_hoist_shapes[HOIST_POINT_0]);
 
 		trA.setIdentity();
-		trA.setOrigin(btVector3(0.2f,10.f + btCos(btRadians(m_info.hoistAngle))*m_info.pelvisHalfLength, btSin(btRadians(m_info.hoistAngle))* m_info.pelvisHalfLength));
-		trA *= m_info.hoistTransform; 
+		trA.setOrigin(
+			btVector3(
+			btCos(btRadians(m_info.hoistAngleXY))*btSin(btRadians(m_info.hoistAngleZXY))* m_info.pelvisHalfLength + 0.2f*btCos(btRadians(m_info.hoistAngleZXY)), 
+			btSin(btRadians(m_info.hoistAngleXY))*btSin(btRadians(m_info.hoistAngleZXY))* m_info.pelvisHalfLength,
+			btCos(btRadians(m_info.hoistAngleZXY))*m_info.pelvisHalfLength - 0.2f*btSin(btRadians(m_info.hoistAngleZXY))
+			));
+		trA *= m_info.hoistTransform;
+
 		m_hoist_bodies[HOIST_POINT_1] = localCreateRigidBody(
 			0,
 			trA,
 			m_hoist_shapes[HOIST_POINT_1]);
 
 		trA.setIdentity();
-		trA.setOrigin(btVector3(-0.2f,10.f + btCos(btRadians(m_info.hoistAngle))*m_info.pelvisHalfLength, btSin(btRadians(m_info.hoistAngle))* m_info.pelvisHalfLength));
-		trA *= m_info.hoistTransform; 
+		trA.setOrigin(
+			btVector3(
+			btCos(btRadians(m_info.hoistAngleXY))*btSin(btRadians(m_info.hoistAngleZXY))* m_info.pelvisHalfLength - 0.2f*btCos(btRadians(m_info.hoistAngleZXY)), 
+			btSin(btRadians(m_info.hoistAngleXY))*btSin(btRadians(m_info.hoistAngleZXY))* m_info.pelvisHalfLength,
+			btCos(btRadians(m_info.hoistAngleZXY))*m_info.pelvisHalfLength + 0.2f*btSin(btRadians(m_info.hoistAngleZXY))
+			));
+		trA *= m_info.hoistTransform;
 		m_hoist_bodies[HOIST_POINT_2] = localCreateRigidBody(
 			0,
 			trA,
@@ -106,8 +129,8 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 		pointC = new btPoint2PointConstraint(
 			*m_bodies[BODYPART_PELVIS],
 			*m_hoist_bodies[HOIST_POINT_0],
-			btVector3(0.0f,0.0f,0.1f),
-			btVector3(0.0f,-5.0f,0.0f)
+			btVector3(0.0f,0.0f,0.0f),
+			btVector3(0.0f,5.0f,0.0f)
 			);
 		m_ownerWorld->addConstraint(pointC,true);
 		m_hoist_joints[JOINT_HOIST_POINT_0] = pointC;
@@ -115,18 +138,24 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 		pointC = new btPoint2PointConstraint(
 			*m_bodies[BODYPART_PELVIS],
 			*m_hoist_bodies[HOIST_POINT_1],
-			btVector3(0.2f,1.0f,0.1f),
-			btVector3(0.0f,-5.0f,0.0f)
-			);
+			btVector3(+0.2,1.0f,0.0f),
+			btVector3(
+			0,
+			5.0f,
+			0
+			));
 		m_ownerWorld->addConstraint(pointC,true);
 		m_hoist_joints[JOINT_HOIST_POINT_1] = pointC;
 
 		pointC = new btPoint2PointConstraint(
 			*m_bodies[BODYPART_PELVIS],
 			*m_hoist_bodies[HOIST_POINT_2],
-			btVector3(-0.2f,1.0f,0.1f),
-			btVector3(0.0f,-5.0f,0.0f)
-			);
+			btVector3(-0.2f,1.0f,0.0f),
+			btVector3(
+			0,
+			5.0f,
+			0
+			));
 		m_ownerWorld->addConstraint(pointC,true);
 		m_hoist_joints[JOINT_HOIST_POINT_2] = pointC;
 	}/**/
@@ -144,7 +173,8 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 				btVector3( 0.f, +1.f,  0.f)
 				);
 		hingeC->setLimit(btRadians(90.f - m_info.wingFlapHingeLimit), btRadians(90.f + m_info.wingFlapHingeLimit));
-		hingeC->enableMotor(true);
+		hingeC->enableMotor(enable_motor);
+		hingeC->enableFeedback(enable_motor);
 		hingeC->setMaxMotorImpulse(m_info.wingFlapMotorMaxImpulse);
 		m_ownerWorld->addConstraint(hingeC, true);
 		m_joints[JOINT_LEFT_SHOULDER] = hingeC;
@@ -160,7 +190,8 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 				btVector3( 0.f, +1.f,  0.f)
 				);
 		hingeC->setLimit(btRadians(90.f - m_info.wingFlapHingeLimit), btRadians(90.f + m_info.wingFlapHingeLimit));
-		hingeC->enableMotor(true);
+		hingeC->enableMotor(enable_motor);
+		hingeC->enableFeedback(enable_motor);
 		hingeC->setMaxMotorImpulse(m_info.wingFlapMotorMaxImpulse);
 		m_ownerWorld->addConstraint(hingeC, true);
 		m_joints[JOINT_RIGHT_SHOULDER] = hingeC;
@@ -180,7 +211,8 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 				btVector3(0, 1, 0),
 				btVector3(0, 0, 1)
 				);
-		hingeC->enableMotor(true);
+		hingeC->enableMotor(enable_motor);
+		hingeC->enableFeedback(enable_motor);
 		hingeC->setMaxMotorImpulse(m_info.featherAoAMotorMaxImpulse);
 		hingeC->setLimit(btRadians(90.f - m_info.featherAoAHingeLimit), btRadians(90 + m_info.featherAoAHingeLimit));
 		m_ownerWorld->addConstraint(hingeC, true);
@@ -201,7 +233,8 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 				btVector3(0, 1, 0),
 				btVector3(0, 0, 1)
 				);
-		hingeC->enableMotor(true);
+		hingeC->enableMotor(enable_motor);
+		hingeC->enableFeedback(enable_motor);
 		hingeC->setMaxMotorImpulse(m_info.featherAoAMotorMaxImpulse);
 		hingeC->setLimit(btRadians(90.f - m_info.featherAoAHingeLimit), btRadians(90 + m_info.featherAoAHingeLimit));
 		m_ownerWorld->addConstraint(hingeC, true);
@@ -222,7 +255,8 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 				btVector3(0, 1, 0),
 				btVector3(0, 0, 1)
 				);
-		hingeC->enableMotor(true);
+		hingeC->enableMotor(enable_motor);
+		hingeC->enableFeedback(enable_motor);
 		hingeC->setMaxMotorImpulse(m_info.featherAoAMotorMaxImpulse);
 		hingeC->setLimit(btRadians(90.f - m_info.featherAoAHingeLimit), btRadians(90 + m_info.featherAoAHingeLimit));
 		m_ownerWorld->addConstraint(hingeC, true);
@@ -243,7 +277,8 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 				btVector3(0, 1, 0),
 				btVector3(0, 0, 1)
 				);
-		hingeC->enableMotor(true);
+		hingeC->enableMotor(enable_motor);
+		hingeC->enableFeedback(enable_motor);
 		hingeC->setMaxMotorImpulse(m_info.featherAoAMotorMaxImpulse);
 		hingeC->setLimit(btRadians(90.f - m_info.featherAoAHingeLimit), btRadians(90 + m_info.featherAoAHingeLimit));
 		m_ownerWorld->addConstraint(hingeC, true);
@@ -264,7 +299,8 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 				btVector3(0, 1, 0),
 				btVector3(0, 0, 1)
 				);
-		hingeC->enableMotor(true);
+		hingeC->enableMotor(enable_motor);
+		hingeC->enableFeedback(enable_motor);
 		hingeC->setMaxMotorImpulse(m_info.featherAoAMotorMaxImpulse);
 		hingeC->setLimit(btRadians(90.f - m_info.featherAoAHingeLimit), btRadians(90 + m_info.featherAoAHingeLimit));
 		m_ownerWorld->addConstraint(hingeC, true);
@@ -285,29 +321,60 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& bbI
 				btVector3(0, 1, 0),
 				btVector3(0, 0, 1)
 				);
-		hingeC->enableMotor(true);
+		hingeC->enableMotor(enable_motor);
+		hingeC->enableFeedback(enable_motor);
 		hingeC->setMaxMotorImpulse(m_info.featherAoAMotorMaxImpulse);
 		hingeC->setLimit(btRadians(90.f - m_info.featherAoAHingeLimit), btRadians(90 + m_info.featherAoAHingeLimit));
 		m_ownerWorld->addConstraint(hingeC, true);
 		m_joints[JOINT_RIGHT_SHOULDER_FEATHER_3] = hingeC;
 	}
 
+	m_info.randSeed = (unsigned int)time(NULL);
+	srand(m_info.randSeed);
+
+	m_info.reqWingFlappingAngle = new btScalar[m_info.numPoints];
+	m_info.reqFeatherAngleOfAttack1 = new btScalar[m_info.numPoints];
+	m_info.reqFeatherAngleOfAttack2 = new btScalar[m_info.numPoints];
+	m_info.reqFeatherAngleOfAttack3 = new btScalar[m_info.numPoints];
+	fillWithRandomNumbers(m_info.reqWingFlappingAngle,-m_info.wingFlapHingeLimit,m_info.wingFlapHingeLimit,m_info.numPoints);
+	fillWithRandomNumbers(m_info.reqFeatherAngleOfAttack1,-m_info.featherAoAHingeLimit,m_info.featherAoAHingeLimit,m_info.numPoints);
+	fillWithRandomNumbers(m_info.reqFeatherAngleOfAttack2,-m_info.featherAoAHingeLimit,m_info.featherAoAHingeLimit,m_info.numPoints);
+	fillWithRandomNumbers(m_info.reqFeatherAngleOfAttack3,-m_info.featherAoAHingeLimit,m_info.featherAoAHingeLimit,m_info.numPoints);
+
 	convert << "bigBird" <<  m_info.birdId << ".txt";
 	file.open(convert.str());
-
 	initialOutputToFile();
-
 
 }
 
 BigBird::~BigBird() {
+	end();
+}
+
+void BigBird::end() {
 	int i;
+
+	for ( i = 0; i < JOINT_HOIST_COUNT; ++i) {
+		m_ownerWorld->removeConstraint(m_hoist_joints[i]);
+		delete m_hoist_joints[i];
+		m_hoist_joints[i] = 0;
+	}
 
 	// Remove all constraints
 	for ( i = 0; i < JOINT_COUNT; ++i) {
 		m_ownerWorld->removeConstraint(m_joints[i]);
 		delete m_joints[i];
 		m_joints[i] = 0;
+	}
+
+	// Remove all bodies and shapes
+	for ( i = 0; i < HOIST_POINT_COUNT; ++i) {
+		m_ownerWorld->removeRigidBody(m_hoist_bodies[i]);
+		delete m_hoist_bodies[i]->getMotionState();
+		delete m_hoist_bodies[i];
+		m_hoist_bodies[i] = 0;
+		delete m_hoist_shapes[i];
+		m_hoist_shapes[i] = 0;
 	}
 
 	// Remove all bodies and shapes
@@ -324,6 +391,15 @@ BigBird::~BigBird() {
 		delete m_feathers[ii];
 		m_feathers[ii] = 0;
 	}
+
+	if (m_info.reqWingFlappingAngle)
+		delete m_info.reqWingFlappingAngle;
+	if (m_info.reqFeatherAngleOfAttack1)
+		delete m_info.reqFeatherAngleOfAttack1;
+	if (m_info.reqFeatherAngleOfAttack2)
+		delete m_info.reqFeatherAngleOfAttack2;
+	if (m_info.reqFeatherAngleOfAttack3)
+		delete m_info.reqFeatherAngleOfAttack3;
 	file.close();
 }
 
@@ -385,7 +461,7 @@ void BigBird::initialOutputToFile() {
 	file << "pm,wm: " << m_info.pelvisMass << "," << m_info.wingMass << std::endl;
 	file << "wfl,fal: " << m_info.wingFlapHingeLimit << "," << m_info.featherAoAHingeLimit << std::endl;
 
-	file << "ha: " << m_info.hoistAngle << std::endl;
+	file << "haXY,haZXY: " << m_info.hoistAngleXY << "," << m_info.hoistAngleZXY << std::endl;
 	file << "np,rs: " << m_info.numPoints << "," << m_info.randSeed << std::endl;
 
 	file << "wa: ";
@@ -421,4 +497,11 @@ void BigBird::pretickOutputToFile() {
 	btQuaternion ortInWorld = m_bodies[BODYPART_PELVIS]->getWorldTransform().getRotation();
 	file << posInWorld.getX() << "," << posInWorld.getY() << "," << posInWorld.getZ() << std::endl;
 	file << btDegrees(ortInWorld.getAngle())<< std::endl;
+}
+
+void BigBird::fillWithRandomNumbers(btScalar* arrScalar, btScalar minValue, btScalar maxValue, int numPoints)
+{
+	for (int ii = 0 ; ii < numPoints; ++ii) {
+		arrScalar[ii] = minValue + (((double)rand())/RAND_MAX)*(maxValue-minValue);
+	}
 }

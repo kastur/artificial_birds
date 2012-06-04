@@ -6,7 +6,6 @@
 #include "GLDebugDrawer.h"
 #include "BigBird.h"
 #include "BigFeather.h"
-#include "time.h"
 
 const btScalar kGravity = -9.80;
 const int kSolverNumIterations = 100;
@@ -72,15 +71,14 @@ void ArtificialBirdsDemoApp::spawnBigBird(const btVector3& startOffset)
 	BigBirdConstructionInfo info;
 	
 	info.birdId = m_bigbirds.size();
-	//info.convert << "birdInfo" << info.birdId << ".txt";
-	//info.file.open(info.convert.str());
 	
 	info.startTransform.setIdentity();
 	info.startTransform.setOrigin(startOffset);
 
 	info.hoistTransform.setIdentity();
 	info.hoistTransform.setOrigin(startOffset);
-	info.hoistAngle = 240.f;
+	info.hoistAngleXY = 0.f;
+	info.hoistAngleZXY = 45.f;
 
 	info.pelvisHalfLength = 1.0f;
 	info.wingHalfLength = 0.6f;
@@ -89,26 +87,13 @@ void ArtificialBirdsDemoApp::spawnBigBird(const btVector3& startOffset)
 	info.wingMass = 1.0f;
 	info.pelvisRelPosToAttachWing = btVector3(0.f, 0.f, 0.f);
 	info.featherRelPosToAttachFeather = btVector3(0.f, 0.f, 0.f);
-	info.wingFlapHingeLimit = 90.f;
-	info.featherAoAHingeLimit = 90.f;
+	info.wingFlapHingeLimit = 0.f;
+	info.featherAoAHingeLimit = 0.f;
 	info.featherAoAMotorMaxImpulse = 10.0f;
 	info.wingFlapMotorMaxImpulse = 10.0f;
 	info.wingFlapFrequency = 1.5f;
 
-
-	info.randSeed = (unsigned int)time(NULL);
-	srand(info.randSeed);
-
 	info.numPoints = 200;
-	info.reqWingFlappingAngle = new btScalar[info.numPoints];
-	info.reqFeatherAngleOfAttack1 = new btScalar[info.numPoints];
-	info.reqFeatherAngleOfAttack2 = new btScalar[info.numPoints];
-	info.reqFeatherAngleOfAttack3 = new btScalar[info.numPoints];
-
-	fillWithRandomNumbers(info.reqWingFlappingAngle,-info.wingFlapHingeLimit,info.wingFlapHingeLimit,info.numPoints);
-	fillWithRandomNumbers(info.reqFeatherAngleOfAttack1,-info.featherAoAHingeLimit,info.featherAoAHingeLimit,info.numPoints);
-	fillWithRandomNumbers(info.reqFeatherAngleOfAttack2,-info.featherAoAHingeLimit,info.featherAoAHingeLimit,info.numPoints);
-	fillWithRandomNumbers(info.reqFeatherAngleOfAttack3,-info.featherAoAHingeLimit,info.featherAoAHingeLimit,info.numPoints);
 
 	BigBird* bigbird = new BigBird(m_dynamicsWorld, info);
 	m_bigbirds.push_back(bigbird);
@@ -159,6 +144,13 @@ void ArtificialBirdsDemoApp::displayCallback()
 void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y) {
 	switch (key) {
 	case '!':
+		break;
+	case 'e':
+		if (m_bigbirds.size() > 0)
+			m_bigbirds.at(0)->restart();
+		break;
+	case 'r':
+		removeBird(0);
 		break;
 	default:
 		DemoApplication::keyboardCallback(key, x, y);
@@ -213,15 +205,9 @@ void ArtificialBirdsDemoApp::exitPhysics()
 	delete m_collisionConfiguration;	
 }
 
-void ArtificialBirdsDemoApp::fillWithRandomNumbers(btScalar* arrScalar, btScalar minValue, btScalar maxValue, int numPoints)
-{
-	for (int ii = 0 ; ii < numPoints; ++ii) {
-		arrScalar[ii] = minValue + (((double)rand())/RAND_MAX)*(maxValue-minValue);
-	}
-}
-
 void ArtificialBirdsDemoApp::removeBird(int birdId) {
 	BigBird* bird = m_bigbirds[birdId];
+	m_bigbirds.remove(m_bigbirds[birdId]);
 	delete bird;
 	for (int ii = birdId + 1; ii < m_bigbirds.size(); ++ii) {
 		m_bigbirds[ii - 1] = m_bigbirds[ii];

@@ -15,7 +15,8 @@ struct BigBirdConstructionInfo {
 	btScalar pelvisHalfLength;
 	btScalar wingHalfLength;
 
-	btScalar hoistAngle;
+	btScalar hoistAngleXY;
+	btScalar hoistAngleZXY;
 	btScalar hoistMass;
 	btScalar pelvisMass;
 	btScalar wingMass;

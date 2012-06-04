@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "time.h"
 
 class BigBird {
 
@@ -31,8 +32,6 @@ class BigBird {
 	enum {
 		JOINT_LEFT_SHOULDER = 0,
 		JOINT_RIGHT_SHOULDER,
-		JOINT_LEFT_SHOULDER_FEATHER,
-		JOINT_RIGHT_SHOULDER_FEATHER,
 		JOINT_LEFT_SHOULDER_FEATHER_1,
 		JOINT_RIGHT_SHOULDER_FEATHER_1,
 		JOINT_LEFT_SHOULDER_FEATHER_2,
@@ -60,6 +59,7 @@ public:
 	BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& info);
 	virtual ~BigBird();
 	void pretick(btScalar dt);
+	void restart();
 
 	btVector3 getPosition() {
 		return m_bodies[BODYPART_PELVIS]->getCenterOfMassPosition();
@@ -69,6 +69,9 @@ protected:
 	btRigidBody* BigBird::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);
 	void initialOutputToFile();
 	void pretickOutputToFile();
+	void fillWithRandomNumbers(btScalar* arrScalar, btScalar minValue, btScalar maxValue, int numPoints);
+	void start();
+	void end();
 
 private:
 	btDynamicsWorld* m_ownerWorld;
