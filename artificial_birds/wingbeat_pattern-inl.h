@@ -4,12 +4,12 @@
 #include <string>
 #include <vector>
 #include "btBulletDynamicsCommon.h"
-#include "../proto/wingbeat_pattern.pb.h"
+#include "../proto/proto.pb.h"
 
 using namespace std;
 
 class WingbeatPattern {
-	proto::WingbeatPattern pattern;
+	proto::WingbeatData pattern;
 
 public:
 	void Clear() {
@@ -17,7 +17,7 @@ public:
 	}
 
 	void AddSample(float wingAngle, float featherAngle) {
-		proto::JointAngleInfo* anglesElem = pattern.add_angles();
+		proto::WingbeatSample* anglesElem = pattern.add_sample();
 		anglesElem->set_wing(wingAngle);
 		anglesElem->set_feather(featherAngle);
 	}
