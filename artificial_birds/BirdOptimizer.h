@@ -7,10 +7,14 @@
 #include "BigBird.h"
 #include "BigFeather.h"
 #include "time.h"
+#include <random>
+
+typedef std::tr1::ranlux64_base_01 t_rand_eng;
+typedef std::tr1::normal_distribution<float> t_rand_dist;
 
 class BirdOptimizer {
 public:
-	BirdOptimizer(btDynamicsWorld* ownerWorld, int numBirds);
+	BirdOptimizer(btDynamicsWorld* ownerWorld, int numBirds, int numPoints);
 	~BirdOptimizer();
 	void pretick(btScalar dt);
 	void spawnBigBird(const btVector3& startOffset);
@@ -34,12 +38,16 @@ private:
 	btAlignedObjectArray<proto::TrajectoryData*> m_birdTrajectoryData;
 	proto::TrajectoryData* m_currentTrajectoryData;
 	btAlignedObjectArray<proto::BigBirdConstructionData*> m_birdInfos;
-	proto::BigBirdConstructionData* m_birdData;
-	BigBirdLocalParams* m_birdLocalParam;
+	proto::BigBirdConstructionData* m_currentBirdData;
+	BigBirdLocalParams* m_currentBirdLocalParam;
 	proto::BigBirdConstructionData* m_currentBestInfo;
 	int m_numBirdsPerGeneration;
 	int m_numGeneration;
 	int m_giveBirdThisId;
+	int m_numPoints;
+
+	t_rand_eng m_rand_eng;
+	t_rand_dist m_rand_dist;
 };
 
 #endif

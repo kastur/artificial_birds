@@ -279,7 +279,7 @@ void BigBird::pretick (btScalar dt) {
 	m_time += dt;
 	m_time_steps = (m_time_steps  + 1) % wingbeat_pattern_length;
 	
-	if ((5 < m_time) && (m_time <= (5 + dt))) {
+	if ((2 < m_time) && (m_time <= (2 + dt))) {
 		for (int ii = 0; ii < JOINT_HOIST_COUNT; ++ii) {
 			m_ownerWorld->removeConstraint(m_hoist_joints[ii]);
 		}

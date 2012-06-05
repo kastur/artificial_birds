@@ -67,7 +67,7 @@ void ArtificialBirdsDemoApp::initPhysics()
 #endif //CREATE_GROUND_COLLISION_OBJECT
 
 	}
-	m_birdOpt = new BirdOptimizer(m_dynamicsWorld, 2);
+	m_birdOpt = new BirdOptimizer(m_dynamicsWorld, 5, 18);
 
 	clientResetScene();		
 }
