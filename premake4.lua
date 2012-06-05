@@ -41,6 +41,8 @@ include "bullet/src/BulletDynamics"
 include "bullet/src/BulletSoftBody"
 include "bullet/Demos/OpenGL"	
 
+-- Experiment tools
+include "experiment_tools"
 
 -- Test cases
 dofile "proto/wingbeat_pattern-test.lua"

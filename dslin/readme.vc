@@ -1,0 +1,171 @@
+********************************************************************
+**                                                                **
+**               IBM-PC Installation of DISLIN                    **
+**                                                                **
+**  Contents:  1.)  Introduction                                  **
+**             2.)  Installation of DISLIN                        **
+**             3.)  Getting a DISLIN License                      **
+**             4.)  Programming with DISLIN                       **
+**                                                                **
+**  Date   :   15.04.2012                                         **
+**  Version:   10.2 / Windows,  MS Visual C++                     **
+**  Author :   Helmut Michels                                     **
+**             MPI fuer Sonnensystemforschung,                    **
+**             Max-Planck-Str. 2, 37191 Katlenburg-Lindau,        **
+**             Germany                                            **
+**             E-mail: michels@mps.mpg.de                         **
+********************************************************************
+
+1.)  Introduction
+
+     This file describes the  installation  of the  data  plotting
+     software  DISLIN on IBM-PCs  for Windows  and the Microsoft C
+     compiler Visual C++.
+
+2.)  Installation of DISLIN
+
+     The  DISLIN version for the Microsoft Compiler Visual C++  is
+     distributed in the zipped file  dl_10_vc.zip.  An utility for
+     unpacking the DISLIN files is available from the same locati-
+     on where you have downloaded dl_10_vc.zip, or from the DISLIN
+     CD-ROM. 
+
+     To install DISLIN, make the following steps:
+
+  a) Create a temporary directory and copy the files dl_10_vc.zip
+     and unzip.exe to it:
+
+     for example:   md  c:\temp
+                    cd  c:\temp
+                    copy e:\dislin\windows\unzip.exe    *.*
+                    copy e:\dislin\windows\dl_10_vc.zip *.*
+
+  b) Extract the DISLIN files with the command:
+
+                 unzip  -o dl_10_vc.zip
+
+  c) Run the setup program with the command
+
+                  setup
+
+     -  Choose OK
+
+     -  Give the Installation Directory where  DISLIN  should be in-
+        stalled. The default directory is C:\DISLIN.
+
+  d) Reconfigure the System
+
+     Set the DISLIN environment variable to c:\dislin and include
+     c:\dislin\win in your path. If you have installed DISLIN in a
+     different directory, you have to use that directory for the 
+     environment variables above.
+
+     The environment variables can be set or modified with the Control
+     Panel 
+    
+     (see Control Panel -> System -> Advanced -> Environment
+      Variables).
+   
+  e) Now you can compile,  link and run the example programs in the
+     DISLIN subdirectory examples with the commands
+
+                    clink   -a  exa_c
+                    clink   -a  map_c
+
+                    cpplink -a  exa_cpp
+                    coolink -a  map_cpp
+
+     Notes: 
+
+         - clink links by default with the static library disvc.lib 
+           of DISLIN, but this distribution contains also a library
+           for dynamic linking (dislnc.lib) and double precision 
+           libraries of DISLIN (disvc_d.lib, dislnc_d.lib). The C++
+           library of Dislin (discpp.lib) is only implemented as a
+           double precision library.
+
+         - This distribution contains the libraries disvc.lib, disvcm.lib
+           and disvcd.lib for handling different versions of MS Visual 
+           Studio and MS Visual C++. The Dislin libraries are compiled for
+           the runtime libraries libc (disvc.lib), libcmt (disvcm.lib)
+           and msvcrt (disvcd.lib). If you are using MS Visual Studio
+           2005, you can link with the Dislin library disvcd.lib from 
+           MS Studio and with the library disvcm.lib from the command 
+           line without changing default options. disvc.lib can be used
+           for older versions of MS Visual C++. 
+
+
+3.)  Getting a DISLIN License
+
+
+     DISLIN is free for non-commercial use. Licenses for commercial
+     use, or for just supporting DISLIN, are available from the site 
+     http://www.dislin.de. 
+
+
+4.)  Programming with DISLIN
+
+     The software  DISLIN allows users to write graphic programs for
+     the Microsoft Windows system  without knowledge of Windows pro-
+     gramming.  The programs must be written in the programming lan-
+     guage C and compiled and  linked  with  the  Microsoft compiler
+     Visual C++.    
+     
+     Structure of DISLIN programs
+
+     The following example shows the structure of DISLIN programs:
+
+     a) Windows Console Programs
+
+     #include <stdio.h>
+     #include "dislin.h"           /* DISLIN  include file  */
+
+     int main ()
+     { metafl ("xwin");     /* Screen output            */
+       disini ();           /* Initialization of DISLIN */
+       pagera ();           /* plots a page border      */
+       complx ();           /* Selects the COMPLX font  */
+
+       messag ("This is a test!", 100, 100);   /* plots a message */
+       disfin ();           /* Terminates DISLIN        */
+       return 0;            /* End of the program        */
+     }
+
+
+     This example is compiled and linked by Visual C++ to a Windows
+     console application. A console is created automatically by
+     the program which can be used for input/output with standard
+     C functions such as printf and scanf.  
+
+     b) Windows Applications
+
+     #include <windows.h>          /* Windows include file  */
+     #include "dislin.h"           /* DISLIN  include file  */
+
+     /* The following routine WinMain replaces the main routine of 
+        normal C programs.
+     */
+
+     int WINAPI WinMain (HINSTANCE hInst, HINSTANCE hPrevInst,
+                         PSTR lpsz, int nShow)
+     {
+
+       winapp ("windows");  /* DISLIN function: Warnings are written */
+                            /* to a file and the protocol in disfin  */
+                            /* is displayed in a widget.             */
+
+       metafl ("xwin");     /* Screen output            */
+       disini ();           /* Initialization of DISLIN */
+       pagera ();           /* plots a page border      */
+       complx ();           /* Selects the COMPLX font  */
+
+       messag ("This is a test!", 100, 100);   /* plots a message */
+       disfin ();           /* Terminates DISLIN        */
+       return 0;            /* End of the program        */
+     }
+
+     This example is compiled and linked by Visual C++ to a Windows
+     application. Standard C functions for input/output are not 
+     available. Instead of printf/scanf, DISLIN widget routines can
+     be used. 
+
