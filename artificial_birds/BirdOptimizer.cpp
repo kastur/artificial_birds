@@ -1,8 +1,20 @@
 #include "BirdOptimizer.h"
 #include "../proto/proto_helper.h"
 
-BirdOptimizer::BirdOptimizer(btDynamicsWorld* ownersWorld, int numBirds, int numPoints) 
-	: m_ownerWorld(ownersWorld), m_numBirdsPerGeneration(numBirds), m_numPoints(numPoints) {
+//#define RAPID_TESTING
+
+const int kNumSamplesInWingbeat = 18;
+const float kPerturbScaler = 0.1f;
+#ifdef RAPID_TESTING
+const int kBirdLifeTime = 10;
+const int kNumBirdsPerGeneration = 2;
+#else
+const int kBirdLifeTime = 6;
+const int kNumBirdsPerGeneration = 10;
+#endif
+
+BirdOptimizer::BirdOptimizer(btDynamicsWorld* ownersWorld) 
+	: m_ownerWorld(ownersWorld) {
 	
 	m_time = 0;
 	m_numGeneration = -1;
@@ -34,7 +46,7 @@ BirdOptimizer::~BirdOptimizer() {
 
 void BirdOptimizer::spawnBigBird(const btVector3& startOffset)
 {
-	if ((m_giveBirdThisId % m_numBirdsPerGeneration) == 0) {
+	if ((m_giveBirdThisId % kNumBirdsPerGeneration) == 0) {
 		m_numGeneration++;
 		if (m_numGeneration > 0) {
 			evaluateCurrentGenerationBirds();
@@ -71,11 +83,11 @@ void BirdOptimizer::spawnBigBird(const btVector3& startOffset)
 	m_currentBirdData->set_randseed((unsigned int)time(NULL));
 	srand(m_currentBirdData->randseed());
 
-	int numPoints = m_numPoints;
+	int numPoints = kNumSamplesInWingbeat;
 
 	if(m_numGeneration == 0) {
 		fillWithRandomNumbers(m_currentBirdData, numPoints);
-	} else if (m_numGeneration > 0 && (m_giveBirdThisId % m_numBirdsPerGeneration) == 0) {
+	} else if (m_numGeneration > 0 && (m_giveBirdThisId % kNumBirdsPerGeneration) == 0) {
 		m_currentBirdData->CopyFrom(*m_currentBestInfo);
 	} else if (m_numGeneration > 0) {
 		perturbBestResult(*m_currentBestInfo,m_currentBirdData);
@@ -95,8 +107,8 @@ void BirdOptimizer::fillWithRandomNumbers(proto::BigBirdConstructionData* info, 
 		proto::WingbeatSample* sample = info->mutable_wingbeatdata()->add_sample();
 		sample->set_wing(req_angle);
 		sample->set_feather(feather_angle);
-		//sample->set_wing(-info->wingflaphingelimit() + (((double)rand())/RAND_MAX)*(2*info->wingflaphingelimit()));
-		//sample->set_feather(-info->featheraoahingelimit() + (((double)rand())/RAND_MAX)*(2*info->featheraoahingelimit()));
+		sample->set_wing(-info->wingflaphingelimit() + (((double)rand())/RAND_MAX)*(2*info->wingflaphingelimit()));
+		sample->set_feather(-info->featheraoahingelimit() + (((double)rand())/RAND_MAX)*(2*info->featheraoahingelimit()));
 	}
 }
 
@@ -108,10 +120,10 @@ void BirdOptimizer::perturbBestResult(const proto::BigBirdConstructionData& best
 	for (int ii = 0 ; ii < infoSize; ++ii) {
 		proto::WingbeatSample* sample = info->mutable_wingbeatdata()->mutable_sample(ii);
 
-		float noise = 0.1f * info->wingflaphingelimit() * m_rand_dist(m_rand_eng);
+		float noise = kPerturbScaler * info->wingflaphingelimit() * m_rand_dist(m_rand_eng);
 		sample->set_wing(sample->wing() + noise);
 
-		noise = 0.1 * info->featheraoahingelimit() * m_rand_dist(m_rand_eng);
+		noise = kPerturbScaler * info->featheraoahingelimit() * m_rand_dist(m_rand_eng);
 		sample->set_feather(sample->feather() + noise);
 
 		if (sample->wing() > info->wingflaphingelimit())
@@ -136,7 +148,7 @@ void BirdOptimizer::pretick(btScalar dt) {
 
 		m_bigbird->pretick(dt);
 
-		if (m_bigbird->getTime() >= 3) {
+		if (m_bigbird->getTime() >= kBirdLifeTime) {
 			removeBigBird();
 			spawnBigBird(btVector3(0,0,0));
 		}
@@ -178,22 +190,39 @@ float calculateEnergy(proto::TrajectoryData* trajectoryData) {
 //need to make a proper evaluation function
 //get the best CPG function, delete the rest of CPGs and clear the m_birdCPGs array
 void BirdOptimizer::evaluateCurrentGenerationBirds() {
-	if (m_birdInfos.size()) {
-		//choose the best CPG
-		float minEnergy = FLT_MAX;
-		int minIndex = -1;
-		for (int ii = 0; ii < m_birdTrajectoryData.size(); ++ii) {
-			float energy = calculateEnergy(m_birdTrajectoryData[ii]);
-			std::cout << "energy: " << energy << std::endl;
-			if (energy < minEnergy)
-			{
-				minEnergy = energy;
-				minIndex = ii;
-			}
+
+	//choose the best CPG
+	float minEnergy = FLT_MAX;
+	int minIndex = -1;
+	for (int ii = 0; ii < m_birdTrajectoryData.size(); ++ii) {
+		float energy = calculateEnergy(m_birdTrajectoryData[ii]);
+		std::cout << "energy: " << energy << std::endl;
+		if (energy < minEnergy)
+		{
+			minEnergy = energy;
+			minIndex = ii;
 		}
-		std::cout << "min_energy: " << minEnergy << " index: " << minIndex << std::endl;
-		m_currentBestInfo = m_birdInfos[minIndex];
 	}
+	std::cout << "min_energy: " << minEnergy << " index: " << minIndex << std::endl;
+	m_currentBestInfo = m_birdInfos[minIndex];
+
+	// Save bird configuration.
+
+	proto::BirdOptimizerResult* result = m_result_data.add_result();
+	result->set_cum_energy(minEnergy);
+	result->mutable_bird()->CopyFrom(*m_birdInfos[minIndex]);
+
+	if ((m_numGeneration-1 % 20) == 0) {
+		{
+		std::ofstream ofs("C:\\Users\\k\\bird_data.pbdata");
+		ofs << m_result_data.SerializeAsString();
+		}
+		{
+		std::ofstream ofs("C:\\Users\\k\\bird_data.txt");
+		ofs << m_result_data.DebugString();
+		}
+	}
+
 
 	for (int ii = 0; ii < m_birdTrajectoryData.size(); ++ii) {
 		delete m_birdTrajectoryData[ii];
@@ -209,6 +238,6 @@ void BirdOptimizer::evaluateCurrentGenerationBirds() {
 	//this is just in case this gets called at some point not correctly
 	if (!m_currentBestInfo) {
 		m_currentBestInfo = new proto::BigBirdConstructionData();
-		fillWithRandomNumbers(m_currentBestInfo, m_numPoints);
+		fillWithRandomNumbers(m_currentBestInfo, kNumSamplesInWingbeat);
 	}
 }

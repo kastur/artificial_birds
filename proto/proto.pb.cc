@@ -35,6 +35,12 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* BigBirdConstructionData_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   BigBirdConstructionData_reflection_ = NULL;
+const ::google::protobuf::Descriptor* BirdOptimizerResult_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  BirdOptimizerResult_reflection_ = NULL;
+const ::google::protobuf::Descriptor* BirdOptimizerData_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  BirdOptimizerData_reflection_ = NULL;
 
 }  // namespace
 
@@ -157,6 +163,37 @@ void protobuf_AssignDesc_proto_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(BigBirdConstructionData));
+  BirdOptimizerResult_descriptor_ = file->message_type(6);
+  static const int BirdOptimizerResult_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BirdOptimizerResult, bird_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BirdOptimizerResult, cum_energy_),
+  };
+  BirdOptimizerResult_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      BirdOptimizerResult_descriptor_,
+      BirdOptimizerResult::default_instance_,
+      BirdOptimizerResult_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BirdOptimizerResult, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BirdOptimizerResult, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(BirdOptimizerResult));
+  BirdOptimizerData_descriptor_ = file->message_type(7);
+  static const int BirdOptimizerData_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BirdOptimizerData, result_),
+  };
+  BirdOptimizerData_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      BirdOptimizerData_descriptor_,
+      BirdOptimizerData::default_instance_,
+      BirdOptimizerData_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BirdOptimizerData, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BirdOptimizerData, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(BirdOptimizerData));
 }
 
 namespace {
@@ -181,6 +218,10 @@ void protobuf_RegisterTypes(const ::std::string&) {
     TrajectoryData_descriptor_, &TrajectoryData::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     BigBirdConstructionData_descriptor_, &BigBirdConstructionData::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    BirdOptimizerResult_descriptor_, &BirdOptimizerResult::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    BirdOptimizerData_descriptor_, &BirdOptimizerData::default_instance());
 }
 
 }  // namespace
@@ -198,6 +239,10 @@ void protobuf_ShutdownFile_proto_2eproto() {
   delete TrajectoryData_reflection_;
   delete BigBirdConstructionData::default_instance_;
   delete BigBirdConstructionData_reflection_;
+  delete BirdOptimizerResult::default_instance_;
+  delete BirdOptimizerResult_reflection_;
+  delete BirdOptimizerData::default_instance_;
+  delete BirdOptimizerData_reflection_;
 }
 
 void protobuf_AddDesc_proto_2eproto() {
@@ -229,7 +274,11 @@ void protobuf_AddDesc_proto_2eproto() {
     "\030\014 \002(\002\022!\n\031featherAoAMotorMaxImpulse\030\r \002("
     "\002\022\034\n\024featherAoAHingeLimit\030\016 \002(\002\022\020\n\010randS"
     "eed\030\017 \002(\005\022)\n\014wingbeatData\030\020 \002(\0132\023.proto."
-    "WingbeatData", 892);
+    "WingbeatData\"W\n\023BirdOptimizerResult\022,\n\004b"
+    "ird\030\001 \002(\0132\036.proto.BigBirdConstructionDat"
+    "a\022\022\n\ncum_energy\030\002 \002(\002\"\?\n\021BirdOptimizerDa"
+    "ta\022*\n\006result\030\001 \003(\0132\032.proto.BirdOptimizer"
+    "Result", 1046);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "proto.proto", &protobuf_RegisterTypes);
   Vector3d::default_instance_ = new Vector3d();
@@ -238,12 +287,16 @@ void protobuf_AddDesc_proto_2eproto() {
   TrajectorySample::default_instance_ = new TrajectorySample();
   TrajectoryData::default_instance_ = new TrajectoryData();
   BigBirdConstructionData::default_instance_ = new BigBirdConstructionData();
+  BirdOptimizerResult::default_instance_ = new BirdOptimizerResult();
+  BirdOptimizerData::default_instance_ = new BirdOptimizerData();
   Vector3d::default_instance_->InitAsDefaultInstance();
   WingbeatSample::default_instance_->InitAsDefaultInstance();
   WingbeatData::default_instance_->InitAsDefaultInstance();
   TrajectorySample::default_instance_->InitAsDefaultInstance();
   TrajectoryData::default_instance_->InitAsDefaultInstance();
   BigBirdConstructionData::default_instance_->InitAsDefaultInstance();
+  BirdOptimizerResult::default_instance_->InitAsDefaultInstance();
+  BirdOptimizerData::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_proto_2eproto);
 }
 
@@ -2369,6 +2422,465 @@ void BigBirdConstructionData::Swap(BigBirdConstructionData* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = BigBirdConstructionData_descriptor_;
   metadata.reflection = BigBirdConstructionData_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int BirdOptimizerResult::kBirdFieldNumber;
+const int BirdOptimizerResult::kCumEnergyFieldNumber;
+#endif  // !_MSC_VER
+
+BirdOptimizerResult::BirdOptimizerResult()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void BirdOptimizerResult::InitAsDefaultInstance() {
+  bird_ = const_cast< ::proto::BigBirdConstructionData*>(&::proto::BigBirdConstructionData::default_instance());
+}
+
+BirdOptimizerResult::BirdOptimizerResult(const BirdOptimizerResult& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void BirdOptimizerResult::SharedCtor() {
+  _cached_size_ = 0;
+  bird_ = NULL;
+  cum_energy_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+BirdOptimizerResult::~BirdOptimizerResult() {
+  SharedDtor();
+}
+
+void BirdOptimizerResult::SharedDtor() {
+  if (this != default_instance_) {
+    delete bird_;
+  }
+}
+
+void BirdOptimizerResult::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* BirdOptimizerResult::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return BirdOptimizerResult_descriptor_;
+}
+
+const BirdOptimizerResult& BirdOptimizerResult::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_proto_2eproto();  return *default_instance_;
+}
+
+BirdOptimizerResult* BirdOptimizerResult::default_instance_ = NULL;
+
+BirdOptimizerResult* BirdOptimizerResult::New() const {
+  return new BirdOptimizerResult;
+}
+
+void BirdOptimizerResult::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_bird()) {
+      if (bird_ != NULL) bird_->::proto::BigBirdConstructionData::Clear();
+    }
+    cum_energy_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool BirdOptimizerResult::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required .proto.BigBirdConstructionData bird = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_bird()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(21)) goto parse_cum_energy;
+        break;
+      }
+      
+      // required float cum_energy = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_cum_energy:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &cum_energy_)));
+          set_has_cum_energy();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void BirdOptimizerResult::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required .proto.BigBirdConstructionData bird = 1;
+  if (has_bird()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->bird(), output);
+  }
+  
+  // required float cum_energy = 2;
+  if (has_cum_energy()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->cum_energy(), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* BirdOptimizerResult::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // required .proto.BigBirdConstructionData bird = 1;
+  if (has_bird()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->bird(), target);
+  }
+  
+  // required float cum_energy = 2;
+  if (has_cum_energy()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->cum_energy(), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int BirdOptimizerResult::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required .proto.BigBirdConstructionData bird = 1;
+    if (has_bird()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->bird());
+    }
+    
+    // required float cum_energy = 2;
+    if (has_cum_energy()) {
+      total_size += 1 + 4;
+    }
+    
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void BirdOptimizerResult::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const BirdOptimizerResult* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const BirdOptimizerResult*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void BirdOptimizerResult::MergeFrom(const BirdOptimizerResult& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_bird()) {
+      mutable_bird()->::proto::BigBirdConstructionData::MergeFrom(from.bird());
+    }
+    if (from.has_cum_energy()) {
+      set_cum_energy(from.cum_energy());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void BirdOptimizerResult::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void BirdOptimizerResult::CopyFrom(const BirdOptimizerResult& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool BirdOptimizerResult::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+  
+  if (has_bird()) {
+    if (!this->bird().IsInitialized()) return false;
+  }
+  return true;
+}
+
+void BirdOptimizerResult::Swap(BirdOptimizerResult* other) {
+  if (other != this) {
+    std::swap(bird_, other->bird_);
+    std::swap(cum_energy_, other->cum_energy_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata BirdOptimizerResult::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = BirdOptimizerResult_descriptor_;
+  metadata.reflection = BirdOptimizerResult_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int BirdOptimizerData::kResultFieldNumber;
+#endif  // !_MSC_VER
+
+BirdOptimizerData::BirdOptimizerData()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void BirdOptimizerData::InitAsDefaultInstance() {
+}
+
+BirdOptimizerData::BirdOptimizerData(const BirdOptimizerData& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void BirdOptimizerData::SharedCtor() {
+  _cached_size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+BirdOptimizerData::~BirdOptimizerData() {
+  SharedDtor();
+}
+
+void BirdOptimizerData::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void BirdOptimizerData::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* BirdOptimizerData::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return BirdOptimizerData_descriptor_;
+}
+
+const BirdOptimizerData& BirdOptimizerData::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_proto_2eproto();  return *default_instance_;
+}
+
+BirdOptimizerData* BirdOptimizerData::default_instance_ = NULL;
+
+BirdOptimizerData* BirdOptimizerData::New() const {
+  return new BirdOptimizerData;
+}
+
+void BirdOptimizerData::Clear() {
+  result_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool BirdOptimizerData::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated .proto.BirdOptimizerResult result = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_result:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_result()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(10)) goto parse_result;
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void BirdOptimizerData::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // repeated .proto.BirdOptimizerResult result = 1;
+  for (int i = 0; i < this->result_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->result(i), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* BirdOptimizerData::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // repeated .proto.BirdOptimizerResult result = 1;
+  for (int i = 0; i < this->result_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->result(i), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int BirdOptimizerData::ByteSize() const {
+  int total_size = 0;
+  
+  // repeated .proto.BirdOptimizerResult result = 1;
+  total_size += 1 * this->result_size();
+  for (int i = 0; i < this->result_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->result(i));
+  }
+  
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void BirdOptimizerData::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const BirdOptimizerData* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const BirdOptimizerData*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void BirdOptimizerData::MergeFrom(const BirdOptimizerData& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  result_.MergeFrom(from.result_);
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void BirdOptimizerData::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void BirdOptimizerData::CopyFrom(const BirdOptimizerData& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool BirdOptimizerData::IsInitialized() const {
+  
+  for (int i = 0; i < result_size(); i++) {
+    if (!this->result(i).IsInitialized()) return false;
+  }
+  return true;
+}
+
+void BirdOptimizerData::Swap(BirdOptimizerData* other) {
+  if (other != this) {
+    result_.Swap(&other->result_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata BirdOptimizerData::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = BirdOptimizerData_descriptor_;
+  metadata.reflection = BirdOptimizerData_reflection_;
   return metadata;
 }
 

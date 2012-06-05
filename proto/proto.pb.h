@@ -38,6 +38,8 @@ class WingbeatData;
 class TrajectorySample;
 class TrajectoryData;
 class BigBirdConstructionData;
+class BirdOptimizerResult;
+class BirdOptimizerData;
 
 // ===================================================================
 
@@ -761,6 +763,184 @@ class BigBirdConstructionData : public ::google::protobuf::Message {
   void InitAsDefaultInstance();
   static BigBirdConstructionData* default_instance_;
 };
+// -------------------------------------------------------------------
+
+class BirdOptimizerResult : public ::google::protobuf::Message {
+ public:
+  BirdOptimizerResult();
+  virtual ~BirdOptimizerResult();
+  
+  BirdOptimizerResult(const BirdOptimizerResult& from);
+  
+  inline BirdOptimizerResult& operator=(const BirdOptimizerResult& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const BirdOptimizerResult& default_instance();
+  
+  void Swap(BirdOptimizerResult* other);
+  
+  // implements Message ----------------------------------------------
+  
+  BirdOptimizerResult* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const BirdOptimizerResult& from);
+  void MergeFrom(const BirdOptimizerResult& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required .proto.BigBirdConstructionData bird = 1;
+  inline bool has_bird() const;
+  inline void clear_bird();
+  static const int kBirdFieldNumber = 1;
+  inline const ::proto::BigBirdConstructionData& bird() const;
+  inline ::proto::BigBirdConstructionData* mutable_bird();
+  inline ::proto::BigBirdConstructionData* release_bird();
+  
+  // required float cum_energy = 2;
+  inline bool has_cum_energy() const;
+  inline void clear_cum_energy();
+  static const int kCumEnergyFieldNumber = 2;
+  inline float cum_energy() const;
+  inline void set_cum_energy(float value);
+  
+  // @@protoc_insertion_point(class_scope:proto.BirdOptimizerResult)
+ private:
+  inline void set_has_bird();
+  inline void clear_has_bird();
+  inline void set_has_cum_energy();
+  inline void clear_has_cum_energy();
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::proto::BigBirdConstructionData* bird_;
+  float cum_energy_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_proto_2eproto();
+  friend void protobuf_AssignDesc_proto_2eproto();
+  friend void protobuf_ShutdownFile_proto_2eproto();
+  
+  void InitAsDefaultInstance();
+  static BirdOptimizerResult* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class BirdOptimizerData : public ::google::protobuf::Message {
+ public:
+  BirdOptimizerData();
+  virtual ~BirdOptimizerData();
+  
+  BirdOptimizerData(const BirdOptimizerData& from);
+  
+  inline BirdOptimizerData& operator=(const BirdOptimizerData& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const BirdOptimizerData& default_instance();
+  
+  void Swap(BirdOptimizerData* other);
+  
+  // implements Message ----------------------------------------------
+  
+  BirdOptimizerData* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const BirdOptimizerData& from);
+  void MergeFrom(const BirdOptimizerData& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // repeated .proto.BirdOptimizerResult result = 1;
+  inline int result_size() const;
+  inline void clear_result();
+  static const int kResultFieldNumber = 1;
+  inline const ::proto::BirdOptimizerResult& result(int index) const;
+  inline ::proto::BirdOptimizerResult* mutable_result(int index);
+  inline ::proto::BirdOptimizerResult* add_result();
+  inline const ::google::protobuf::RepeatedPtrField< ::proto::BirdOptimizerResult >&
+      result() const;
+  inline ::google::protobuf::RepeatedPtrField< ::proto::BirdOptimizerResult >*
+      mutable_result();
+  
+  // @@protoc_insertion_point(class_scope:proto.BirdOptimizerData)
+ private:
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::google::protobuf::RepeatedPtrField< ::proto::BirdOptimizerResult > result_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_proto_2eproto();
+  friend void protobuf_AssignDesc_proto_2eproto();
+  friend void protobuf_ShutdownFile_proto_2eproto();
+  
+  void InitAsDefaultInstance();
+  static BirdOptimizerData* default_instance_;
+};
 // ===================================================================
 
 
@@ -1436,6 +1616,90 @@ inline ::proto::WingbeatData* BigBirdConstructionData::release_wingbeatdata() {
   ::proto::WingbeatData* temp = wingbeatdata_;
   wingbeatdata_ = NULL;
   return temp;
+}
+
+// -------------------------------------------------------------------
+
+// BirdOptimizerResult
+
+// required .proto.BigBirdConstructionData bird = 1;
+inline bool BirdOptimizerResult::has_bird() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void BirdOptimizerResult::set_has_bird() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void BirdOptimizerResult::clear_has_bird() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void BirdOptimizerResult::clear_bird() {
+  if (bird_ != NULL) bird_->::proto::BigBirdConstructionData::Clear();
+  clear_has_bird();
+}
+inline const ::proto::BigBirdConstructionData& BirdOptimizerResult::bird() const {
+  return bird_ != NULL ? *bird_ : *default_instance_->bird_;
+}
+inline ::proto::BigBirdConstructionData* BirdOptimizerResult::mutable_bird() {
+  set_has_bird();
+  if (bird_ == NULL) bird_ = new ::proto::BigBirdConstructionData;
+  return bird_;
+}
+inline ::proto::BigBirdConstructionData* BirdOptimizerResult::release_bird() {
+  clear_has_bird();
+  ::proto::BigBirdConstructionData* temp = bird_;
+  bird_ = NULL;
+  return temp;
+}
+
+// required float cum_energy = 2;
+inline bool BirdOptimizerResult::has_cum_energy() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void BirdOptimizerResult::set_has_cum_energy() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void BirdOptimizerResult::clear_has_cum_energy() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void BirdOptimizerResult::clear_cum_energy() {
+  cum_energy_ = 0;
+  clear_has_cum_energy();
+}
+inline float BirdOptimizerResult::cum_energy() const {
+  return cum_energy_;
+}
+inline void BirdOptimizerResult::set_cum_energy(float value) {
+  set_has_cum_energy();
+  cum_energy_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// BirdOptimizerData
+
+// repeated .proto.BirdOptimizerResult result = 1;
+inline int BirdOptimizerData::result_size() const {
+  return result_.size();
+}
+inline void BirdOptimizerData::clear_result() {
+  result_.Clear();
+}
+inline const ::proto::BirdOptimizerResult& BirdOptimizerData::result(int index) const {
+  return result_.Get(index);
+}
+inline ::proto::BirdOptimizerResult* BirdOptimizerData::mutable_result(int index) {
+  return result_.Mutable(index);
+}
+inline ::proto::BirdOptimizerResult* BirdOptimizerData::add_result() {
+  return result_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::proto::BirdOptimizerResult >&
+BirdOptimizerData::result() const {
+  return result_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::proto::BirdOptimizerResult >*
+BirdOptimizerData::mutable_result() {
+  return &result_;
 }
 
 

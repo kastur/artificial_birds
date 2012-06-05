@@ -53,3 +53,12 @@ message BigBirdConstructionData {
 
 	required WingbeatData wingbeatData = 16;
 }
+
+message BirdOptimizerResult {
+	required BigBirdConstructionData bird = 1;
+	required float cum_energy = 2;
+}
+
+message BirdOptimizerData {
+	repeated BirdOptimizerResult result = 1;
+}

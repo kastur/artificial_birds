@@ -14,7 +14,7 @@ typedef std::tr1::normal_distribution<float> t_rand_dist;
 
 class BirdOptimizer {
 public:
-	BirdOptimizer(btDynamicsWorld* ownerWorld, int numBirds, int numPoints);
+	BirdOptimizer(btDynamicsWorld* ownerWorld);
 	~BirdOptimizer();
 	void pretick(btScalar dt);
 	void spawnBigBird(const btVector3& startOffset);
@@ -26,8 +26,6 @@ public:
 	}
 protected:
 	void fillWithRandomNumbers(proto::BigBirdConstructionData* info, int numPoints);
-	//void spawnBigBird(const btVector3& startOffset);
-	//void removeBird();
 	void perturbBestResult(const proto::BigBirdConstructionData& bestCPG, proto::BigBirdConstructionData* info);
 	void evaluateCurrentGenerationBirds();
 
@@ -48,6 +46,8 @@ private:
 
 	t_rand_eng m_rand_eng;
 	t_rand_dist m_rand_dist;
+
+	proto::BirdOptimizerData m_result_data;
 };
 
 #endif

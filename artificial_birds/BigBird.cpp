@@ -2,6 +2,7 @@
 #include "../proto/proto_helper.h"
 
 const bool kEnableMotors = true;
+const float kHoistHoldTime = 1.5f;
 
 btRigidBody* BigBird::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape) {
 	btVector3 localInertia(0,0,0);
@@ -23,6 +24,8 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdLocalParams& local_in
 	m_time = 0;
 	m_time_steps = -1;
 
+
+	m_hoist_broken = false;
 	m_hoist_shapes[HOIST_POINT_0] = new btCapsuleShape(0.1f, 0.1f);
 	m_hoist_shapes[HOIST_POINT_1] = new btCapsuleShape(0.1f, 0.1f);
 	m_hoist_shapes[HOIST_POINT_2] = new btCapsuleShape(0.1f, 0.1f);
@@ -279,7 +282,8 @@ void BigBird::pretick (btScalar dt) {
 	m_time += dt;
 	m_time_steps = (m_time_steps  + 1) % wingbeat_pattern_length;
 	
-	if ((2 < m_time) && (m_time <= (2 + dt))) {
+	if (!m_hoist_broken && m_time > kHoistHoldTime) {
+		m_hoist_broken = true;
 		for (int ii = 0; ii < JOINT_HOIST_COUNT; ++ii) {
 			m_ownerWorld->removeConstraint(m_hoist_joints[ii]);
 		}

@@ -84,6 +84,7 @@ private:
 
 	btScalar m_time;  // keep track of time.
 	int m_time_steps;
+	bool m_hoist_broken;
 };
 
 #endif
