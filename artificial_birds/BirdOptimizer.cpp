@@ -1,29 +1,35 @@
 #include "BirdOptimizer.h"
+#include "../proto/proto_helper.h"
 
 BirdOptimizer::BirdOptimizer(btDynamicsWorld* ownersWorld, int numBirds) 
 : m_ownerWorld(ownersWorld), m_numBirdsPerGeneration(numBirds) {
 	
 	m_time = 0;
-	m_bigbird = 0;
-	m_currentBirdMetricDetails = 0;
 	m_numGeneration = -1;
-	m_currentBestCPG = 0;
 	m_giveBirdThisId = 0;
+
+	//Pointers.
+	m_bigbird = 0;
+	m_currentTrajectoryData = 0;
+	m_currentBestInfo = 0;
+	m_birdLocalParam = 0;
+	m_birdData = 0;
+	
 	spawnBigBird(btVector3(0,0,0));
 }
 
 BirdOptimizer::~BirdOptimizer() {
 	removeBigBird();
-	for (int ii = 0 ; ii < m_birdMetricDetails.size(); ii++) {
-		delete m_birdMetricDetails.at(ii);
+	for (int ii = 0 ; ii < m_birdTrajectoryData.size(); ii++) {
+		delete m_birdTrajectoryData[ii];
 	}
 
-	for (int ii = 0; ii < m_birdCPGs.size(); ii++) {
-		if (m_birdCPGs.at(ii) == m_currentBestCPG) continue;
-		delete m_birdCPGs.at(ii);
+	for (int ii = 0; ii < m_birdInfos.size(); ii++) {
+		if (m_birdInfos[ii] == m_currentBestInfo) continue;
+		delete m_birdInfos[ii];
 	}
-	if (m_currentBestCPG)
-		delete m_currentBestCPG;
+	if (m_currentBestInfo)
+		delete m_currentBestInfo;
 }
 
 void BirdOptimizer::spawnBigBird(const btVector3& startOffset)
@@ -35,73 +41,78 @@ void BirdOptimizer::spawnBigBird(const btVector3& startOffset)
 		}
 	}
 
-	BigBirdConstructionInfo info;
+	m_birdLocalParam = new BigBirdLocalParams();
 	
-	info.birdId = m_giveBirdThisId++;
+	m_birdLocalParam->birdId = m_giveBirdThisId++;
 
-	info.startTransform.setIdentity();
-	info.startTransform.setOrigin(startOffset);
+	m_birdLocalParam->startTransform.setIdentity();
+	m_birdLocalParam->startTransform.setOrigin(startOffset);
 
-	info.hoistTransform.setIdentity();
-	info.hoistTransform.setOrigin(startOffset);
-	info.hoistAngleXY = 30.f;
-	info.hoistAngleZXY = 90.f;
+	m_birdLocalParam->hoistTransform.setIdentity();
+	m_birdLocalParam->hoistTransform.setOrigin(startOffset);
 
-	info.pelvisHalfLength = 0.5f;
-	info.wingHalfLength = 0.5f;
-	info.hoistMass = 0.0f;
-	info.pelvisMass = 2.0f;
-	info.wingMass = 0.5f;
-	info.pelvisRelPosToAttachWing = btVector3(0.f, 0.f, 0.f);
-	info.featherRelPosToAttachFeather = btVector3(0.f, 0.f, 0.f);
-	info.wingFlapHingeLimit = 90.f;
-	info.featherAoAHingeLimit = 90.f;
-	info.featherAoAMotorMaxImpulse = 1000.0f;
-	info.wingFlapMotorMaxImpulse = 1000.0f;
-	info.wingFlapFrequency = 3.5f;
+	m_birdData = new proto::BigBirdConstructionData();
 
-	info.numPoints = 180;
-	info.randSeed = (unsigned int)time(NULL);
-	srand(info.randSeed);
+	m_birdData->set_hoistanglexy(30.f);
+	m_birdData->set_hoistanglezxy(90.f);
 
-	info.birdCPG = new CPG();
+	m_birdData->set_pelvishalflength(0.5f);
+	m_birdData->set_winghalflength(0.5f);
+	m_birdData->set_hoistmass(0.0f);
+	m_birdData->set_pelvismass(2.0f);
+	m_birdData->set_wingmass(0.5f);
+	make_Vector3d(btVector3(0.f, 0.f, 0.f), m_birdData->mutable_pelvisrelpostoattachwing());
+	make_Vector3d(btVector3(0.f, 0.f, 0.f), m_birdData->mutable_featherrelpostoattachfeather());
+	m_birdData->set_wingflaphingelimit(90.f);
+	m_birdData->set_featheraoahingelimit(90.f);
+	m_birdData->set_featheraoamotormaximpulse(1000.0f);
+	m_birdData->set_wingflapmotormaximpulse(1000.0f);
+
+	m_birdData->set_randseed((unsigned int)time(NULL));
+	srand(m_birdData->randseed());
+
+	int numPoints = 180;
 
 	if(m_numGeneration == 0) {
-		fillWithRandomNumbers(&(info.birdCPG->reqWingFlappingAngle),-info.wingFlapHingeLimit,info.wingFlapHingeLimit,info.numPoints);
-		fillWithRandomNumbers(&(info.birdCPG->reqFeatherAngleOfAttack1),-info.featherAoAHingeLimit,info.featherAoAHingeLimit,info.numPoints);
+		fillWithRandomNumbers(m_birdData, numPoints);
 	} else if (m_numGeneration > 0) {
-		perturbBestResult(&(m_currentBestCPG->reqWingFlappingAngle),&(info.birdCPG->reqWingFlappingAngle), -info.wingFlapHingeLimit,info.wingFlapHingeLimit,info.numPoints);
-		perturbBestResult(&(m_currentBestCPG->reqFeatherAngleOfAttack1),&(info.birdCPG->reqFeatherAngleOfAttack1), -info.wingFlapHingeLimit,info.wingFlapHingeLimit,info.numPoints);
+		perturbBestResult(*m_currentBestInfo,m_birdData);
 	}
 	
-	info.birdCPG->birdId = info.birdId;
-	m_birdCPGs.push_back(info.birdCPG);
-
-	m_currentBirdMetricDetails = new MetricDetails();
-	m_currentBirdMetricDetails->birdId = info.birdId;
-	m_bigbird = new BigBird(m_ownerWorld, info);
+	m_currentTrajectoryData = new proto::TrajectoryData();
+	m_bigbird = new BigBird(m_ownerWorld, *m_birdLocalParam,*m_birdData);
 }
 
-void BirdOptimizer::fillWithRandomNumbers(btAlignedObjectArray<btScalar>* arrScalar, btScalar minValue, btScalar maxValue, int numPoints)
+void BirdOptimizer::fillWithRandomNumbers(proto::BigBirdConstructionData* info, int numPoints)
 {
 	for (int ii = 0 ; ii < numPoints; ++ii) {
-		arrScalar->push_back(minValue + (((double)rand())/RAND_MAX)*(maxValue-minValue));
+		proto::WingbeatSample* sample = info->mutable_wingbeatdata()->add_sample();
+		sample->set_wing(-info->wingflaphingelimit() + (((double)rand())/RAND_MAX)*(2*info->wingflaphingelimit()));
+		sample->set_feather(-info->featheraoahingelimit() + (((double)rand())/RAND_MAX)*(2*info->featheraoahingelimit()));
 	}
 }
 
-void BirdOptimizer::perturbBestResult(btAlignedObjectArray<btScalar>* arrBase, btAlignedObjectArray<btScalar>* arrChanged, btScalar minValue, btScalar maxValue, int numPoints)
+void BirdOptimizer::perturbBestResult(const proto::BigBirdConstructionData& bestInfo, proto::BigBirdConstructionData* info)
 {
-	arrChanged->clear();
-	arrChanged->copyFromArray(*arrBase);
+	info->CopyFrom(bestInfo);
 	double mult = 0.0;
-	for (int ii = 0 ; ii < arrChanged->size(); ++ii) {
+	for (int ii = 0 ; ii < info->wingbeatdata().sample_size(); ++ii) {
 		if (rand() < RAND_MAX/2)
 			mult = 1.0;
-		arrChanged->at(ii) += (minValue + (((double)rand())/RAND_MAX)*(maxValue-minValue))*mult;
-		if (arrChanged->at(ii) > maxValue)
-			arrChanged->at(ii) = maxValue;
-		if (arrChanged->at(ii) < minValue)
-			arrChanged->at(ii) = minValue;
+		proto::WingbeatSample* sample = info->mutable_wingbeatdata()->add_sample();
+		float noise = 0.f;
+		sample->set_wing(sample->wing() + noise);
+		noise = 0.f;
+		sample->set_feather(sample->feather() + noise);
+
+		if (sample->wing() > info->wingflaphingelimit())
+			sample->set_wing(info->wingflaphingelimit());
+		if (sample->wing() < -info->wingflaphingelimit())
+			sample->set_wing(-info->wingflaphingelimit());
+		if (sample->feather() > info->featheraoahingelimit())
+			sample->set_feather(info->featheraoahingelimit());
+		if (sample->feather() < -info->featheraoahingelimit())
+			sample->set_feather(-info->featheraoahingelimit());
 	}
 }
 
@@ -109,7 +120,7 @@ void BirdOptimizer::pretick(btScalar dt) {
 	m_time += dt;
 	
 	if (m_bigbird) {
-		m_bigbird->fillMetricDetails(m_currentBirdMetricDetails);
+		m_bigbird->getCurrentTrajectory(m_currentTrajectoryData->add_sample());
 		m_bigbird->pretick(dt);
 
 		if (m_bigbird->getTime() >= 15) {
@@ -123,30 +134,32 @@ void BirdOptimizer::pretick(btScalar dt) {
 void BirdOptimizer::removeBigBird() {
 	if (m_bigbird) {
 		delete m_bigbird;
+		delete m_birdLocalParam;
 		m_bigbird = 0;
-		m_birdMetricDetails.push_back(m_currentBirdMetricDetails);
-		m_currentBirdMetricDetails = 0;
+		m_birdTrajectoryData.push_back(m_currentTrajectoryData);
+		m_birdInfos.push_back(m_birdData);
+		m_currentTrajectoryData = 0;
+		m_birdLocalParam = 0;
+		m_birdData = 0;
 	}
 }
 
 //need to make a proper evaluation function
 //get the best CPG function, delete the rest of CPGs and clear the m_birdCPGs array
 void BirdOptimizer::evaluateCurrentGenerationBirds() {
-	if (m_birdCPGs.size()) {
+	if (m_birdInfos.size()) {
 		//choose the best CPG
-		m_currentBestCPG = m_birdCPGs.at(0);
+		m_currentBestInfo = m_birdInfos[0];
 	}
-	for (int ii = 0; ii < m_birdCPGs.size(); ii++) {
-		if (m_birdCPGs.at(ii) == m_currentBestCPG) continue;
-		delete m_birdCPGs.at(ii);
+	for (int ii = 0; ii < m_birdInfos.size(); ii++) {
+		if (m_birdInfos[ii] == m_currentBestInfo) continue;
+		delete m_birdInfos[ii];
 	}
-	m_birdCPGs.clear();
+	m_birdInfos.clear();
 
 	//this is just in case this gets called at some point not correctly
-	if (!m_currentBestCPG) {
-		m_currentBestCPG = new CPG();
-		m_currentBestCPG->birdId = 0;
-		fillWithRandomNumbers(&(m_currentBestCPG->reqWingFlappingAngle),0,0,180);
-		fillWithRandomNumbers(&(m_currentBestCPG->reqFeatherAngleOfAttack1),0,0,180);
+	if (!m_currentBestInfo) {
+		m_currentBestInfo = new proto::BigBirdConstructionData();
+		fillWithRandomNumbers(m_currentBestInfo, 180);
 	}
 }

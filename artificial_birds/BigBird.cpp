@@ -1,5 +1,5 @@
 #include "BigBird.h"
-#include "../proto/proto_helper-inl.h"
+#include "../proto/proto_helper.h"
 
 const bool kEnableMotors = true;
 
@@ -49,7 +49,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdLocalParams& local_in
 			btVector3(
 			btCos(xy_angle) * btSin(zxy_angle) * m_data.pelvishalflength() + 0.2f*btCos(zxy_angle), 
 			btSin(xy_angle) * btSin(zxy_angle) * m_data.pelvishalflength(),
-			btCos(xy_angle) * m_data.pelvishalflength() - 0.2f*btSin(zxy_angle)
+			btCos(zxy_angle) * m_data.pelvishalflength() - 0.2f*btSin(zxy_angle)
 			));
 		trA *= m_local_info.hoistTransform;
 
@@ -63,7 +63,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdLocalParams& local_in
 			btVector3(
 			btCos(xy_angle) * btSin(zxy_angle) * m_data.pelvishalflength() - 0.2f*btCos(zxy_angle), 
 			btSin(xy_angle) * btSin(zxy_angle) * m_data.pelvishalflength(),
-			btCos(xy_angle) * m_data.pelvishalflength() + 0.2f*btSin(zxy_angle)
+			btCos(zxy_angle) * m_data.pelvishalflength() + 0.2f*btSin(zxy_angle)
 			));
 		trA *= m_local_info.hoistTransform;
 		m_hoist_bodies[HOIST_POINT_2] = localCreateRigidBody(
@@ -329,4 +329,10 @@ void BigBird::getCurrentTrajectory(proto::TrajectorySample* trajectory_sample) {
 	btScalar rtShoulderImpulse = m_joints[JOINT_RIGHT_SHOULDER]->getAppliedImpulse();
 	btScalar lfFeatherImpulse = m_joints[JOINT_LEFT_SHOULDER_FEATHER_1]->getAppliedImpulse();
 	btScalar rtFeatherImpulse = m_joints[JOINT_RIGHT_SHOULDER_FEATHER_1]->getAppliedImpulse();
+
+	make_Vector3d(posInWorld, trajectory_sample->mutable_pelvisposition());
+	trajectory_sample->set_leftwingimpulse(lfShoulderImpulse);
+	trajectory_sample->set_rightwingimpulse(rtShoulderImpulse);
+	trajectory_sample->set_leftfeatherimpulse(lfFeatherImpulse);
+	trajectory_sample->set_rightfeatherimpulse(rtFeatherImpulse);
 }

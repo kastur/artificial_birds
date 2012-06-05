@@ -67,44 +67,10 @@ void ArtificialBirdsDemoApp::initPhysics()
 #endif //CREATE_GROUND_COLLISION_OBJECT
 
 	}
-	m_birdOpt = new BirdOptimizer(m_dynamicsWorld, 1);
+	m_birdOpt = new BirdOptimizer(m_dynamicsWorld, 2);
 
 	clientResetScene();		
 }
-
-void ArtificialBirdsDemoApp::spawnBigBird(const btVector3& startOffset)
-{
-	BigBirdConstructionInfo info;
-	
-	info.birdId = m_bigbirds.size();
-	
-	info.startTransform.setIdentity();
-	info.startTransform.setOrigin(startOffset);
-
-	info.hoistTransform.setIdentity();
-	info.hoistTransform.setOrigin(startOffset);
-	info.hoistAngleXY = 30.f;
-	info.hoistAngleZXY = 90.f;
-
-	info.pelvisHalfLength = 1.0f;
-	info.wingHalfLength = 0.6f;
-	info.hoistMass = 0.0f;
-	info.pelvisMass = 5.0f;
-	info.wingMass = 1.0f;
-	info.pelvisRelPosToAttachWing = btVector3(0.f, 0.f, 0.f);
-	info.featherRelPosToAttachFeather = btVector3(0.f, 0.f, 0.f);
-	info.wingFlapHingeLimit = 0.f;
-	info.featherAoAHingeLimit = 0.f;
-	info.featherAoAMotorMaxImpulse = 10.0f;
-	info.wingFlapMotorMaxImpulse = 10.0f;
-	info.wingFlapFrequency = 1.5f;
-
-	info.numPoints = 200;
-
-	BigBird* bigbird = new BigBird(m_dynamicsWorld, info);
-	m_bigbirds.push_back(bigbird);
-}
-
 
 void ArtificialBirdsDemoApp::clientMoveAndDisplay()
 {

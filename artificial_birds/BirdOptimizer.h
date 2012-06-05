@@ -2,10 +2,10 @@
 #define BIRD_OPTIMIZER_H__
 
 #include "btBulletDynamicsCommon.h"
-#include "BigBirdConstructionInfo.h"
+#include "BigBirdLocalParams.h"
+#include "../proto/proto.pb.h"
 #include "BigBird.h"
 #include "BigFeather.h"
-#include "MetricDetails.h"
 #include "time.h"
 
 class BirdOptimizer {
@@ -21,20 +21,22 @@ public:
 		return btVector3(0,0,0);
 	}
 protected:
-	void fillWithRandomNumbers(btAlignedObjectArray<btScalar>* arrScalar, btScalar minValue, btScalar maxValue, int numPoints);
+	void fillWithRandomNumbers(proto::BigBirdConstructionData* info, int numPoints);
 	//void spawnBigBird(const btVector3& startOffset);
 	//void removeBird();
-	void perturbBestResult(btAlignedObjectArray<btScalar>* arrBase, btAlignedObjectArray<btScalar>* arrChanged, btScalar minValue, btScalar maxValue, int numPoints);
+	void perturbBestResult(const proto::BigBirdConstructionData& bestCPG, proto::BigBirdConstructionData* info);
 	void evaluateCurrentGenerationBirds();
 
 private:
 	btDynamicsWorld* m_ownerWorld;
 	BigBird* m_bigbird;
 	btScalar m_time;  // keep track of time.
-	btAlignedObjectArray<struct MetricDetails*> m_birdMetricDetails;
-	MetricDetails* m_currentBirdMetricDetails;
-	btAlignedObjectArray<struct CPG*> m_birdCPGs;
-	CPG* m_currentBestCPG;
+	btAlignedObjectArray<proto::TrajectoryData*> m_birdTrajectoryData;
+	proto::TrajectoryData* m_currentTrajectoryData;
+	btAlignedObjectArray<proto::BigBirdConstructionData*> m_birdInfos;
+	proto::BigBirdConstructionData* m_birdData;
+	BigBirdLocalParams* m_birdLocalParam;
+	proto::BigBirdConstructionData* m_currentBestInfo;
 	int m_numBirdsPerGeneration;
 	int m_numGeneration;
 	int m_giveBirdThisId;
