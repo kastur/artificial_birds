@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include "btBulletDynamicsCommon.h"
-#include "../proto/proto.pb.h"
+#include "../proto/wingbeat_pattern.pb.h"
 
 using namespace std;
 
