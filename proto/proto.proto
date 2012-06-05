@@ -1,0 +1,55 @@
+package proto;
+
+message Vector3d {
+	required float x = 1;
+	required float y = 2;
+	required float z = 3;
+}
+
+message WingbeatSample {
+	required float wing = 1;
+	required float feather = 2;
+}
+
+message WingbeatData {
+	repeated WingbeatSample sample = 1;
+}
+
+message TrajectorySample {
+	required Vector3d pelvisPosition = 1;
+	required float leftWingImpulse = 2;
+	required float rightWingImpulse = 3;
+	required float leftFeatherImpulse = 4;
+	required float rightFeatherImpulse = 5;
+}
+
+message TrajectoryData {
+	repeated TrajectorySample sample = 1;
+}
+
+message BigBirdConstructionData {
+
+	// Geometry
+	required float pelvisHalfLength = 1;
+	required float wingHalfLength = 2;
+
+	required float hoistAngleXY = 3;
+	required float hoistAngleZXY = 4;
+	required float hoistMass = 5;
+	required float pelvisMass = 6;
+	required float wingMass = 7;
+
+	optional float featherArea = 8;  // unused.
+	required Vector3d pelvisRelPosToAttachWing = 9;
+	required Vector3d featherRelPosToAttachFeather = 10;
+
+	// Wingbeat
+	required float wingFlapMotorMaxImpulse = 11;
+	required float wingFlapHingeLimit = 12;
+	required float featherAoAMotorMaxImpulse = 13;
+	required float featherAoAHingeLimit = 14;
+
+	required int32 randSeed = 15;
+
+	required WingbeatData wingbeatData = 16;
+}
