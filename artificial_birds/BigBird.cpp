@@ -1,5 +1,5 @@
 #include "BigBird.h"
-#include "../proto/proto_helper.h"
+#include "proto_helper.h"
 
 const bool kEnableMotors = true;
 const float kHoistHoldTime = 1.5f;

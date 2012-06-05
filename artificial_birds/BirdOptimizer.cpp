@@ -1,5 +1,5 @@
 #include "BirdOptimizer.h"
-#include "../proto/proto_helper.h"
+#include "proto_helper.h"
 
 #define RAPID_TESTING
 
