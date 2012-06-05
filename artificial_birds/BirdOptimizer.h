@@ -25,7 +25,6 @@ public:
 		return btVector3(0,3,0);
 	}
 protected:
-	void fillWithRandomNumbers(proto::BigBirdConstructionData* info, int numPoints);
 	void perturbBestResult(const proto::BigBirdConstructionData& bestCPG, proto::BigBirdConstructionData* info);
 	void evaluateCurrentGenerationBirds();
 
