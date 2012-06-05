@@ -49,30 +49,31 @@ class BigBird {
 	};
 
 public:
-	BigBird(btDynamicsWorld* ownerWorld, const BigBirdLocalParams& local_info, proto::BigBirdConstructionData* data);
+	BigBird(
+		btDynamicsWorld* ownerWorld,
+		const BigBirdLocalParams& local_info,
+		const proto::BigBirdConstructionData& data);
+	
 	virtual ~BigBird();
+
 	void pretick(btScalar dt);
 
 	btVector3 getPosition() {
 		return m_bodies[BODYPART_PELVIS]->getCenterOfMassPosition();
 	}
 
-	void fillMetricDetails(MetricDetails* md);
 	
 	btScalar getTime() {return m_time;}
+	void getCurrentTrajectory(proto::TrajectorySample* sample);
 
 protected:
 	btRigidBody* BigBird::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);
-	void initialOutputToFile();
-	void pretickOutputToFile();
-	void restart();
-	void start();
-	void end();
 
 private:
 	btDynamicsWorld* m_ownerWorld;
-	BigBirdLocalParams m_local_info;
-	proto::BigBirdConstructionData* m_data;
+	const BigBirdLocalParams& m_local_info;
+	const proto::BigBirdConstructionData& m_data;
+	
 	btCollisionShape* m_shapes[BODYPART_COUNT];
 	btRigidBody* m_bodies[BODYPART_COUNT];
 	BigFeather* m_feathers[FEATHER_COUNT];
@@ -80,10 +81,9 @@ private:
 	btCollisionShape* m_hoist_shapes[HOIST_POINT_COUNT];
 	btRigidBody* m_hoist_bodies[HOIST_POINT_COUNT];
 	btTypedConstraint* m_hoist_joints[JOINT_HOIST_COUNT];
+
 	btScalar m_time;  // keep track of time.
 	int m_time_steps;
-	std::ofstream file;
-	std::ostringstream convert;
 };
 
 #endif
