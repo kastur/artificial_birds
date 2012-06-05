@@ -134,6 +134,7 @@ void BigFeather::pretick(btScalar dt) {
 	std::cout << "  force_mag: " << (lift_impulse + drag_impulse).length(); 
 	std::cout << std::endl;
 	*/
+	
 	/*
 	btVector3 impulse = (lift_impulse + drag_impulse);
 	std::cout << std::setprecision(2) << std::fixed;
@@ -146,14 +147,14 @@ void BigFeather::pretick(btScalar dt) {
 
 	
 
-	btScalar scaler = 2.0f;
-	if (t < 2) {
+	btScalar scaler = 1.2f;
+	if (t < 0.2) {
 		scaler = 100.0f;
 	}
 	btVector3 liftForce = (lift_impulse + drag_impulse) / scaler;
 	btVector3 forcePos =  m_limb->getCenterOfMassPosition() - feather->getCenterOfMassPosition();
 	
-	const btScalar maxForce = 200.0;
+	const btScalar maxForce = 500.0;
 	btScalar forceMag = liftForce.length();
 	if (forceMag < maxForce) {
 		m_limb->applyForce(liftForce, forcePos);

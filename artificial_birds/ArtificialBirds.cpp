@@ -123,7 +123,7 @@ void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y) {
 	case 'e':
 		if (m_birdOpt) {
 			m_birdOpt->removeBigBird();
-			m_birdOpt->spawnBigBird(btVector3(0,0,0));
+			m_birdOpt->spawnBigBird();
 		}
 		break;
 	case 'r':
