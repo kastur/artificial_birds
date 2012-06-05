@@ -17,12 +17,12 @@ public:
 	BirdOptimizer(btDynamicsWorld* ownerWorld);
 	~BirdOptimizer();
 	void pretick(btScalar dt);
-	void spawnBigBird(const btVector3& startOffset);
+	void spawnBigBird();
 	void removeBigBird();
 	btVector3 getBirdPosition() { 
 		if (m_bigbird)
 			return m_bigbird->getPosition();
-		return btVector3(0,0,0);
+		return btVector3(0,3,0);
 	}
 protected:
 	void fillWithRandomNumbers(proto::BigBirdConstructionData* info, int numPoints);
@@ -48,6 +48,7 @@ private:
 	t_rand_dist m_rand_dist;
 
 	proto::BirdOptimizerData m_result_data;
+	float m_perturb_scaler;
 };
 
 #endif
