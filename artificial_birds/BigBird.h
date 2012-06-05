@@ -3,8 +3,9 @@
 #define BIGBIRD_H__
 
 #include "btBulletDynamicsCommon.h"
-#include "BigBirdConstructionInfo.h"
+#include "BigBirdLocalParams.h"
 #include "BigFeather.h"
+#include "../proto/proto.pb.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -56,7 +57,7 @@ class BigBird {
 	};
 
 public:
-	BigBird(btDynamicsWorld* ownerWorld, const BigBirdConstructionInfo& info);
+	BigBird(btDynamicsWorld* ownerWorld, const BigBirdLocalParams& local_info, proto::BigBirdConstructionData* data);
 	virtual ~BigBird();
 	void pretick(btScalar dt);
 
@@ -78,7 +79,8 @@ protected:
 
 private:
 	btDynamicsWorld* m_ownerWorld;
-	BigBirdConstructionInfo m_info;
+	BigBirdLocalParams m_local_info;
+	proto::BigBirdConstructionData* m_data;
 	btCollisionShape* m_shapes[BODYPART_COUNT];
 	btRigidBody* m_bodies[BODYPART_COUNT];
 	BigFeather* m_feathers[FEATHER_COUNT];
@@ -90,8 +92,6 @@ private:
 	int m_time_steps;
 	std::ofstream file;
 	std::ostringstream convert;
-
-
 };
 
 #endif
