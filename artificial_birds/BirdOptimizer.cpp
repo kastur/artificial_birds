@@ -207,8 +207,6 @@ void BirdOptimizer::removeBigBird() {
 		m_currentBirdLocalParam = 0;
 		m_currentBirdData = 0;
 	}
-
-
 }
 
 float calculateEnergy(proto::TrajectoryData* trajectoryData) {
@@ -238,6 +236,18 @@ float calculateTimeToHitGround(proto::TrajectoryData* trajectoryData) {
 	return 1.f - (float)ii / trajectoryData->sample_size();
 }
 
+float calculateTotalUpTime(proto::TrajectoryData* trajectoryData) {
+	float ypos = FLT_MAX;
+	int ii;
+	int count = 0;
+	for (ii = 60; ii < trajectoryData->sample_size(); ++ii) {
+		if (trajectoryData->sample(ii).pelvisposition().y() < 1.0f)
+			continue;
+		count++;
+	}
+
+	return 1.f - (float)count / trajectoryData->sample_size();
+}
 //need to make a proper evaluation function
 //get the best CPG function, delete the rest of CPGs and clear the m_birdCPGs array
 void BirdOptimizer::evaluateCurrentGenerationBirds() {
@@ -253,6 +263,7 @@ void BirdOptimizer::evaluateCurrentGenerationBirds() {
 	for (int ii = 0; ii < m_birdTrajectoryData.size(); ++ii) {
 		float energy =
 			calculateTimeToHitGround(m_birdTrajectoryData[ii])
+			+ calculateTotalUpTime(m_birdTrajectoryData[ii])
 			+ calculateEnergy(m_birdTrajectoryData[ii])/1500.0;
 		std::cout << "\tenergy: " << energy << std::endl;
 		if (energy < minEnergy)

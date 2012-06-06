@@ -21,6 +21,8 @@ Written by: Marten Svanfeldt
 
 #include "GlutDemoApplication.h"
 #include "LinearMath/btAlignedObjectArray.h"
+#include "BirdDemo.h"
+#include "BirdOptimizer.h"
 class btBroadphaseInterface;
 class btCollisionShape;
 class btOverlappingPairCache;
@@ -45,7 +47,8 @@ class ArtificialBirdsDemoApp : public GlutDemoApplication {
 
 	btDefaultCollisionConfiguration* m_collisionConfiguration;
 
-	class BirdOptimizer* m_birdOpt;
+	BirdOptimizer* m_birdOpt;
+	BirdDemo* m_birdDemo;
 
 	void removeBigBird(int id);
 public:
@@ -78,6 +81,7 @@ public:
 	btAlignedObjectArray<class BigFeather*> getFeathers() { return m_bigfeathers; }
 	btAlignedObjectArray<class BigBird*> getBirds() { return m_bigbirds; }
 	BirdOptimizer* getBirdOptimizer() {return m_birdOpt;}
+	BirdDemo* getBirdDemo() {return m_birdDemo;}
 	
 };
 

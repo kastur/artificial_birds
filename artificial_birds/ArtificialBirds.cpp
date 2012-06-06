@@ -18,10 +18,13 @@ void pickingPreTickCallback(btDynamicsWorld *world, btScalar timeStep) {
 		app->getBirds()[ii]->pretick(timeStep);
 	}
 
-	BirdOptimizer* birdOpt = app->getBirdOptimizer();
-	if (birdOpt)
-		birdOpt->pretick(timeStep);
+	//BirdOptimizer* birdOpt = app->getBirdOptimizer();
+	//if (birdOpt)
+	//	birdOpt->pretick(timeStep);
 
+	BirdDemo* birdDemo = app->getBirdDemo();
+	if (birdDemo)
+		birdDemo->pretick(timeStep);
 }
 
 void ArtificialBirdsDemoApp::initPhysics()
@@ -67,7 +70,11 @@ void ArtificialBirdsDemoApp::initPhysics()
 #endif //CREATE_GROUND_COLLISION_OBJECT
 
 	}
-	m_birdOpt = new BirdOptimizer(m_dynamicsWorld);
+
+	m_birdOpt = 0;
+	m_birdDemo = 0;
+	//m_birdOpt = new BirdOptimizer(m_dynamicsWorld);
+	m_birdDemo = new BirdDemo(m_dynamicsWorld);
 
 	clientResetScene();		
 }
@@ -94,6 +101,8 @@ void ArtificialBirdsDemoApp::clientMoveAndDisplay()
 		m_cameraTargetPosition = m_bigbirds[0]->getPosition();
 	else if (m_birdOpt)
 		m_cameraTargetPosition = m_birdOpt->getBirdPosition();
+	else if (m_birdDemo)
+		m_cameraTargetPosition = m_birdDemo->getPosition();
 
 	renderme(); 
 
@@ -129,6 +138,20 @@ void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y) {
 	case 'r':
 		if (m_birdOpt)
 			m_birdOpt->removeBigBird();
+		if (m_birdDemo)
+			m_birdDemo->createBirds();
+		break;
+	case 'm':
+		if (m_birdDemo)
+			m_birdDemo->toggleMasslessBirds();
+		break;
+	case 'w':
+		if (m_birdDemo)
+			m_birdDemo->toggleBirdWingbeatData();
+		break;
+	case 'c':
+		if (m_birdDemo)
+			m_birdDemo->cycleThroughBirdViews();
 		break;
 	default:
 		DemoApplication::keyboardCallback(key, x, y);

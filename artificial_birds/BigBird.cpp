@@ -37,7 +37,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdLocalParams& local_in
 	{ // HOIST_POINTS
 		btTransform trA;
 		trA.setIdentity();
-		trA.setOrigin(btVector3(0.0f,00.f,0.0f));
+		trA.setOrigin(btVector3(0.0f,10.f,0.0f));
 		trA *= m_local_info.hoistTransform; 
 		m_hoist_bodies[HOIST_POINT_0] = localCreateRigidBody(
 			0.f,
@@ -51,7 +51,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdLocalParams& local_in
 		trA.setOrigin(
 			btVector3(
 			btCos(xy_angle) * btSin(zxy_angle) * m_data.pelvishalflength() + 0.2f*btCos(zxy_angle), 
-			btSin(xy_angle) * btSin(zxy_angle) * m_data.pelvishalflength(),
+			10.f + btSin(xy_angle) * btSin(zxy_angle) * m_data.pelvishalflength(),
 			btCos(zxy_angle) * m_data.pelvishalflength() - 0.2f*btSin(zxy_angle)
 			));
 		trA *= m_local_info.hoistTransform;
@@ -65,7 +65,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdLocalParams& local_in
 		trA.setOrigin(
 			btVector3(
 			btCos(xy_angle) * btSin(zxy_angle) * m_data.pelvishalflength() - 0.2f*btCos(zxy_angle), 
-			btSin(xy_angle) * btSin(zxy_angle) * m_data.pelvishalflength(),
+			10.f + btSin(xy_angle) * btSin(zxy_angle) * m_data.pelvishalflength(),
 			btCos(zxy_angle) * m_data.pelvishalflength() + 0.2f*btSin(zxy_angle)
 			));
 		trA *= m_local_info.hoistTransform;
@@ -123,7 +123,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdLocalParams& local_in
 			*m_bodies[BODYPART_PELVIS],
 			*m_hoist_bodies[HOIST_POINT_0],
 			btVector3(0.0f,0.0f,0.0f),
-			btVector3(0.0f,5.0f,0.0f)
+			btVector3(0.0f,-5.0f,0.0f)
 			);
 		m_ownerWorld->addConstraint(pointC,true);
 		m_hoist_joints[JOINT_HOIST_POINT_0] = pointC;
@@ -132,11 +132,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdLocalParams& local_in
 			*m_bodies[BODYPART_PELVIS],
 			*m_hoist_bodies[HOIST_POINT_1],
 			btVector3(+0.2,m_data.pelvishalflength(),0.0f),
-			btVector3(
-			0,
-			5.0f,
-			0
-			));
+			btVector3(0, -5.0f, 0));
 		m_ownerWorld->addConstraint(pointC,true);
 		m_hoist_joints[JOINT_HOIST_POINT_1] = pointC;
 
@@ -144,11 +140,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdLocalParams& local_in
 			*m_bodies[BODYPART_PELVIS],
 			*m_hoist_bodies[HOIST_POINT_2],
 			btVector3(-0.2f,m_data.pelvishalflength(),0.0f),
-			btVector3(
-			0,
-			5.0f,
-			0
-			));
+			btVector3(0,-5.0f,0));
 		m_ownerWorld->addConstraint(pointC,true);
 		m_hoist_joints[JOINT_HOIST_POINT_2] = pointC;
 	}
