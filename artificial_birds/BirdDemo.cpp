@@ -1,6 +1,7 @@
 #include "BirdDemo.h"
 #include "Bird.h"
 #include "proto_helper.h"
+#include <vector>
 
 const int kNumGenerationsToLoad = 5;
 
@@ -8,10 +9,10 @@ BirdDemo::BirdDemo(btDynamicsWorld* ownerWorld) : m_ownerWorld(ownerWorld) {
 	m_numBirds = kNumGenerationsToLoad;
 	m_time = 0;
 	m_cameraViewer = 0;
-	m_hasMass = true;
+	m_singleBird = false;
 	m_randomData = true;
 	m_optimizedData = new proto::BirdOptimizerData();
-	m_generationChooser = new int[kNumGenerationsToLoad];
+	m_generationChooser.reserve(kNumGenerationsToLoad);
 
 	loadData();
 
@@ -33,7 +34,7 @@ void BirdDemo::toggleBirdWingbeatData() {
 }
 
 void BirdDemo::loadData() {
-	std::string filename = "..\\experiment_data\\8_seconds_unif\\bird_data.pbdata";
+	std::string filename = "..\\experiment_data\\8_seconds_unif_2\\bird_data.pbdata";
 	if (!m_randomData)
 		filename = "..\\experiment_data\\8_seconds_flight_2\\bird_data.pbdata";
 
@@ -49,15 +50,18 @@ void BirdDemo::loadData() {
 	ifs.close();
 
 	//Hack. Need to find a better way to choose the generations.
+	float multiplier = (float)m_optimizedData->result_size()/(kNumGenerationsToLoad-1);
+	m_generationChooser.clear();
 	for (int ii = 0 ; ii < kNumGenerationsToLoad - 1; ++ii) {
-		m_generationChooser[ii] = ii*(m_optimizedData->result_size()/kNumGenerationsToLoad);
+		m_generationChooser.insert(m_generationChooser.begin() + ii,ii*multiplier);
 	}
-	m_generationChooser[kNumGenerationsToLoad-1] = m_optimizedData->result_size() - 1;
+	m_generationChooser.insert(m_generationChooser.begin() + (kNumGenerationsToLoad - 1), m_optimizedData->result_size() - 1);
 }
 
 void BirdDemo::toggleMasslessBirds() {
-	m_hasMass = !m_hasMass;
-	createBirds();
+	for (int ii = 0; ii < m_birdArray.size(); ++ii) {
+		m_birdArray[ii]->m_bigbird->toggleHoist();
+	}
 }
 
 
@@ -71,7 +75,7 @@ void BirdDemo::createBirds() {
 }
 
 void BirdDemo::createBird(Bird* bird, int numGen) {
-	btVector3 startOffset = btVector3(0.f,5.f,numGen*1.f);
+	btVector3 startOffset = btVector3(0.f,5.f,numGen*0.5f);
 	BigBirdLocalParams* birdLocalParams= new BigBirdLocalParams();
 
 	birdLocalParams->birdId = numGen;
@@ -83,14 +87,11 @@ void BirdDemo::createBird(Bird* bird, int numGen) {
 	birdLocalParams->hoistTransform.setOrigin(startOffset);
 
 	proto::BigBirdConstructionData* birdConstData = new proto::BigBirdConstructionData();
-	if (numGen < m_optimizedData->result().size())
+	if (0 <= numGen && numGen < m_optimizedData->result().size())
 		birdConstData->CopyFrom(m_optimizedData->result(numGen).bird());
 
 	bird->m_birdConstData = birdConstData;
 	bird->m_birdLocalParams = birdLocalParams;
-
-	if (!m_hasMass)
-		bird->m_birdConstData->set_pelvismass(0.f);
 
 	bird->m_bigbird = new BigBird(m_ownerWorld,*(bird->m_birdLocalParams),*(bird->m_birdConstData));
 }
@@ -98,10 +99,14 @@ void BirdDemo::createBird(Bird* bird, int numGen) {
 void BirdDemo::pretick(btScalar dt) {
 	m_time += dt;
 
-	for (int ii = 0; ii < m_birdArray.size(); ++ii) {
-		m_birdArray[ii]->m_bigbird->pretick(dt);
+	if (!m_singleBird) {
+		for (int ii = 0; ii < m_birdArray.size(); ++ii) {
+			m_birdArray[ii]->m_bigbird->pretick(dt);
+		}
+	} else {
+		if (0 < m_cameraViewer && m_cameraViewer < m_birdArray.size() )
+			m_birdArray[m_cameraViewer]->m_bigbird->pretick(dt);
 	}
-
 }
 
 void BirdDemo::removeBird(int index) {
@@ -120,4 +125,8 @@ void BirdDemo::removeAllBirds() {
 		delete m_birdArray[ii]->m_birdLocalParams;
 	}
 	m_birdArray.clear();
+}
+
+void BirdDemo::toggleSingleBirdDemo() {
+	m_singleBird = !m_singleBird;
 }

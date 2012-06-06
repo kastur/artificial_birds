@@ -65,7 +65,7 @@ public:
 	
 	btScalar getTime() {return m_time;}
 	void getCurrentTrajectory(proto::TrajectorySample* sample);
-
+	void toggleHoist();
 protected:
 	btRigidBody* BigBird::localCreateRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);
 
@@ -84,7 +84,7 @@ private:
 
 	btScalar m_time;  // keep track of time.
 	int m_time_steps;
-	bool m_hoist_broken;
+	bool m_hoist_enabled;
 };
 
 #endif

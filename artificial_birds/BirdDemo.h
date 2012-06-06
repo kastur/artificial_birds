@@ -19,6 +19,7 @@ public:
 	void pretick(btScalar dt);
 	void toggleMasslessBirds();
 	void toggleBirdWingbeatData();
+	void toggleSingleBirdDemo();
 	void createBirds();
 	void cycleThroughBirdViews() {
 		m_cameraViewer++;
@@ -26,7 +27,7 @@ public:
 			m_cameraViewer = 0;
 	}
 	btVector3 getPosition() { 
-		if (m_birdArray.size() > m_cameraViewer)
+		if (0 < m_cameraViewer && m_cameraViewer < m_birdArray.size())
 			return m_birdArray[m_cameraViewer]->m_bigbird->getPosition();
 		return btVector3(0.f,10.f,0.f);
 		}
@@ -43,10 +44,10 @@ private:
 	btAlignedObjectArray<Bird*> m_birdArray;
 	btDynamicsWorld* m_ownerWorld;
 	btScalar m_time;
-	int* m_generationChooser;
+	std::vector<int> m_generationChooser;
 	int m_numBirds;
 	int m_cameraViewer;
-	bool m_hasMass;
+	bool m_singleBird;
 	bool m_randomData;
 };
 

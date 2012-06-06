@@ -153,6 +153,10 @@ void ArtificialBirdsDemoApp::keyboardCallback(unsigned char key, int x, int y) {
 		if (m_birdDemo)
 			m_birdDemo->cycleThroughBirdViews();
 		break;
+	case 's':
+		if (m_birdDemo)
+			m_birdDemo->toggleSingleBirdDemo();
+		break;
 	default:
 		DemoApplication::keyboardCallback(key, x, y);
 	}

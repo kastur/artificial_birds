@@ -25,7 +25,7 @@ BigBird::BigBird(btDynamicsWorld* ownerWorld, const BigBirdLocalParams& local_in
 	m_time_steps = -1;
 
 
-	m_hoist_broken = false;
+	m_hoist_enabled = true;
 	m_hoist_shapes[HOIST_POINT_0] = new btCapsuleShape(0.1f, 0.1f);
 	m_hoist_shapes[HOIST_POINT_1] = new btCapsuleShape(0.1f, 0.1f);
 	m_hoist_shapes[HOIST_POINT_2] = new btCapsuleShape(0.1f, 0.1f);
@@ -274,10 +274,12 @@ void BigBird::pretick (btScalar dt) {
 	m_time += dt;
 	m_time_steps = (m_time_steps  + 1) % wingbeat_pattern_length;
 	
-	if (!m_hoist_broken && m_time > kHoistHoldTime) {
-		m_hoist_broken = true;
+	// Commented out for demo purposes.
+	if (m_hoist_enabled && m_time > kHoistHoldTime) { 
+		m_hoist_enabled = !m_hoist_enabled;
 		for (int ii = 0; ii < JOINT_HOIST_COUNT; ++ii) {
 			m_ownerWorld->removeConstraint(m_hoist_joints[ii]);
+			//m_hoist_joints[ii]->setEnabled(false);
 		}
 	}
 
@@ -331,4 +333,11 @@ void BigBird::getCurrentTrajectory(proto::TrajectorySample* trajectory_sample) {
 	trajectory_sample->set_rightwingimpulse(rtShoulderImpulse);
 	trajectory_sample->set_leftfeatherimpulse(lfFeatherImpulse);
 	trajectory_sample->set_rightfeatherimpulse(rtFeatherImpulse);
+}
+
+void BigBird::toggleHoist() {
+	m_hoist_enabled = !m_hoist_enabled;
+	for (int ii = 0; ii < JOINT_HOIST_COUNT; ++ii) {
+		m_hoist_joints[ii]->setEnabled(m_hoist_enabled);
+	}
 }
